@@ -11,16 +11,17 @@ import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.Shimmer
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
 import id.fajarproject.roommovie.ui.widget.AppBarStateChangeListener
 import id.fajarproject.roommovie.ui.widget.DialogListener
@@ -39,7 +40,8 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 
-class MovieDetailActivity : AppCompatActivity(),MovieDetailContract.View {
+class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
+
     @Inject lateinit var presenter: MovieDetailContract.Presenter
     var id = 0
 
@@ -57,12 +59,13 @@ class MovieDetailActivity : AppCompatActivity(),MovieDetailContract.View {
             showDialogNoData()
             return
         }
-        presenter.loadData(id)
+        if (isConnection) {
+            presenter.loadData(id)
+        }
     }
 
     @SuppressLint("SetTextI18n")
     override fun showDataSuccess(data: MovieItem) {
-
         Glide.with(this)
             .load(Constant.BASE_IMAGE + data.posterPath)
             .placeholder(Util.circleLoading(this))
@@ -359,21 +362,18 @@ class MovieDetailActivity : AppCompatActivity(),MovieDetailContract.View {
     }
 
     override fun showLoading() {
-        loading.visibility = View.VISIBLE
+        refreshLayout.visibility    = View.GONE
+        appbar.visibility           = View.GONE
+        shimmerView.visibility  = View.VISIBLE
+        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
+        shimmerView.startShimmer()
     }
 
     override fun hideLoading() {
-        loading.visibility  = View.GONE
+        shimmerView.stopShimmer()
+        shimmerView.visibility      = View.GONE
+        refreshLayout.visibility    = View.VISIBLE
+        appbar.visibility           = View.VISIBLE
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
-            onBackPressed()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return true
-    }
 }

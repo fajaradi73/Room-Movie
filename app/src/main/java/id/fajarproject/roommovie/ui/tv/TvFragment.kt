@@ -13,7 +13,6 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.MovieItem
-import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.tvList.TvListActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener

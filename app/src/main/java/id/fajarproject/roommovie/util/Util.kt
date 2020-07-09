@@ -21,6 +21,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
@@ -186,6 +187,21 @@ object Util {
         }
     }
 
+    fun showDialogInternet(activity: Activity,dialogListener: DialogListener){
+        val alertDialog     = AlertDialog.Builder(activity).create()
+        val inflater        = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val viewDialog      = inflater.inflate(R.layout.dialog_no_internet,null)
+        alertDialog.setView(viewDialog)
+        alertDialog.setCancelable(false)
+        alertDialog.setCanceledOnTouchOutside(false)
+        viewDialog.findViewById<Button>(R.id.btnOk).setOnClickListener{
+            alertDialog.dismiss()
+            dialogListener.onYes()
+        }
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+    }
+
     fun showRoundedDialog(activity: Activity,title : String,message: String,isTwoButton: Boolean,dialogListener: DialogListener){
         initShowDialog(activity,title,message,isTwoButton)
         btnYes?.setOnClickListener {
@@ -214,25 +230,18 @@ object Util {
         }
         return result
     }
-    fun checkDataNull(data: String?): String? {
-        return if (data == null || data.isEmpty()) {
-            ""
-        } else {
-            data
-        }
-    }
 
     fun convertDate(
         date: String,
         oldFormat: String,
         newFormat: String
-    ): String? {
+    ): String {
         val newDateFormat =
             SimpleDateFormat(newFormat, Locale.getDefault())
         val oldDateFormat =
             SimpleDateFormat(oldFormat, Locale.getDefault())
         return try {
-            newDateFormat.format(oldDateFormat.parse(date)!!)
+            newDateFormat.format(oldDateFormat.parse(date) ?: Date())
         } catch (e: ParseException) {
             e.printStackTrace()
             ""
@@ -451,4 +460,5 @@ object Util {
         }
         return language
     }
+    
 }

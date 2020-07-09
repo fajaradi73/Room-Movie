@@ -26,6 +26,7 @@ class TvDetailContract {
         fun setViewPosters(list: MutableList<PostersItem?>)
         fun setViewRecommendation(list: MutableList<MovieItem?>)
         fun setViewNetwork(list: MutableList<NetworksItem?>)
+        fun setViewSeason(list: MutableList<SeasonsItem?>,title :String)
     }
 
     interface Presenter : BaseContract.Presenter<View>{

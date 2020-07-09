@@ -18,6 +18,7 @@ import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
 import id.fajarproject.roommovie.models.people.PeopleItem
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
 import id.fajarproject.roommovie.ui.people.PeopleAdapter
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
@@ -30,7 +31,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class SearchActivity : AppCompatActivity(),SearchContract.View {
+class SearchActivity : BaseActivity(),SearchContract.View {
 
     @Inject lateinit var presenter : SearchContract.Presenter
     lateinit var layoutManager: GridLayoutManager
@@ -64,12 +65,13 @@ class SearchActivity : AppCompatActivity(),SearchContract.View {
         setUI()
         searchBar.setSearchHint("${getString(R.string.search_hint)} ${status.toLowerCase(Locale.getDefault())}")
 
-        if (query.isNotEmpty()){
-            presenter.checkData(currentPage,query,status)
-            searchBar.setSearchText(query)
-        }else{
-            searchBar.setSearchFocused(true)
-        }
+        if (isConnection)
+            if (query.isNotEmpty()){
+                presenter.checkData(currentPage,query,status)
+                searchBar.setSearchText(query)
+            }else{
+                searchBar.setSearchFocused(true)
+            }
     }
 
     override fun onDestroy() {

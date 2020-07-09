@@ -17,7 +17,7 @@
     <string name="tv_on_the_air">TV On The Air</string>
     <string name="upcoming">Upcoming</string>
     <string name="popular_people">Popular People</string>
-    <string name="setting">Setting</string>
+    <string name="setting">Settings</string>
     <string name="voice">Voice</string>
     <string name="search_hint">Search for a </string>
     <string name="clear_cache">Clear Cache</string>
@@ -48,4 +48,9 @@
     <string name="series_cast">Series Cast</string>
     <string name="last_season">Last Season</string>
     <string name="original_name">Original Name</string>
+    <string name="episodes">Episodes</string>
+    <string name="seasons">Seasons</string>
+    <string name="close">Close</string>
+    <string name="no_internet">No Internet Connection</string>
+    <string name="body_internet">You must have Cellular Data or wifi to access this. Press OK to activate the internet</string>
 </resources>

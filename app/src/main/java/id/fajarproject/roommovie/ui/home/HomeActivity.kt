@@ -9,7 +9,6 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.arlib.floatingsearchview.FloatingSearchView
@@ -20,6 +19,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.GenresItem
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movie.MovieFragment
 import id.fajarproject.roommovie.ui.people.PeopleFragment
 import id.fajarproject.roommovie.ui.search.SearchActivity
@@ -38,7 +38,7 @@ import javax.inject.Inject
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
 
-class HomeActivity : AppCompatActivity() ,HomeContract.View{
+class HomeActivity : BaseActivity() ,HomeContract.View{
 
     @Inject lateinit var presenter: HomeContract.Presenter
 
@@ -51,13 +51,16 @@ class HomeActivity : AppCompatActivity() ,HomeContract.View{
         setContentView(R.layout.activity_home)
         injectDependency()
         presenter.attach<Activity>(this,this)
-        if (!checkDataPreferences(Constant.language)){
-            presenter.loadDataLanguage()
-        }else {
-            if (!checkDataPreferences(Constant.genreMovie)) {
-                presenter.loadData()
-            } else {
-                setUI()
+        setToolbar()
+        if (isConnection){
+            if (!checkDataPreferences(Constant.language)){
+                presenter.loadDataLanguage()
+            }else {
+                if (!checkDataPreferences(Constant.genreMovie)) {
+                    presenter.loadData()
+                } else {
+                    setUI()
+                }
             }
         }
     }
@@ -150,6 +153,10 @@ class HomeActivity : AppCompatActivity() ,HomeContract.View{
         activityComponent.inject(this)
     }
 
+    override fun setToolbar() {
+        setSupportActionBar(toolbar)
+    }
+
     override fun addFragment(fragments: Fragment, tag: String) {
 
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
@@ -212,10 +219,12 @@ class HomeActivity : AppCompatActivity() ,HomeContract.View{
     override fun changeToolbar(isSearch: Boolean) {
         if (isSearch){
             searchBar.visibility    = View.VISIBLE
-            tvTitle.visibility      = View.GONE
+            toolbar.visibility      = View.GONE
+            title                   = ""
         }else{
             searchBar.visibility    = View.GONE
-            tvTitle.visibility      = View.VISIBLE
+            toolbar.visibility      = View.VISIBLE
+            title                   = getString(R.string.setting)
         }
     }
 

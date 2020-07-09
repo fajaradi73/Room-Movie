@@ -50,7 +50,7 @@
         <activity
             android:name=".ui.home.HomeActivity"
             android:configChanges="locale"
-            android:label="Home"
+            android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

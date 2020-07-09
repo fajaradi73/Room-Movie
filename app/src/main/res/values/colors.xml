@@ -8,4 +8,5 @@
     <color name="colorBlack">#000</color>
     <color name="colorBlackOverlay">#7b000000</color>
     <color name="shimmerBG">#bdc3c7</color>
+    <color name="df_transparent_black_background">#80000000</color>
 </resources>

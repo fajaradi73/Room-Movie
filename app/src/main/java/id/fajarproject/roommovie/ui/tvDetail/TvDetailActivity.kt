@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,12 +15,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.Shimmer
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
 import id.fajarproject.roommovie.ui.widget.AppBarStateChangeListener
 import id.fajarproject.roommovie.ui.widget.DialogListener
@@ -35,10 +36,11 @@ import kotlinx.android.synthetic.main.activity_tv_detail.*
 import kotlinx.android.synthetic.main.activity_tv_detail_info.*
 import kotlinx.android.synthetic.main.activity_tv_detail_overview.*
 import kotlinx.android.synthetic.main.activity_tv_detail_people.*
+import kotlinx.android.synthetic.main.activity_tv_detail_season.*
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class TvDetailActivity : AppCompatActivity(),TvDetailContract.View {
+class TvDetailActivity : BaseActivity(),TvDetailContract.View {
 
     @Inject
     lateinit var presenter: TvDetailContract.Presenter
@@ -58,6 +60,7 @@ class TvDetailActivity : AppCompatActivity(),TvDetailContract.View {
             showDialogNoData()
             return
         }
+        if (isConnection)
         presenter.loadData(id)
     }
 
@@ -110,6 +113,21 @@ class TvDetailActivity : AppCompatActivity(),TvDetailContract.View {
         data.networks?.let {
             setViewNetwork(it)
         }
+        data.seasons?.let { list : MutableList<SeasonsItem?> ->
+            val last : MutableList<SeasonsItem?> = arrayListOf()
+
+            list[list.size - 1]?.airDate?.let {
+                last.add(list[list.size - 1])
+            } ?: kotlin.run {
+                if (list.size > 1){
+                    last.add(list[list.size - 2])
+                }else{
+                    last.add(list[list.size])
+                }
+            }
+            setViewSeason(last,data.name ?: "")
+        }
+
         ivLink.setOnClickListener {
             data.homepage?.let {
                 if (it.isNotEmpty()) {
@@ -255,6 +273,19 @@ class TvDetailActivity : AppCompatActivity(),TvDetailContract.View {
         rvNetwork.adapter            = adapter
     }
 
+    override fun setViewSeason(list: MutableList<SeasonsItem?>,title :String) {
+
+        val layoutManager                   = LinearLayoutManager(this)
+        layoutManager.orientation           = LinearLayoutManager.VERTICAL
+        rvSeason.layoutManager              = layoutManager
+        val adapter                         =
+            DetailSeasonAdapter(
+                this,
+                list,title
+            )
+        rvSeason.adapter            = adapter
+    }
+
     override fun setClickableSpan(textView : TextView){
         PatternEditableBuilder().addPattern(
             Pattern.compile("(\\w+) (\\w+)"), Color.BLACK,
@@ -390,12 +421,20 @@ class TvDetailActivity : AppCompatActivity(),TvDetailContract.View {
     }
 
     override fun showLoading() {
-        loading.visibility = View.VISIBLE
+        refreshLayout.visibility    = View.GONE
+        appbar.visibility           = View.GONE
+        shimmerView.visibility  = View.VISIBLE
+        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
+        shimmerView.startShimmer()
     }
 
     override fun hideLoading() {
-        loading.visibility  = View.GONE
+        shimmerView.stopShimmer()
+        shimmerView.visibility      = View.GONE
+        refreshLayout.visibility    = View.VISIBLE
+        appbar.visibility           = View.VISIBLE
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home){

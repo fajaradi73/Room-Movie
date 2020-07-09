@@ -59,7 +59,7 @@ data class MovieItem(
 	val productionCountries: MutableList<ProductionCountriesItem?>? = null,
 
     @field:SerializedName("seasons")
-    val seasons: MutableList<ProductionCountriesItem?>? = null,
+    val seasons: MutableList<SeasonsItem?>? = null,
 
     @field:SerializedName("episode_run_time")
     val episodeRunTime: MutableList<Int?>? = null,

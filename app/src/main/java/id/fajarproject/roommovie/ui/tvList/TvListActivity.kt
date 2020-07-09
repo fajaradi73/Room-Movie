@@ -2,7 +2,6 @@ package id.fajarproject.roommovie.ui.tvList
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -15,6 +14,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
@@ -23,7 +23,7 @@ import id.fajarproject.roommovie.util.Util
 import kotlinx.android.synthetic.main.activity_tv_list.*
 import javax.inject.Inject
 
-class TvListActivity : AppCompatActivity() ,TvListContract.View{
+class TvListActivity : BaseActivity() ,TvListContract.View{
 
     @Inject
     lateinit var presenter: TvListContract.Presenter
@@ -49,6 +49,7 @@ class TvListActivity : AppCompatActivity() ,TvListContract.View{
         setToolbar()
         setRecycleView()
         setUI()
+        if (isConnection)
         presenter.loadData(currentPage,status)
 
     }

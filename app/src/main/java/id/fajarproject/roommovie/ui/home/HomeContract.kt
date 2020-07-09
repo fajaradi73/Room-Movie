@@ -11,11 +11,7 @@ import id.fajarproject.roommovie.ui.base.BaseContract
  */
 class HomeContract {
 
-    interface View{
-        fun injectDependency()
-        fun setUI()
-        fun showLoading()
-        fun hideLoading()
+    interface View : BaseContract.View{
         fun addFragment(fragments: Fragment, tag: String)
         fun saveGenres(list: MutableList<GenresItem?>?,prefName : String)
         fun checkDataPreferences(prefName: String) : Boolean

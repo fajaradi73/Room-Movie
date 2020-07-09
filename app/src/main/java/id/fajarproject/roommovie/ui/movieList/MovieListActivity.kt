@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
@@ -16,6 +15,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
+import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
@@ -27,7 +27,7 @@ import javax.inject.Inject
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class MovieListActivity : AppCompatActivity(),MovieListContract.View {
+class MovieListActivity : BaseActivity(),MovieListContract.View {
 
     @Inject lateinit var presenter: MovieListContract.Presenter
     lateinit var layoutManager: GridLayoutManager
@@ -52,8 +52,9 @@ class MovieListActivity : AppCompatActivity(),MovieListContract.View {
         setToolbar()
         setRecycleView()
         setUI()
-        presenter.loadData(currentPage,status)
-
+        if (isConnection){
+            presenter.loadData(currentPage,status)
+        }
     }
 
     override fun injectDependency() {
