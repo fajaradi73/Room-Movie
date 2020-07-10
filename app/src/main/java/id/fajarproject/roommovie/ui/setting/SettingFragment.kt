@@ -7,12 +7,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.ui.base.BaseFragment
+import id.fajarproject.roommovie.ui.home.HomeActivity
+import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
 import kotlinx.android.synthetic.main.fragment_setting.*
 
-class SettingFragment : Fragment() {
+class SettingFragment : BaseFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,11 +33,7 @@ class SettingFragment : Fragment() {
         tvSize.text = Util.readableFileSize(size)
         cvCache.setOnClickListener {
             Util.deleteCache(requireContext())
-            requireFragmentManager().beginTransaction().
-            detach(this).
-            attach(this).
-            setPrimaryNavigationFragment(this).
-            commit()
+            updateFragment()
         }
         tvVersion.text = "${getString(R.string.app_version)} ${Util.getAppVersion()}"
         cvPrivacyPolicy.setOnClickListener {
@@ -42,6 +42,29 @@ class SettingFragment : Fragment() {
         cvTermsOfUse.setOnClickListener {
             moveToDetail(getString(R.string.terms_of_use))
         }
+
+        switchMode.isChecked = AppPreference.getBooleanPreferenceByName(requireContext(),Constant.isNightMode)
+
+        switchMode.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked){
+                AppPreference.writePreference(requireContext(),Constant.isNightMode,true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }else{
+                AppPreference.writePreference(requireContext(),Constant.isNightMode,false)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            requireActivity().finish()
+            startActivity(Intent(requireContext(),HomeActivity::class.java))
+//            updateFragment()
+        }
+    }
+
+    private fun updateFragment(){
+        requireFragmentManager().beginTransaction().
+        detach(this).
+        attach(this).
+        setPrimaryNavigationFragment(this).
+        commit()
     }
 
     private fun moveToDetail(status : String){

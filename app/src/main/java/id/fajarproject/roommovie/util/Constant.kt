@@ -29,4 +29,5 @@ object Constant {
     const val voiceSearch       = "VoiceSearch"
     const val idMovie           = "IdMovie"
     const val language          = "Language"
+    const val isNightMode       = "isNightMode"
 }

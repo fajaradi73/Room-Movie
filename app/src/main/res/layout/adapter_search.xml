@@ -63,7 +63,7 @@
                     android:padding="@dimen/itemBetweenMargin"
                     android:textSize="14sp"
                     android:id="@+id/tvRatting"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/textColorPrimary"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/star"
@@ -94,11 +94,12 @@
             android:textSize="18sp"
             tools:text="Doraemon"
             android:id="@+id/tvTitle"
-            android:textColor="@color/colorBlack" />
+            android:textColor="@color/textColorPrimary" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Action"
+            android:textColor="@color/textColorSecondary"
             android:singleLine="true"
             android:paddingStart="5dp"
             android:paddingBottom="5dp"
@@ -107,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="22 juni 2020"
+            android:textColor="@color/textColorSecondary"
             android:paddingStart="5dp"
             android:paddingBottom="5dp"
             android:id="@+id/tvDate" />

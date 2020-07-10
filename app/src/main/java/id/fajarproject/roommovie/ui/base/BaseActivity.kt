@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Build
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import butterknife.ButterKnife
 import id.fajarproject.roommovie.ui.widget.DialogListener
 import id.fajarproject.roommovie.util.Util
@@ -28,6 +31,11 @@ open class BaseActivity : AppCompatActivity() {
 
     var isConnection = true
 
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        super.onCreate(savedInstanceState, persistentState)
+    }
+
     override fun setContentView(@LayoutRes layoutResID: Int) {
         if (!Util.isInternetAvailable(this)){
             showDialogInternet()
@@ -35,7 +43,6 @@ open class BaseActivity : AppCompatActivity() {
         }
         super.setContentView(layoutResID)
         activity = this
-        ButterKnife.bind(this)
     }
 
     override fun onDestroy() {

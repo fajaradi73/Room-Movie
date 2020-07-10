@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background"
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/colorPrimary"
@@ -98,7 +99,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/btnBackToTop"
                 android:layout_margin="16dp"
-                android:src="@drawable/ic_arrow_up"
+                app:backgroundTint="@color/colorPrimary"
+                app:tint="@color/iconColorPrimary"
+                app:srcCompat="@drawable/ic_arrow_up"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,6 +18,7 @@ class HomeContract {
         fun setHintSearch(status : String)
         fun moveToSearch(voiceSearch : String)
         fun changeToolbar(isSearch : Boolean)
+        fun setOpenFragment(fragments: Fragment)
     }
 
     interface Presenter : BaseContract.Presenter<View>{

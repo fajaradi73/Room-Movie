@@ -204,7 +204,7 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     override fun setToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.colorBlack))
+        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
         title = getTitle(status)
     }
 

@@ -12,6 +12,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.people.PeopleItem
+import id.fajarproject.roommovie.ui.base.BaseFragment
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
@@ -22,7 +23,7 @@ import javax.inject.Inject
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class PeopleFragment : Fragment() , PeopleContract.View{
+class PeopleFragment : BaseFragment() , PeopleContract.View{
 
     @Inject lateinit var presenter : PeopleContract.Presenter
     lateinit var layoutManager: GridLayoutManager

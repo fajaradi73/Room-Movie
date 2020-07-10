@@ -115,7 +115,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
                 return false
             }
         })
-        nav_view.selectedItemId = R.id.action_home
+        setOpenFragment(currentFragment ?: MovieFragment())
         searchBar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_voice){
                 Util.onVoiceClicked(this)
@@ -225,6 +225,23 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
             searchBar.visibility    = View.GONE
             toolbar.visibility      = View.VISIBLE
             title                   = getString(R.string.setting)
+        }
+    }
+
+    override fun setOpenFragment(fragments: Fragment) {
+        when (fragments) {
+            is TvFragment -> {
+                nav_view.selectedItemId = R.id.action_tv
+            }
+            is PeopleFragment -> {
+                nav_view.selectedItemId = R.id.action_people
+            }
+            is SettingFragment -> {
+                nav_view.selectedItemId = R.id.action_setting
+            }
+            else -> {
+                nav_view.selectedItemId = R.id.action_home
+            }
         }
     }
 

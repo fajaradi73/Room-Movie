@@ -13,6 +13,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.MovieItem
+import id.fajarproject.roommovie.ui.base.BaseFragment
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
 import id.fajarproject.roommovie.ui.movieList.MovieListActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
@@ -27,7 +28,7 @@ import javax.inject.Inject
  */
 
 
-class MovieFragment : Fragment(),MovieContract.View {
+class MovieFragment : BaseFragment(),MovieContract.View {
 
     @Inject lateinit var presenter : MovieContract.Presenter
 

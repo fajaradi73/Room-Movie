@@ -8,6 +8,8 @@
         <item name="android:fontFamily">@font/palatino_linotype</item>
         <item name="titleTextColor">@color/colorBlack</item>
         <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -24,6 +26,8 @@
         <item name="android:windowDrawsSystemBarBackgrounds" tools:ignore="NewApi">true</item>
         <item name="android:statusBarColor" tools:ignore="NewApi">@android:color/transparent</item>
         <item name="android:fontFamily">@font/palatino_linotype</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -33,6 +37,8 @@
         <item name="android:fontFamily">@font/palatino_linotype</item>
         <item name="titleTextColor">@color/colorBlack</item>
         <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -44,6 +50,8 @@
         <item name="android:fontFamily">@font/palatino_linotype</item>
         <item name="titleTextColor">@color/colorBlack</item>
         <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
     <style name="AppTheme.DarkStatusBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -60,6 +68,8 @@
         <!--<item name="android:windowFullscreen">true</item>-->
         <item name="android:windowDrawsSystemBarBackgrounds" tools:ignore="NewApi">true</item>
         <item name="android:statusBarColor" tools:ignore="NewApi">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
     </style>
 
     <style name="customProgress" parent="Widget.AppCompat.ProgressBar">
@@ -75,33 +85,32 @@
     <style name="SearchView">
         <item name="floatingSearch_backgroundColor">@color/colorPrimary</item>
         <item name="floatingSearch_dimBackground">false</item>
-        <item name="floatingSearch_viewSearchInputTextColor">@color/colorBlack</item>
-        <item name="floatingSearch_viewSuggestionItemTextColor">@color/colorBlack</item>
+        <item name="floatingSearch_viewSearchInputTextColor">@color/textColorPrimary</item>
+        <item name="floatingSearch_viewSuggestionItemTextColor">@color/textColorPrimary</item>
         <item name="floatingSearch_hintTextColor">@color/grey_600</item>
         <item name="floatingSearch_dividerColor">@color/colorPrimary</item>
-        <item name="floatingSearch_clearBtnColor">@color/colorBlack</item>
-        <item name="floatingSearch_leftActionColor">@color/colorBlack</item>
-        <item name="floatingSearch_menuItemIconColor">@color/colorBlack</item>
-        <item name="floatingSearch_suggestionRightIconColor">@color/colorBlack</item>
-        <item name="floatingSearch_actionMenuOverflowColor">@color/colorBlack</item>
+        <item name="floatingSearch_clearBtnColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_leftActionColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_menuItemIconColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_suggestionRightIconColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_actionMenuOverflowColor">@color/iconColorPrimary</item>
     </style>
-    <style name="SearchBarStyle" parent="MaterialSearchBarLight">
-        <item name="mt_searchBarColor">@color/colorPrimary</item>
-        <item name="mt_dividerColor">@color/colorPrimary</item>
-        <item name="mt_navIconTint">@color/searchBarNavIconTintColor</item>
-        <item name="mt_searchIconTint">@color/searchBarSearchIconTintColor</item>
-        <item name="mt_clearIconTint">@color/searchBarClearIconTintColor</item>
-        <item name="mt_menuIconTint">@color/searchBarMenuIconTintColor</item>
-        <item name="mt_backIconTint">@color/searchBarBackIconTintColor</item>
-        <item name="mt_textCursorTint">@color/colorBlack</item>
-        <item name="mt_textColor">@color/searchBarTextColor</item>
-        <item name="mt_hintColor">@color/searchBarHintColor</item>
-        <item name="mt_placeholderColor">@color/searchBarPlaceholderColor</item>
-        <item name="mt_highlightedTextColor">@color/colorBlack</item>
+    <style name="SearchViewWhite">
+        <item name="floatingSearch_backgroundColor">@color/backgroundSearch</item>
+        <item name="floatingSearch_dimBackground">false</item>
+        <item name="floatingSearch_viewSearchInputTextColor">@color/textColorPrimary</item>
+        <item name="floatingSearch_viewSuggestionItemTextColor">@color/textColorPrimary</item>
+        <item name="floatingSearch_hintTextColor">@color/grey_600</item>
+        <item name="floatingSearch_dividerColor">@color/backgroundSearch</item>
+        <item name="floatingSearch_clearBtnColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_leftActionColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_menuItemIconColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_suggestionRightIconColor">@color/iconColorPrimary</item>
+        <item name="floatingSearch_actionMenuOverflowColor">@color/iconColorPrimary</item>
     </style>
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/grey_600</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:fontFamily">@font/palatino_linotype</item>
     </style>
 
@@ -115,6 +124,10 @@
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:focusable">true</item>
     </style>
+    <style name="child">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
     <style name="toolbar">
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:layout_width">match_parent</item>
@@ -122,9 +135,14 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
     <style name="toolbar.title" parent="parent">
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">14dp</item>
+    </style>
+    <style name="SwitchTheme" >
+        <item name="colorControlActivated">@color/colorSwitchActivated</item>
+        <item name="colorSwitchThumbNormal">#414141</item>
+        <item name="android:colorForeground">#42221f1f</item>
     </style>
 </resources>

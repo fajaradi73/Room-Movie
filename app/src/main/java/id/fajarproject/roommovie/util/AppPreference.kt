@@ -40,23 +40,23 @@ object AppPreference {
         editor.putFloat(prefName,prefValue)
         editor.apply()
     }
-    fun getStringPreferenceByName(context: Context, prefName: String) : String?{
+    fun getStringPreferenceByName(context: Context, prefName: String) : String{
         val sharedPref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-        return sharedPref.getString(prefName,"")
+        return sharedPref.getString(prefName,"") ?: ""
     }
-    fun getIntPreferenceByName(context: Context, prefName: String) : Int? {
+    fun getIntPreferenceByName(context: Context, prefName: String) : Int {
         val sharedPref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         return sharedPref.getInt(prefName,0)
     }
-    fun getLongPreferenceByName(context: Context, prefName: String) : Long? {
+    fun getLongPreferenceByName(context: Context, prefName: String) : Long {
         val sharedPref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         return sharedPref.getLong(prefName,0)
     }
-    fun getBooleanPreferenceByName(context: Context, prefName: String) : Boolean? {
+    fun getBooleanPreferenceByName(context: Context, prefName: String) : Boolean {
         val sharedPref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         return sharedPref.getBoolean(prefName,false)
     }
-    fun getFloatPreferenceByName(context: Context, prefName: String) : Float? {
+    fun getFloatPreferenceByName(context: Context, prefName: String) : Float {
         val sharedPref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
         return sharedPref.getFloat(prefName,0f)
     }

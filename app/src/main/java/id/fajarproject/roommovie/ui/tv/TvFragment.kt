@@ -13,6 +13,7 @@ import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.MovieItem
+import id.fajarproject.roommovie.ui.base.BaseFragment
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.tvList.TvListActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.shimmer_home.*
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class TvFragment : Fragment() ,TvContract.View {
+class TvFragment : BaseFragment() ,TvContract.View {
 
     @Inject lateinit var presenter: TvContract.Presenter
 

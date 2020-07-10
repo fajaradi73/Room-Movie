@@ -53,4 +53,7 @@
     <string name="close">Close</string>
     <string name="no_internet">No Internet Connection</string>
     <string name="body_internet">You must have Cellular Data or wifi to access this. Press OK to activate the internet</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="theme">Theme</string>
+    <string name="night_mode">Night Mode</string>
 </resources>
