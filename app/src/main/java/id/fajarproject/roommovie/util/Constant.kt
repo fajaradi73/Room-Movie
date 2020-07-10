@@ -30,4 +30,5 @@ object Constant {
     const val idMovie           = "IdMovie"
     const val language          = "Language"
     const val isNightMode       = "isNightMode"
+    const val tag               = "RoomMovie"
 }

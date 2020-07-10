@@ -70,52 +70,40 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId){
                     R.id.action_home -> {
-                        var fragment = fragmentManager.findFragmentByTag(getString(R.string.movie))
-                        if (fragment == null){
-                            fragment = MovieFragment()
-                        }
-                        addFragment(fragment,getString(R.string.movie))
+                        addFragment(MovieFragment(),getString(R.string.movie))
                         setHintSearch(getString(R.string.movie))
                         changeToolbar(true)
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.movie))
                         return true
                     }
                     R.id.action_tv -> {
-                        var fragment = fragmentManager.findFragmentByTag(getString(R.string.tv))
-                        if (fragment == null){
-                            fragment = TvFragment()
-                            if (!checkDataPreferences(Constant.genreTv)){
-                                presenter.loadDataTv()
-                            }
+                        if (!checkDataPreferences(Constant.genreTv)){
+                            presenter.loadDataTv()
                         }
-                        addFragment(fragment,getString(R.string.tv))
+                        addFragment(TvFragment(),getString(R.string.tv))
                         setHintSearch(getString(R.string.tv))
                         changeToolbar(true)
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.tv))
                         return true
                     }
                     R.id.action_people -> {
-                        var fragment = fragmentManager.findFragmentByTag(getString(R.string.people))
-                        if (fragment == null){
-                            fragment = PeopleFragment()
-                        }
-                        addFragment(fragment,getString(R.string.people))
+                        addFragment(PeopleFragment(),getString(R.string.people))
                         setHintSearch(getString(R.string.people))
                         changeToolbar(true)
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.people))
                         return true
                     }
                     R.id.action_setting -> {
-                        var fragment = fragmentManager.findFragmentByTag(getString(R.string.setting))
-                        if (fragment == null){
-                            fragment = SettingFragment()
-                        }
-                        addFragment(fragment,getString(R.string.setting))
+                        addFragment(SettingFragment(),getString(R.string.setting))
                         changeToolbar(false)
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.setting))
                         return true
                     }
                 }
                 return false
             }
         })
-        setOpenFragment(currentFragment ?: MovieFragment())
+        setOpenFragment()
         searchBar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_voice){
                 Util.onVoiceClicked(this)
@@ -219,24 +207,24 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     override fun changeToolbar(isSearch: Boolean) {
         if (isSearch){
             searchBar.visibility    = View.VISIBLE
-            toolbar.visibility      = View.GONE
+            toolbar.visibility      = View.INVISIBLE
             title                   = ""
         }else{
-            searchBar.visibility    = View.GONE
+            searchBar.visibility    = View.INVISIBLE
             toolbar.visibility      = View.VISIBLE
             title                   = getString(R.string.setting)
         }
     }
 
-    override fun setOpenFragment(fragments: Fragment) {
-        when (fragments) {
-            is TvFragment -> {
+    override fun setOpenFragment() {
+        when (AppPreference.getStringPreferenceByName(this,Constant.tag)) {
+            getString(R.string.tv) -> {
                 nav_view.selectedItemId = R.id.action_tv
             }
-            is PeopleFragment -> {
+            getString(R.string.people) -> {
                 nav_view.selectedItemId = R.id.action_people
             }
-            is SettingFragment -> {
+            getString(R.string.setting)-> {
                 nav_view.selectedItemId = R.id.action_setting
             }
             else -> {

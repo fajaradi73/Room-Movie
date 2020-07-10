@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background"
     android:layout_height="match_parent"
     tools:ignore="ContentDescription">
     <com.google.android.material.appbar.AppBarLayout
@@ -78,7 +79,8 @@
                     tools:text="Doraemon"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/colorBlack"
+                    android:textColor="@color/textColorPrimary"
+                    android:padding="@dimen/itemBetweenMarginMedium"
                     app:layout_constraintTop_toBottomOf="@id/rrPoster"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -100,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="pin"
-                app:titleTextColor="@color/colorBlack"
+                app:titleTextColor="@color/textColorPrimary"
                 android:theme="@style/AppTheme.AppBarOverlay"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

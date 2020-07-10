@@ -1,18 +1,21 @@
 package id.fajarproject.roommovie.ui.setting
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
+import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_movie_list.*
 import kotlinx.android.synthetic.main.activity_web_view.*
-import kotlinx.android.synthetic.main.activity_web_view.toolbar
+
 
 class WebViewActivity : AppCompatActivity() {
 
@@ -30,11 +33,20 @@ class WebViewActivity : AppCompatActivity() {
     private fun setToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.colorBlack))
+        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
         title = intentStatus
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private fun setWebView(){
+        webView.settings.javaScriptEnabled = true
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                // Inject CSS on PageFinished
+                injectCSS(AppPreference.getBooleanPreferenceByName(this@WebViewActivity,Constant.isNightMode))
+                super.onPageFinished(view, url)
+            }
+        }
         if (intentStatus == getString(R.string.privacy_policy)){
             webView.loadUrl("file:///android_asset/privacy_policy.html")
         }else if (intentStatus == getString(R.string.terms_of_use)){
@@ -59,5 +71,23 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return true
+    }
+
+    private fun injectCSS(isNightMode: Boolean) {
+        if (isNightMode) {
+            webView.loadUrl(
+                "javascript:document.body.style.setProperty(\"color\", \"white\");"
+            )
+            webView.loadUrl(
+                "javascript:document.body.style.setProperty(\"background-color\", \"black\");"
+            )
+        }else{
+            webView.loadUrl(
+                "javascript:document.body.style.setProperty(\"color\", \"black\");"
+            )
+            webView.loadUrl(
+                "javascript:document.body.style.setProperty(\"background-color\", \"white\");"
+            )
+        }
     }
 }

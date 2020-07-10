@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import butterknife.ButterKnife
 import id.fajarproject.roommovie.ui.widget.DialogListener
+import id.fajarproject.roommovie.util.AppPreference
+import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
 import io.reactivex.disposables.CompositeDisposable
 
@@ -32,7 +34,11 @@ open class BaseActivity : AppCompatActivity() {
     var isConnection = true
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        if (AppPreference.getBooleanPreferenceByName(this,Constant.isNightMode)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         super.onCreate(savedInstanceState, persistentState)
     }
 

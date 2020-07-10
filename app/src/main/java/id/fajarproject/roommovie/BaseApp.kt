@@ -1,9 +1,12 @@
 package id.fajarproject.roommovie
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.di.component.ApplicationComponent
 import id.fajarproject.roommovie.di.component.DaggerApplicationComponent
 import id.fajarproject.roommovie.di.module.ApplicationModule
+import id.fajarproject.roommovie.util.AppPreference
+import id.fajarproject.roommovie.util.Constant
 
 
 /**
@@ -15,13 +18,13 @@ class BaseApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        if (AppPreference.getBooleanPreferenceByName(this, Constant.isNightMode)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         instance = this
         setup()
-
-//        if (BuildConfig.DEBUG) {
-//            // Maybe TimberPlant etc.
-//        }
     }
 
     fun setup() {

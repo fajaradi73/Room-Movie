@@ -138,6 +138,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         val chip = Chip(this,null,R.style.CustomChipChoice)
         chip.layoutParams   = params
         chip.text           = item?.name
+        chip.setTextAppearanceResource(R.style.ChipText)
         chip.isClickable    = true
         chip.checkedIcon    = null
         chip.tag            = item?.name
@@ -163,7 +164,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         if (video.text.contains(" (${list.size})")) {
             video.text = getString(R.string.video)
         }
-        Util.setSpannable(video, " (${list.size})", Color.GRAY)
+        Util.setSpannable(video, " (${list.size})", ContextCompat.getColor(this,R.color.textColorSecondary))
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
         rvVideo.layoutManager       = layoutManager
@@ -179,7 +180,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         if (backdrops.text.contains(" (${list.size})")) {
             backdrops.text = getString(R.string.backdrops)
         }
-        Util.setSpannable(backdrops," (${list.size})",Color.GRAY)
+        Util.setSpannable(backdrops," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
         rvBackdrops.layoutManager   = layoutManager
@@ -195,7 +196,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         if (posters.text.contains(" (${list.size})")) {
             posters.text = getString(R.string.posters)
         }
-        Util.setSpannable(posters," (${list.size})",Color.GRAY)
+        Util.setSpannable(posters," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
         rvPosters.layoutManager     = layoutManager
@@ -230,7 +231,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
     }
 
     override fun setClickableSpan(textView : TextView){
-        PatternEditableBuilder().addPattern(Pattern.compile("(\\w+) (\\w+)"),Color.BLACK,
+        PatternEditableBuilder().addPattern(Pattern.compile("(\\w+) (\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
             object : SpannableClickedListener {
                 override fun onSpanClicked(text: String?) {
                     Toast.makeText(
@@ -238,7 +239,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            }).addPattern(Pattern.compile("(\\w+)"),Color.BLACK,
+            }).addPattern(Pattern.compile("(\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
             object : SpannableClickedListener {
                 override fun onSpanClicked(text: String?) {
                     Toast.makeText(
@@ -338,7 +339,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         Util.setColorFilter(
             toolbar.navigationIcon!!,
-            ContextCompat.getColor(this, R.color.colorBlack)
+            ContextCompat.getColor(this, R.color.iconColorPrimary)
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {

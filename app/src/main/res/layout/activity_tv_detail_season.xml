@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/padding_10"
+    app:cardBackgroundColor="@color/background"
     android:layout_marginTop="@dimen/itemBetweenMarginMedium">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
             android:id="@+id/season"
             android:text="@string/last_season"
             android:textSize="16sp"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/textColorPrimary"
             android:textStyle="bold"
             android:layout_margin="@dimen/itemBetweenMarginMedium"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvFullSeason"
-            android:text="View All Season"
+            android:text="@string/view_all_season"
             android:textSize="16sp"
             android:textColor="@color/blue_500"
             android:textStyle="bold"
