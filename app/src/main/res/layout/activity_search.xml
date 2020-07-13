@@ -26,6 +26,13 @@
             app:floatingSearch_menu="@menu/search_menu"
             app:floatingSearch_leftActionMode="showHome"
             app:floatingSearch_close_search_on_keyboard_dismiss="true"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:id="@+id/lineToolbar"
+            app:layout_collapseMode="pin"
+            android:background="@color/grey_500"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"

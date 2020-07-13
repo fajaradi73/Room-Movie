@@ -185,7 +185,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
 
     override fun checkDataPreferences(prefName: String) : Boolean {
         var isNotEmpty = true
-        if (AppPreference.getStringPreferenceByName(this,prefName).isNullOrEmpty()){
+        if (AppPreference.getStringPreferenceByName(this,prefName).isEmpty()){
             isNotEmpty = false
         }
         return isNotEmpty
