@@ -59,4 +59,17 @@
     <string name="view_all_season">View All Season</string>
     <string name="transition_name">hello</string>
     <string name="transition_title">item_%1$d</string>
+    <string name="biography">Biography</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="known_for">Known For</string>
+    <string name="known_credits">Known Credits</string>
+    <string name="gender">Gender</string>
+    <string name="birthday">Birthday</string>
+    <string name="place_of_birth">Place of Birth</string>
+    <string name="also_known_as">Also Known As</string>
+    <string name="acting">Acting</string>
+    <string name="crew">Crew</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="overviewSeason">Season %1$d of %2$s on premiered on %3$s</string>
 </resources>

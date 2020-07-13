@@ -148,7 +148,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
             setViewSeason(last,data.name ?: "")
         }
 
-        ivLink.setOnClickListener {
+        link.setOnClickListener {
             data.homepage?.let {
                 if (it.isNotEmpty()) {
                     setOpenURL("https://$it/", "homepage")
@@ -192,7 +192,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         cgKeyword.addView(chip,i,params)
     }
 
-    override fun setViewCasts(list: MutableList<CastItem?>) {
+    override fun setViewCasts(list: MutableList<CreditsItem?>) {
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
         rvCast.layoutManager        = layoutManager
@@ -382,28 +382,28 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
 
     override fun setViewExternalIDs(data: ExternalIds) {
         data.facebookId?.let { s: String ->
-            ivFacebook.visibility = View.VISIBLE
-            ivFacebook.setOnClickListener {
+            facebook.visibility = View.VISIBLE
+            facebook.setOnClickListener {
                 setOpenURL(s,"facebook")
             }
         } ?: kotlin.run {
-            ivFacebook.visibility = View.GONE
+            facebook.visibility = View.GONE
         }
         data.twitterId?.let { s: String ->
-            ivTwitter.visibility = View.VISIBLE
-            ivTwitter.setOnClickListener {
+            twitter.visibility = View.VISIBLE
+            twitter.setOnClickListener {
                 setOpenURL(s,"twitter")
             }
         } ?: kotlin.run {
-            ivTwitter.visibility = View.GONE
+            twitter.visibility = View.GONE
         }
         data.instagramId?.let { s: String ->
-            ivInstagram.visibility = View.VISIBLE
-            ivInstagram.setOnClickListener {
+            instagram.visibility = View.VISIBLE
+            instagram.setOnClickListener {
                 setOpenURL(s,"instagram")
             }
         } ?: kotlin.run {
-            ivInstagram.visibility = View.GONE
+            instagram.visibility = View.GONE
         }
     }
 

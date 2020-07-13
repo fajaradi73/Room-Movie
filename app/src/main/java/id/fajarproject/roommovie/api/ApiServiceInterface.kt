@@ -2,6 +2,7 @@ package id.fajarproject.roommovie.api
 
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.models.people.People
+import id.fajarproject.roommovie.models.people.PeopleItem
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
 import io.reactivex.Observable
@@ -43,6 +44,9 @@ interface ApiServiceInterface {
 
     @GET("person/popular")
     fun getPeoplePopular(@Query("api_key") apiKey : String, @Query("page") page : Int) : Observable<People>
+
+    @GET("person/{person_id}")
+    fun getPeopleDetail(@Path("person_id") movie_id : Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<PeopleItem>
 
     @GET("search/person")
     fun getPeopleSearch(@Query("api_key") apiKey : String, @Query("page") page : Int, @Query("query") query : String) : Observable<People>

@@ -7,11 +7,11 @@ import com.google.gson.annotations.SerializedName
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
 
-data class Casts(
+data class Credits(
 
     @field:SerializedName("cast")
-    val cast: MutableList<CastItem?>? = null,
+    val cast: MutableList<CreditsItem?>? = null,
 
     @field:SerializedName("crew")
-    val crew: MutableList<CrewItem?>? = null
+    val crew: MutableList<CreditsItem?>? = null
 )

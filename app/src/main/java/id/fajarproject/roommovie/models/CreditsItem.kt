@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
 
-data class CastItem(
+data class CreditsItem(
 
     @field:SerializedName("cast_id")
     val castId: Int? = null,
@@ -20,6 +20,12 @@ data class CastItem(
 
     @field:SerializedName("credit_id")
     val creditId: String? = null,
+
+    @field:SerializedName("vote_count")
+    val voteCount: Int? = null,
+
+    @field:SerializedName("media_type")
+    val media_type: String? = null,
 
     @field:SerializedName("name")
     val name: String? = null,

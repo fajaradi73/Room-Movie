@@ -1,5 +1,6 @@
 package id.fajarproject.roommovie.ui.people
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.people.PeopleItem
 import id.fajarproject.roommovie.ui.base.BaseFragment
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
@@ -131,7 +133,12 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
         adapter?.setOnItemClickListener(object :
             OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
-
+                val item = adapter?.getItem(position)
+                item?.id.let {
+                    val intent = Intent(requireContext(),PeopleDetailActivity::class.java)
+                    intent.putExtra(Constant.idPeople,it)
+                    startActivity(intent)
+                }
             }
         })
         checkLastData()

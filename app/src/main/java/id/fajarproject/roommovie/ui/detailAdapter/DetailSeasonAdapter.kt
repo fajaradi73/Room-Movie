@@ -53,7 +53,7 @@ class DetailSeasonAdapter(
         val overview = if (data.overview != null && data.overview.isNotEmpty()){
             data.overview
         }else{
-            "Season ${data.seasonNumber} of ${data.name} on premiered on ${Util.convertDate(data.airDate ?: "","yyyy-MM-dd","MMMM d,yyyy")}"
+            activity.getString(R.string.overviewSeason,data.seasonNumber,title,Util.convertDate(data.airDate ?: "","yyyy-MM-dd","MMMM d,yyyy"))
         }
 
         holder.itemView.tvOverview.text = overview

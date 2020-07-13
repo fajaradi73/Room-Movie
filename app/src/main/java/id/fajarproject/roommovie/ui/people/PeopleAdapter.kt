@@ -98,7 +98,7 @@ class PeopleAdapter(
         return knowFor
     }
 
-    fun getPeopleList(): List<PeopleItem?> {
+    fun getItemList(): List<PeopleItem?> {
         return list
     }
 
@@ -107,7 +107,7 @@ class PeopleAdapter(
         notifyDataSetChanged()
     }
 
-    fun getPeople(position: Int): PeopleItem? {
+    fun getItem(position: Int): PeopleItem? {
         return list[position]
     }
 

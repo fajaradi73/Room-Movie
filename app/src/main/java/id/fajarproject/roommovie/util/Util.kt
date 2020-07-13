@@ -16,13 +16,12 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.speech.RecognizerIntent
-import android.text.SpannableString
+import android.text.*
+import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.DisplayMetrics
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -47,6 +46,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.log10
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -506,5 +506,152 @@ object Util {
             p.setMargins(left, top, right, bottom)
             view.requestLayout()
         }
+    }
+    private fun addClickablePartTextViewResizable(
+        strSpanned: Spanned, tv: TextView,
+        maxLine: Int, spannableText: String, viewMore: Boolean
+    ): SpannableStringBuilder? {
+        val str = strSpanned.toString()
+        val ssb = SpannableStringBuilder(strSpanned)
+        if (str.contains(spannableText)) {
+            ssb.setSpan(object : Spannable(false) {
+                override fun onClick(widget: View) {
+                    tv.layoutParams = tv.layoutParams
+                    tv.setText(tv.tag.toString(), TextView.BufferType.SPANNABLE)
+                    tv.invalidate()
+                    if (viewMore) {
+                        makeTextViewResizable(tv, -1, "", !viewMore)
+                    } else {
+                        makeTextViewResizable(tv, maxLine, "...$spannableText", viewMore)
+                    }
+                }
+            }, str.indexOf(spannableText), str.indexOf(spannableText) + spannableText.length, 0)
+        }
+        return ssb
+    }
+
+    fun makeTextViewResizable(
+        tv: TextView,
+        maxLine: Int,
+        expandText: String,
+        viewMore: Boolean
+    ) {
+        if (tv.tag == null) {
+            tv.tag = tv.text
+        }
+        val vto: ViewTreeObserver = tv.viewTreeObserver
+        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                val text: String
+                val lineEndIndex: Int
+                val obs: ViewTreeObserver = tv.viewTreeObserver
+                obs.removeGlobalOnLayoutListener(this)
+                if (maxLine == 0) {
+                    lineEndIndex = tv.layout.getLineEnd(0)
+                    text = tv.text.subSequence(
+                        0,
+                        lineEndIndex - expandText.length + 1
+                    ).toString() + "..." + expandText
+                } else if (maxLine > 0 && tv.lineCount >= maxLine) {
+                    lineEndIndex = tv.layout.getLineEnd(maxLine - 1)
+                    text = tv.text.subSequence(
+                        0,
+                        lineEndIndex - expandText.length + 1
+                    ).toString() + "..." + expandText
+                } else {
+                    lineEndIndex = tv.layout.getLineEnd(tv.layout.lineCount - 1)
+                    text = tv.text.subSequence(0, lineEndIndex).toString()
+                }
+                tv.text = text
+                tv.movementMethod = LinkMovementMethod.getInstance()
+                tv.setText(
+                    addClickablePartTextViewResizable(
+                        Html.fromHtml(tv.text.toString()), tv, lineEndIndex, expandText,
+                        viewMore
+                    ), TextView.BufferType.SPANNABLE
+                )
+            }
+        })
+    }
+    fun justify(textView: TextView) {
+        val isJustify =
+            AtomicBoolean(false)
+        val textString = textView.text.toString()
+        val textPaint: TextPaint = textView.paint
+        val builder = SpannableStringBuilder()
+        textView.post {
+            if (!isJustify.get()) {
+                val lineCount = textView.lineCount
+                val textViewWidth = textView.width
+                for (i in 0 until lineCount) {
+                    val lineStart = textView.layout.getLineStart(i)
+                    val lineEnd = textView.layout.getLineEnd(i)
+                    val lineString = textString.substring(lineStart, lineEnd)
+                    if (i == lineCount - 1) {
+                        builder.append(SpannableString(lineString))
+                        break
+                    }
+                    val trimSpaceText = lineString.trim { it <= ' ' }
+                    val removeSpaceText = lineString.replace(" ".toRegex(), "")
+                    val removeSpaceWidth = textPaint.measureText(removeSpaceText)
+                    val spaceCount =
+                        trimSpaceText.length - removeSpaceText.length.toFloat()
+                    val eachSpaceWidth =
+                        (textViewWidth - removeSpaceWidth) / spaceCount
+                    val spannableString =
+                        SpannableString(lineString)
+                    for (j in trimSpaceText.indices) {
+                        val c = trimSpaceText[j]
+                        if (c == ' ') {
+                            val drawable: Drawable =
+                                ColorDrawable(0x00ffffff)
+                            drawable.setBounds(0, 0, eachSpaceWidth.toInt(), 0)
+                            val span =
+                                ImageSpan(drawable)
+                            spannableString.setSpan(
+                                span,
+                                j,
+                                j + 1,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                        }
+                    }
+                    builder.append(spannableString)
+                }
+                textView.text = builder
+                isJustify.set(true)
+            }
+        }
+    }
+
+    fun getAge(birthday: String,format: String): String? {
+        val sdf = SimpleDateFormat(format, Locale.ENGLISH)
+        val dobCal = Calendar.getInstance()
+        dobCal.time = sdf.parse(birthday) ?: Date()
+        val diffCal = Calendar.getInstance()
+        diffCal.timeInMillis =
+            Calendar.getInstance().timeInMillis - dobCal.timeInMillis
+        val ageS: String
+        var age = diffCal[Calendar.YEAR] - 1970
+        //Check if less than a year
+        if (age == 0) {
+            age = diffCal[Calendar.MONTH]
+            //Check if less than a month
+            if (age == 0) {
+                age = diffCal[Calendar.WEEK_OF_YEAR]
+                //Check if less than a week
+                if (age == 1) {
+                    age = diffCal[Calendar.DAY_OF_YEAR]
+                    ageS = (age - 1).toString() + " days old"
+                } else {
+                    ageS = (age - 1).toString() + " weeks old"
+                }
+            } else {
+                ageS = "$age months old"
+            }
+        } else {
+            ageS = "$age years old"
+        }
+        return ageS
     }
 }

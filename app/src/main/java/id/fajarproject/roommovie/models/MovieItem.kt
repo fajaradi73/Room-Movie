@@ -92,7 +92,7 @@ data class MovieItem(
 	val spokenLanguages: MutableList<SpokenLanguagesItem?>? = null,
 
     @field:SerializedName("credits")
-	val credits: Casts? = null,
+	val credits: Credits? = null,
 
     @field:SerializedName("production_companies")
 	val productionCompanies: MutableList<ProductionCompaniesItem?>? = null,

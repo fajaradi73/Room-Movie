@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
-import id.fajarproject.roommovie.models.CastItem
+import id.fajarproject.roommovie.models.CreditsItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.adapter_detail_cast.view.*
  */
 class DetailCastAdapter(
     var activity: Activity,
-    private var list: MutableList<CastItem?>
+    private var list: MutableList<CreditsItem?>
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -44,7 +44,7 @@ class DetailCastAdapter(
         holder: RecyclerView.ViewHolder,
         position: Int
     ) {
-        val data = list[position] ?: CastItem()
+        val data = list[position] ?: CreditsItem()
         holder.itemView.tvName.text = data.name
         holder.itemView.tvKnownFor.text = data.character
         Glide.with(activity)
@@ -58,7 +58,7 @@ class DetailCastAdapter(
         return if (list.size > 10) 10 else list.size
     }
 
-    fun getItem(position: Int): CastItem? {
+    fun getItem(position: Int): CreditsItem? {
         return list[position]
     }
 

@@ -9,6 +9,8 @@ import id.fajarproject.roommovie.ui.movieDetail.MovieDetailContract
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailPresenter
 import id.fajarproject.roommovie.ui.movieList.MovieListContract
 import id.fajarproject.roommovie.ui.movieList.MovieListPresenter
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailContract
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailPresenter
 import id.fajarproject.roommovie.ui.picture.PictureContract
 import id.fajarproject.roommovie.ui.picture.PicturePresenter
 import id.fajarproject.roommovie.ui.search.SearchContract
@@ -65,4 +67,9 @@ class ActivityModule(private var activity: Activity) {
     fun providePicturePresenter() : PictureContract.Presenter{
         return PicturePresenter()
     }
+    @Provides
+    fun providePeopleDetailPresenter() : PeopleDetailContract.Presenter{
+        return PeopleDetailPresenter()
+    }
+
 }

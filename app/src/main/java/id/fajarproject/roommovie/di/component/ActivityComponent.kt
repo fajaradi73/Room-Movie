@@ -5,6 +5,7 @@ import id.fajarproject.roommovie.ui.movieList.MovieListActivity
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.ui.home.HomeActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.picture.PictureActivity
 import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
 import id.fajarproject.roommovie.ui.search.SearchActivity
@@ -32,4 +33,5 @@ interface ActivityComponent {
     fun inject(videoListActivity: VideoListActivity)
     fun inject(previewPictureActivity: PreviewPictureActivity)
     fun inject(pictureActivity: PictureActivity)
+    fun inject(peopleDetailActivity: PeopleDetailActivity)
 }
