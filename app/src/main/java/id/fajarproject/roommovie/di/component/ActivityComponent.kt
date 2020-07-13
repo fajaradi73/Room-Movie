@@ -5,10 +5,14 @@ import id.fajarproject.roommovie.ui.movieList.MovieListActivity
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.ui.home.HomeActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
+import id.fajarproject.roommovie.ui.picture.PictureActivity
+import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
 import id.fajarproject.roommovie.ui.search.SearchActivity
 import id.fajarproject.roommovie.ui.setting.WebViewActivity
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.tvList.TvListActivity
+import id.fajarproject.roommovie.ui.video.VideoPlayerActivity
+import id.fajarproject.roommovie.ui.video.VideoListActivity
 
 
 /**
@@ -24,4 +28,8 @@ interface ActivityComponent {
     fun inject(tvListActivity: TvListActivity)
     fun inject(movieDetailActivity: MovieDetailActivity)
     fun inject(tvDetailActivity: TvDetailActivity)
+    fun inject(videoPlayerActivity: VideoPlayerActivity)
+    fun inject(videoListActivity: VideoListActivity)
+    fun inject(previewPictureActivity: PreviewPictureActivity)
+    fun inject(pictureActivity: PictureActivity)
 }

@@ -9,12 +9,16 @@ import id.fajarproject.roommovie.ui.movieDetail.MovieDetailContract
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailPresenter
 import id.fajarproject.roommovie.ui.movieList.MovieListContract
 import id.fajarproject.roommovie.ui.movieList.MovieListPresenter
+import id.fajarproject.roommovie.ui.picture.PictureContract
+import id.fajarproject.roommovie.ui.picture.PicturePresenter
 import id.fajarproject.roommovie.ui.search.SearchContract
 import id.fajarproject.roommovie.ui.search.SearchPresenter
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailContract
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailPresenter
 import id.fajarproject.roommovie.ui.tvList.TvListContract
 import id.fajarproject.roommovie.ui.tvList.TvListPresenter
+import id.fajarproject.roommovie.ui.video.VideoListContract
+import id.fajarproject.roommovie.ui.video.VideoListPresenter
 
 
 /**
@@ -52,5 +56,13 @@ class ActivityModule(private var activity: Activity) {
     @Provides
     fun provideTvDetailPresenter() : TvDetailContract.Presenter{
         return TvDetailPresenter()
+    }
+    @Provides
+    fun provideVideoListPresenter() : VideoListContract.Presenter{
+        return VideoListPresenter()
+    }
+    @Provides
+    fun providePicturePresenter() : PictureContract.Presenter{
+        return PicturePresenter()
     }
 }

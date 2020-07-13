@@ -11,7 +11,13 @@ import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.app.SharedElementCallback
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -24,6 +30,10 @@ import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
+import id.fajarproject.roommovie.ui.picture.PictureActivity
+import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
+import id.fajarproject.roommovie.ui.video.VideoPlayerActivity
+import id.fajarproject.roommovie.ui.video.VideoListActivity
 import id.fajarproject.roommovie.ui.widget.AppBarStateChangeListener
 import id.fajarproject.roommovie.ui.widget.DialogListener
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
@@ -37,6 +47,7 @@ import kotlinx.android.synthetic.main.activity_tv_detail_info.*
 import kotlinx.android.synthetic.main.activity_tv_detail_overview.*
 import kotlinx.android.synthetic.main.activity_tv_detail_people.*
 import kotlinx.android.synthetic.main.activity_tv_detail_season.*
+import org.parceler.Parcels
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -45,6 +56,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
     @Inject
     lateinit var presenter: TvDetailContract.Presenter
     var id = 0
+    private var reenterState: Bundle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +74,8 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         }
         if (isConnection)
         presenter.loadData(id)
+        ActivityCompat.setExitSharedElementCallback(this, exitElementCallback)
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -101,11 +115,17 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         data.videos?.results?.let {
             setViewVideo(it)
         }
-        data.images?.backdrops?.let {
-            setViewBackdrops(it)
+        data.images?.backdrops?.let { list : MutableList<PicturesItem?> ->
+            setViewBackdrops(list)
+            allBackdrops.setOnClickListener {
+                moveToPicture(data.title ?: "",list)
+            }
         }
-        data.images?.posters?.let {
-            setViewPosters(it)
+        data.images?.posters?.let { list : MutableList<PicturesItem?> ->
+            setViewPosters(list)
+            allPosters.setOnClickListener {
+                moveToPicture(data.title ?: "",list)
+            }
         }
         data.recommendations?.movieList?.let {
             setViewRecommendation(it)
@@ -138,6 +158,12 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
             } ?: kotlin.run {
                 setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
             }
+        }
+        allVideo.setOnClickListener {
+            val intent = Intent(this,VideoListActivity::class.java)
+            intent.putExtra(Constant.title,data.name)
+            intent.putExtra(Constant.idMovie,data.id)
+            startActivity(intent)
         }
     }
 
@@ -194,12 +220,23 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                     list
                 )
             rvVideo.adapter             = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    val item = adapter.getItem(position)
+                    item?.key?.let {
+                        val intent = Intent(this@TvDetailActivity, VideoPlayerActivity::class.java)
+                        intent.putExtra(Constant.keyVideo,it)
+                        intent.putExtra(Constant.title,item.name)
+                        startActivity(intent)
+                    }
+                }
+            })
         }else{
             allVideo.visibility = View.GONE
         }
     }
 
-    override fun setViewBackdrops(list: MutableList<BackdropsItem?>) {
+    override fun setViewBackdrops(list: MutableList<PicturesItem?>) {
         if (list.size > 0){
             allBackdrops.visibility = View.VISIBLE
             if (backdrops.text.contains(" (${list.size})")) {
@@ -215,12 +252,19 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                     list
                 )
             rvBackdrops.adapter         = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    view?.let {
+                        showPreviewImage(it,position,list,false)
+                    }
+                }
+            })
         }else{
             allBackdrops.visibility = View.GONE
         }
     }
 
-    override fun setViewPosters(list: MutableList<PostersItem?>) {
+    override fun setViewPosters(list: MutableList<PicturesItem?>) {
         if (list.size > 0){
             allPosters.visibility   = View.VISIBLE
             if (posters.text.contains(" (${list.size})")) {
@@ -236,6 +280,13 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                     list
                 )
             rvPosters.adapter           = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    view?.let {
+                        showPreviewImage(it,position,list,false)
+                    }
+                }
+            })
         }else{
             allPosters.visibility   = View.GONE
         }
@@ -285,6 +336,25 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 list,title
             )
         rvSeason.adapter            = adapter
+    }
+
+    override fun showPreviewImage(view: View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean) {
+        val intent = Intent(this, PreviewPictureActivity::class.java)
+        intent.putExtra(Constant.position,position)
+        intent.putExtra(Constant.dataPicture, Parcels.wrap(data))
+        intent.putExtra(Constant.isDetail,true)
+        intent.putExtra(Constant.isBackdrops,isBackdrops)
+        val p1      = Pair.create(view, ViewCompat.getTransitionName(view))
+        val bundle  = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1).toBundle()
+
+        startActivity(intent,bundle)
+    }
+
+    override fun moveToPicture(title: String, list: MutableList<PicturesItem?>) {
+        val intent = Intent(this, PictureActivity::class.java)
+        intent.putExtra(Constant.title,title)
+        intent.putExtra(Constant.dataPicture, Parcels.wrap(list))
+        startActivity(intent)
     }
 
     override fun setClickableSpan(textView : TextView){
@@ -384,7 +454,52 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
             }
         })
     }
+    private val exitElementCallback = object : SharedElementCallback() {
+        override fun onMapSharedElements(names: MutableList<String>, sharedElements: MutableMap<String, View>) {
+            if (reenterState != null) {
+                val startingPosition   = reenterState?.getInt(Constant.EXTRA_STARTING_ALBUM_POSITION)
+                val currentPosition    = reenterState?.getInt(Constant.EXTRA_CURRENT_ALBUM_POSITION)
+                val isBackdrops        = reenterState?.getBoolean(Constant.isBackdrops) ?: true
+                if (startingPosition != currentPosition) {
+                    // Current element has changed, need to override previous exit transitions
+                    val newTransitionName = getString(R.string.transition_title,currentPosition)
+                    val newSharedElement = if (isBackdrops)
+                        rvBackdrops.findViewWithTag<ConstraintLayout>(newTransitionName)
+                    else
+                        rvPosters.findViewWithTag(newTransitionName)
+                    if (newSharedElement != null) {
+                        names.clear()
+                        names.add(newTransitionName)
 
+                        sharedElements.clear()
+                        sharedElements[newTransitionName] = newSharedElement
+                    }
+                }
+                reenterState = null
+            }
+        }
+    }
+
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
+        reenterState = Bundle(data?.extras)
+        reenterState?.let {
+            val startingPosition    = it.getInt(Constant.EXTRA_STARTING_ALBUM_POSITION)
+            val currentPosition     = it.getInt(Constant.EXTRA_CURRENT_ALBUM_POSITION)
+            val isBackdrops         = it.getBoolean(Constant.isBackdrops,true)
+            val view                = if (isBackdrops) rvBackdrops else rvPosters
+            if (startingPosition != currentPosition) view.scrollToPosition(currentPosition)
+            ActivityCompat.postponeEnterTransition(this)
+
+            view.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    view.viewTreeObserver.removeOnPreDrawListener(this)
+                    ActivityCompat.startPostponedEnterTransition(this@TvDetailActivity)
+                    return true
+                }
+            })
+        }
+    }
     override fun injectDependency() {
         val activityComponent = DaggerActivityComponent.builder()
             .activityModule(ActivityModule(this))

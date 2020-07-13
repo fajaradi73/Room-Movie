@@ -22,11 +22,13 @@ class TvDetailContract {
         fun configureChip(item: KeywordsItem?, params : RelativeLayout.LayoutParams, i : Int)
         fun setViewCasts(list: MutableList<CastItem?>)
         fun setViewVideo(list: MutableList<VideosItem?>)
-        fun setViewBackdrops(list: MutableList<BackdropsItem?>)
-        fun setViewPosters(list: MutableList<PostersItem?>)
+        fun setViewBackdrops(list: MutableList<PicturesItem?>)
+        fun setViewPosters(list: MutableList<PicturesItem?>)
         fun setViewRecommendation(list: MutableList<MovieItem?>)
         fun setViewNetwork(list: MutableList<NetworksItem?>)
         fun setViewSeason(list: MutableList<SeasonsItem?>,title :String)
+        fun showPreviewImage(view : android.view.View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean)
+        fun moveToPicture(title : String,list: MutableList<PicturesItem?>)
     }
 
     interface Presenter : BaseContract.Presenter<View>{

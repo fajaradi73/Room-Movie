@@ -208,18 +208,6 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         title = getTitle(status)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
-            onBackPressed()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return true
-    }
-
-
     override fun onDestroy() {
         presenter.unsubscribe()
         super.onDestroy()

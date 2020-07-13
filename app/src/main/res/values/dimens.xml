@@ -23,6 +23,7 @@
     <dimen name="padding_10">10dp</dimen>
     <dimen name="padding_20">20dp</dimen>
     <dimen name="height_icon">40dp</dimen>
+    <dimen name="height_image2">150dp</dimen>
 
     /////BottomNavigation
     <dimen name="design_bottom_navigation_item_max_width" tools:override="true">600dp</dimen>

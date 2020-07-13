@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
@@ -18,8 +18,10 @@ import android.os.Build
 import android.speech.RecognizerIntent
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -34,7 +36,6 @@ import id.fajarproject.roommovie.BuildConfig
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.models.GenresItem
 import id.fajarproject.roommovie.models.LanguagesItem
-import id.fajarproject.roommovie.models.SpokenLanguagesItem
 import id.fajarproject.roommovie.ui.widget.DialogListener
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -460,5 +461,50 @@ object Util {
         }
         return language
     }
-    
+
+    fun getScriptAutoPlayYoutube(keyVideo : String?) : String{
+        return """
+        <html>
+            <body style='margin:0px;padding:0px;'>
+                <script type='text/javascript' src='http://www.youtube.com/iframe_api'></script><script type='text/javascript'>
+                        var player;
+                function onYouTubeIframeAPIReady()
+                {player=new YT.Player('playerId',{events:{onReady:onPlayerReady}})}
+                function onPlayerReady(event){player.playVideo();}
+                </script>
+                <style>
+                    .video-container { 
+                    position: relative; 
+                    padding-bottom: 56.25%; 
+                    padding-top: 35px; 
+                    height: 0; 
+                    overflow: hidden; 
+                    }
+                    .video-container iframe { 
+                    position: absolute; 
+                    top:0; 
+                    left: 0; 
+                    width: 100%; 
+                    height: 100%; 
+                    }
+                </style>
+                <div class="video-container">
+                    <iframe id='playerId' type='text/html'
+                    src='https://www.youtube.com/embed/$keyVideo?enablejsapi=1&autoplay=1' frameborder='0' allowfullscreen>
+                </div>
+            </body>
+        </html>"""
+    }
+    fun convertDpToPixel(dp: Float): Int {
+        val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
+        val px: Float = dp * (metrics.densityDpi / 160f)
+        return px.roundToInt()
+    }
+    fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
+        if (view.layoutParams is ViewGroup.MarginLayoutParams) {
+            val p = view.layoutParams as ViewGroup.MarginLayoutParams
+            p.setMargins(left, top, right, bottom)
+            view.requestLayout()
+        }
+    }
 }

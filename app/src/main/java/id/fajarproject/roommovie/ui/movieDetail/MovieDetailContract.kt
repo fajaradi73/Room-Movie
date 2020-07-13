@@ -1,5 +1,6 @@
 package id.fajarproject.roommovie.ui.movieDetail
 
+import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import id.fajarproject.roommovie.models.*
@@ -23,9 +24,11 @@ class MovieDetailContract {
         fun configureChip(item: KeywordsItem?, params : RelativeLayout.LayoutParams, i : Int)
         fun setViewCasts(list: MutableList<CastItem?>)
         fun setViewVideo(list: MutableList<VideosItem?>)
-        fun setViewBackdrops(list: MutableList<BackdropsItem?>)
-        fun setViewPosters(list: MutableList<PostersItem?>)
+        fun setViewBackdrops(list: MutableList<PicturesItem?>)
+        fun setViewPosters(list: MutableList<PicturesItem?>)
         fun setViewRecommendation(list: MutableList<MovieItem?>)
+        fun showPreviewImage(view : android.view.View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean)
+        fun moveToPicture(title : String,list: MutableList<PicturesItem?>)
     }
 
     interface Presenter : BaseContract.Presenter<View>{

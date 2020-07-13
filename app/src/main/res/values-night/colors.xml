@@ -15,5 +15,9 @@
     <color name="colorBlack">#000</color>
     <color name="colorBlackOverlay">#7b000000</color>
     <color name="shimmerBG">#bdc3c7</color>
+    <color name="colorWhitePressed">#e6e6e6</color>
+    <color name="black_transparent">#AA000000</color>
+    <color name="blackTransparent">#4D000000</color>
+    <color name="greyTransparent">#77BBBBBB</color>
     <color name="df_transparent_black_background">#80000000</color>
 </resources>

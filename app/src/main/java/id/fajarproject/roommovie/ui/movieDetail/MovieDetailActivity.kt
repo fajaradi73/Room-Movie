@@ -11,7 +11,13 @@ import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.util.Pair
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.app.SharedElementCallback
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.facebook.shimmer.Shimmer
@@ -23,6 +29,10 @@ import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
+import id.fajarproject.roommovie.ui.picture.PictureActivity
+import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
+import id.fajarproject.roommovie.ui.video.VideoPlayerActivity
+import id.fajarproject.roommovie.ui.video.VideoListActivity
 import id.fajarproject.roommovie.ui.widget.AppBarStateChangeListener
 import id.fajarproject.roommovie.ui.widget.DialogListener
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
@@ -36,6 +46,7 @@ import kotlinx.android.synthetic.main.activity_movie_detail_media.*
 import kotlinx.android.synthetic.main.activity_movie_detail_overview.*
 import kotlinx.android.synthetic.main.activity_movie_detail_people.*
 import kotlinx.android.synthetic.main.activity_movie_detail_recommendation.*
+import org.parceler.Parcels
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -44,6 +55,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
 
     @Inject lateinit var presenter: MovieDetailContract.Presenter
     var id = 0
+    private var reenterState: Bundle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +74,8 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         if (isConnection) {
             presenter.loadData(id)
         }
+        ActivityCompat.setExitSharedElementCallback(this, exitElementCallback)
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -101,12 +115,19 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         data.videos?.results?.let {
             setViewVideo(it)
         }
-        data.images?.backdrops?.let {
-            setViewBackdrops(it)
+        data.images?.backdrops?.let { list : MutableList<PicturesItem?> ->
+            setViewBackdrops(list)
+            allBackdrops.setOnClickListener {
+                moveToPicture(data.title ?: "",list)
+            }
         }
-        data.images?.posters?.let {
-            setViewPosters(it)
+        data.images?.posters?.let { list : MutableList<PicturesItem?> ->
+            setViewPosters(list)
+            allPosters.setOnClickListener {
+                moveToPicture(data.title ?: "",list)
+            }
         }
+
         data.recommendations?.movieList?.let {
             setViewRecommendation(it)
         }
@@ -120,6 +141,12 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
             } ?: kotlin.run {
                 setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
             }
+        }
+        allVideo.setOnClickListener {
+            val intent = Intent(this, VideoListActivity::class.java)
+            intent.putExtra(Constant.title,data.title)
+            intent.putExtra(Constant.idMovie,data.id)
+            startActivity(intent)
         }
     }
 
@@ -161,51 +188,91 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
     }
 
     override fun setViewVideo(list: MutableList<VideosItem?>) {
-        if (video.text.contains(" (${list.size})")) {
-            video.text = getString(R.string.video)
+        if (list.size > 0){
+            allVideo.visibility = View.VISIBLE
+            if (video.text.contains(" (${list.size})")) {
+                video.text = getString(R.string.video)
+            }
+            Util.setSpannable(video, " (${list.size})", ContextCompat.getColor(this,R.color.textColorSecondary))
+            val layoutManager           = LinearLayoutManager(this)
+            layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
+            rvVideo.layoutManager       = layoutManager
+            val adapter                 =
+                DetailVideoAdapter(
+                    this,
+                    list
+                )
+            rvVideo.adapter             = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    val item = adapter.getItem(position)
+                    item?.key?.let {
+                        val intent = Intent(this@MovieDetailActivity,VideoPlayerActivity::class.java)
+                        intent.putExtra(Constant.keyVideo,it)
+                        intent.putExtra(Constant.title,item.name)
+                        startActivity(intent)
+                    }
+                }
+            })
+        }else{
+            allVideo.visibility = View.GONE
         }
-        Util.setSpannable(video, " (${list.size})", ContextCompat.getColor(this,R.color.textColorSecondary))
-        val layoutManager           = LinearLayoutManager(this)
-        layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
-        rvVideo.layoutManager       = layoutManager
-        val adapter                 =
-            DetailVideoAdapter(
-                this,
-                list
-            )
-        rvVideo.adapter             = adapter
     }
 
-    override fun setViewBackdrops(list: MutableList<BackdropsItem?>) {
-        if (backdrops.text.contains(" (${list.size})")) {
-            backdrops.text = getString(R.string.backdrops)
+    override fun setViewBackdrops(list: MutableList<PicturesItem?>) {
+        if (list.size > 0){
+            allBackdrops.visibility = View.VISIBLE
+            if (backdrops.text.contains(" (${list.size})")) {
+                backdrops.text = getString(R.string.backdrops)
+            }
+            Util.setSpannable(backdrops," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
+            val layoutManager           = LinearLayoutManager(this)
+            layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
+            rvBackdrops.layoutManager   = layoutManager
+            val adapter                 =
+                DetailBackdropsAdapter(
+                    this,
+                    list
+                )
+            rvBackdrops.adapter         = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    view?.let {
+                        showPreviewImage(it,position,list,true)
+                    }
+                }
+            })
+        }else{
+            allBackdrops.visibility = View.GONE
         }
-        Util.setSpannable(backdrops," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
-        val layoutManager           = LinearLayoutManager(this)
-        layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
-        rvBackdrops.layoutManager   = layoutManager
-        val adapter                 =
-            DetailBackdropsAdapter(
-                this,
-                list
-            )
-        rvBackdrops.adapter         = adapter
     }
 
-    override fun setViewPosters(list: MutableList<PostersItem?>) {
-        if (posters.text.contains(" (${list.size})")) {
-            posters.text = getString(R.string.posters)
+    override fun setViewPosters(list: MutableList<PicturesItem?>) {
+        if (list.size > 0){
+            allPosters.visibility = View.VISIBLE
+            if (posters.text.contains(" (${list.size})")) {
+                posters.text = getString(R.string.posters)
+            }
+            Util.setSpannable(posters," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
+            val layoutManager           = LinearLayoutManager(this)
+            layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
+            rvPosters.layoutManager     = layoutManager
+            val adapter                 =
+                DetailPostersAdapter(
+                    this,
+                    list
+                )
+            rvPosters.adapter           = adapter
+            adapter.setOnItemClickListener(object : OnItemClickListener{
+                override fun onItemClick(view: View?, position: Int) {
+                    view?.let {
+                        showPreviewImage(it,position,list,false)
+                    }
+                }
+            })
+        }else{
+            allPosters.visibility = View.GONE
         }
-        Util.setSpannable(posters," (${list.size})",ContextCompat.getColor(this,R.color.textColorSecondary))
-        val layoutManager           = LinearLayoutManager(this)
-        layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
-        rvPosters.layoutManager     = layoutManager
-        val adapter                 =
-            DetailPostersAdapter(
-                this,
-                list
-            )
-        rvPosters.adapter           = adapter
     }
 
     override fun setViewRecommendation(list: MutableList<MovieItem?>) {
@@ -228,6 +295,25 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
                 }
             }
         })
+    }
+
+    override fun showPreviewImage(view: View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean) {
+        val intent = Intent(this, PreviewPictureActivity::class.java)
+        intent.putExtra(Constant.position,position)
+        intent.putExtra(Constant.dataPicture, Parcels.wrap(data))
+        intent.putExtra(Constant.isDetail,true)
+        intent.putExtra(Constant.isBackdrops,isBackdrops)
+        val p1      = Pair.create(view, ViewCompat.getTransitionName(view))
+        val bundle  = ActivityOptionsCompat.makeSceneTransitionAnimation(this, p1).toBundle()
+
+        startActivity(intent,bundle)
+    }
+
+    override fun moveToPicture(title: String, list: MutableList<PicturesItem?>) {
+        val intent = Intent(this,PictureActivity::class.java)
+        intent.putExtra(Constant.title,title)
+        intent.putExtra(Constant.dataPicture,Parcels.wrap(list))
+        startActivity(intent)
     }
 
     override fun setClickableSpan(textView : TextView){
@@ -324,6 +410,53 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
             override fun onNo() {
             }
         })
+    }
+
+    private val exitElementCallback = object : SharedElementCallback() {
+        override fun onMapSharedElements(names: MutableList<String>, sharedElements: MutableMap<String, View>) {
+            if (reenterState != null) {
+                val startingPosition   = reenterState?.getInt(Constant.EXTRA_STARTING_ALBUM_POSITION)
+                val currentPosition    = reenterState?.getInt(Constant.EXTRA_CURRENT_ALBUM_POSITION)
+                val isBackdrops        = reenterState?.getBoolean(Constant.isBackdrops) ?: true
+                if (startingPosition != currentPosition) {
+                    // Current element has changed, need to override previous exit transitions
+                    val newTransitionName = getString(R.string.transition_title,currentPosition)
+                    val newSharedElement = if (isBackdrops)
+                        rvBackdrops.findViewWithTag<ConstraintLayout>(newTransitionName)
+                    else
+                        rvPosters.findViewWithTag(newTransitionName)
+                    if (newSharedElement != null) {
+                        names.clear()
+                        names.add(newTransitionName)
+
+                        sharedElements.clear()
+                        sharedElements[newTransitionName] = newSharedElement
+                    }
+                }
+                reenterState = null
+            }
+        }
+    }
+
+    override fun onActivityReenter(resultCode: Int, data: Intent?) {
+        super.onActivityReenter(resultCode, data)
+        reenterState = Bundle(data?.extras)
+        reenterState?.let {
+            val startingPosition    = it.getInt(Constant.EXTRA_STARTING_ALBUM_POSITION)
+            val currentPosition     = it.getInt(Constant.EXTRA_CURRENT_ALBUM_POSITION)
+            val isBackdrops         = it.getBoolean(Constant.isBackdrops,true)
+            val view                = if (isBackdrops) rvBackdrops else rvPosters
+            if (startingPosition != currentPosition) view.scrollToPosition(currentPosition)
+            ActivityCompat.postponeEnterTransition(this)
+
+            view.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    view.viewTreeObserver.removeOnPreDrawListener(this)
+                    ActivityCompat.startPostponedEnterTransition(this@MovieDetailActivity)
+                    return true
+                }
+            })
+        }
     }
 
     override fun injectDependency() {

@@ -79,11 +79,35 @@
             android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.DarkStatusBar" />
-        <activity android:name=".ui.tvDetail.TvDetailActivity"
+        <activity
+            android:name=".ui.tvDetail.TvDetailActivity"
             android:configChanges="locale"
             android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.DarkStatusBar" />
+        <activity
+            android:name=".ui.video.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.video.VideoListActivity"
+            android:configChanges="locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.previewPicture.PreviewPictureActivity"
+            android:configChanges="locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.DarkStatusBar" />
+        <activity android:name=".ui.picture.PictureActivity"
+            android:configChanges="locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

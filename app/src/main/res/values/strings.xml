@@ -57,4 +57,6 @@
     <string name="theme">Theme</string>
     <string name="night_mode">Night Mode</string>
     <string name="view_all_season">View All Season</string>
+    <string name="transition_name">hello</string>
+    <string name="transition_title">item_%1$d</string>
 </resources>

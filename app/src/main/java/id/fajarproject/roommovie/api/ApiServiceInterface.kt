@@ -1,9 +1,6 @@
 package id.fajarproject.roommovie.api
 
-import id.fajarproject.roommovie.models.Genre
-import id.fajarproject.roommovie.models.LanguagesItem
-import id.fajarproject.roommovie.models.Movie
-import id.fajarproject.roommovie.models.MovieItem
+import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.models.people.People
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
@@ -73,6 +70,12 @@ interface ApiServiceInterface {
 
     @GET("configuration/languages")
     fun getLanguages(@Query("api_key") apiKey : String) : Observable<MutableList<LanguagesItem?>?>
+
+    @GET("movie/{movie_id}/videos")
+    fun getMovieVideo(@Path("movie_id") movie_id : Int, @Query("api_key") apiKey: String) : Observable<Videos>
+
+    @GET("tv/{tv_id}/videos")
+    fun getTvVideo(@Path("tv_id") movie_id : Int, @Query("api_key") apiKey: String) : Observable<Videos>
 
     companion object Factory {
         fun create(): ApiServiceInterface {

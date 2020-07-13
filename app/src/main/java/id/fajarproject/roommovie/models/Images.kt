@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName
 data class Images(
 
     @field:SerializedName("backdrops")
-    val backdrops: MutableList<BackdropsItem?>? = null,
+    val backdrops: MutableList<PicturesItem?>? = null,
 
     @field:SerializedName("posters")
-    val posters: MutableList<PostersItem?>? = null
+    val posters: MutableList<PicturesItem?>? = null
 )
