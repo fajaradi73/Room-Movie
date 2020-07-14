@@ -40,6 +40,7 @@ object Constant {
     const val isDetail          = "IsDetail"
     const val isBackdrops       = "IsBackdrops"
     const val idPeople          = "IDPeople"
+    const val dataKnownFor      = "DataKnowFor"
     const val EXTRA_STARTING_ALBUM_POSITION         = "extra_starting_item_position"
     const val EXTRA_CURRENT_ALBUM_POSITION          = "extra_current_item_position"
     const val SAVED_CURRENT_PAGE_POSITION           = "current_page_position"

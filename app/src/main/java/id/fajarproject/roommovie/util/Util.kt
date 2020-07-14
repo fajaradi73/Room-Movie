@@ -654,4 +654,17 @@ object Util {
         }
         return ageS
     }
+
+    fun dateTimeToMillis(dateString: String,format: String): Long {
+        var sec: Long = 0
+        val df = SimpleDateFormat(format,Locale.getDefault())
+        try {
+            val time = df.parse(dateString)
+            val millis = time?.time
+            sec = TimeUnit.MILLISECONDS.toSeconds(millis ?: 0)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return sec
+    }
 }

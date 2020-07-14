@@ -6,8 +6,11 @@ import id.fajarproject.roommovie.models.CreditsItem
 import id.fajarproject.roommovie.models.people.PeopleItem
 import id.fajarproject.roommovie.ui.base.BasePresenter
 import id.fajarproject.roommovie.util.Constant
+import id.fajarproject.roommovie.util.Util
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.*
+import kotlin.Comparator
 
 
 /**
@@ -73,6 +76,43 @@ class PeopleDetailPresenter : BasePresenter(),PeopleDetailContract.Presenter {
             }
         }
         return total
+    }
+
+    override fun getKnownFor(knownFor : String ,data : MutableList<CreditsItem?>) : MutableList<CreditsItem?>{
+        val list = arrayListOf<CreditsItem?>()
+        for (item in data){
+            if (item?.department == knownFor){
+                list.add(item)
+            }
+        }
+        return list
+    }
+
+    override fun sortKnown() = Comparator<CreditsItem?> { o1, o2 ->
+        return@Comparator o1?.voteCount?.let { o2?.voteCount?.compareTo(it) } ?: 0
+    }
+
+    override fun sortYear() : Comparator<CreditsItem?> {
+        return Comparator { o1, o2 ->
+            val long1: Long =
+                Util.dateTimeToMillis(o1?.releaseDate ?: o1?.firstAirDate ?: "", "yyyy-MM-dd")
+            val long2: Long =
+                Util.dateTimeToMillis(o2?.releaseDate ?: o2?.firstAirDate ?: "", "yyyy-MM-dd")
+            long2.compareTo(long1)
+        }
+    }
+
+    override fun getListCredits(
+        isCredits: Boolean,
+        list: MutableList<CreditsItem?>
+    ): MutableList<CreditsItem?> {
+        val data : MutableList<CreditsItem?> = list
+        if (isCredits){
+            Collections.sort(data,sortYear())
+        }else{
+            Collections.sort(data,sortKnown())
+        }
+        return data
     }
 
     override fun unsubscribe() {

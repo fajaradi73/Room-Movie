@@ -29,6 +29,7 @@ import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.picture.PictureActivity
 import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
 import id.fajarproject.roommovie.ui.video.VideoPlayerActivity
@@ -185,6 +186,16 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
                 list
             )
         rvCast.adapter              = adapter
+        adapter.setOnItemClickListener(object : OnItemClickListener{
+            override fun onItemClick(view: View?, position: Int) {
+                val item = adapter.getItem(position)
+                item?.id.let {
+                    val intent = Intent(activity, PeopleDetailActivity::class.java)
+                    intent.putExtra(Constant.idPeople,it)
+                    startActivity(intent)
+                }
+            }
+        })
     }
 
     override fun setViewVideo(list: MutableList<VideosItem?>) {

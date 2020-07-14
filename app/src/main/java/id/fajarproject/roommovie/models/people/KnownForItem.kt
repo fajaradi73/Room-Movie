@@ -1,7 +1,10 @@
 package id.fajarproject.roommovie.models.people
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.parceler.Parcel
 
+@Parcel
 data class KnownForItem(
 
 	@field:SerializedName("overview")
@@ -24,9 +27,6 @@ data class KnownForItem(
 
 	@field:SerializedName("title")
 	val title: String? = null,
-
-	@field:SerializedName("genre_ids")
-	val genreIds: MutableList<Int?>? = null,
 
 	@field:SerializedName("poster_path")
 	val posterPath: String? = null,
@@ -51,4 +51,54 @@ data class KnownForItem(
 
 	@field:SerializedName("vote_count")
 	val voteCount: Int? = null
-)
+) : Parcelable {
+	constructor(parcel: android.os.Parcel) : this(
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readString(),
+		parcel.readValue(Double::class.java.classLoader) as? Double,
+		parcel.readValue(Int::class.java.classLoader) as? Int,
+		parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
+		parcel.readValue(Int::class.java.classLoader) as? Int
+	)
+
+	override fun writeToParcel(parcel: android.os.Parcel, flags: Int) {
+		parcel.writeString(overview)
+		parcel.writeString(originalLanguage)
+		parcel.writeString(originalTitle)
+		parcel.writeString(originalName)
+		parcel.writeString(name)
+		parcel.writeValue(video)
+		parcel.writeString(title)
+		parcel.writeString(posterPath)
+		parcel.writeString(backdropPath)
+		parcel.writeString(mediaType)
+		parcel.writeString(releaseDate)
+		parcel.writeValue(voteAverage)
+		parcel.writeValue(id)
+		parcel.writeValue(adult)
+		parcel.writeValue(voteCount)
+	}
+
+	override fun describeContents(): Int {
+		return 0
+	}
+
+	companion object CREATOR : Parcelable.Creator<KnownForItem> {
+		override fun createFromParcel(parcel: android.os.Parcel): KnownForItem {
+			return KnownForItem(parcel)
+		}
+
+		override fun newArray(size: Int): Array<KnownForItem?> {
+			return arrayOfNulls(size)
+		}
+	}
+}

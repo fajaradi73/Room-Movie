@@ -21,6 +21,7 @@ import id.fajarproject.roommovie.models.people.PeopleItem
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
 import id.fajarproject.roommovie.ui.people.PeopleAdapter
+import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
@@ -199,8 +200,12 @@ class SearchActivity : BaseActivity(),SearchContract.View {
         adapterPeople?.setOnItemClickListener(object :
             OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
-//                val list = adapter?.getMovieList()
-//                presenter?.getItem(list!![position])
+                val item = adapterPeople?.getItem(position)
+                item?.id.let {
+                    val intent = Intent(activity, PeopleDetailActivity::class.java)
+                    intent.putExtra(Constant.idPeople,it)
+                    startActivity(intent)
+                }
             }
         })
         checkLastData()

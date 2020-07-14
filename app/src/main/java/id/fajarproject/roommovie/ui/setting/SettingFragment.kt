@@ -55,6 +55,10 @@ class SettingFragment : BaseFragment() {
             val intent = Intent(requireContext(),HomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            requireActivity().overridePendingTransition(
+                R.anim.fade_in,
+                R.anim.fade_out
+            )
             startActivity(intent)
         }
     }

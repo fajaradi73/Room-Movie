@@ -20,6 +20,7 @@ import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
 import kotlinx.android.synthetic.main.fragment_people.*
+import org.parceler.Parcels
 import javax.inject.Inject
 
 /**
