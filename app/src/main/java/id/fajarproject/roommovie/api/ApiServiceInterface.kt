@@ -81,6 +81,12 @@ interface ApiServiceInterface {
     @GET("tv/{tv_id}/videos")
     fun getTvVideo(@Path("tv_id") movie_id : Int, @Query("api_key") apiKey: String) : Observable<Videos>
 
+    @GET("discover/tv")
+    fun getTvDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("page") page : Int) : Observable<Movie>
+
+    @GET("discover/movie")
+    fun getMovieDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("page") page : Int) : Observable<Movie>
+
     companion object Factory {
         fun create(): ApiServiceInterface {
             val retrofit = retrofit2.Retrofit.Builder()

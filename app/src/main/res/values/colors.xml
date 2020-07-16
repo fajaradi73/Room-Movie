@@ -10,6 +10,7 @@
     <color name="colorBottomNavigation">#ffc730</color>
     <color name="colorSwitchActivated">#ffc730</color>
     <color name="background">#ffffff</color>
+    <color name="cardBackgroundColor">#f8f8f8</color>
     <color name="backgroundSearch">#ffffff</color>
     <color name="colorWhite">#fff</color>
     <color name="colorBlack">#000</color>

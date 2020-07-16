@@ -55,7 +55,7 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
         listKnownForItem    = Parcels.unwrap(intent.getParcelableExtra(Constant.dataKnownFor))
 
         if (id == -1){
-            showDialogNoData()
+            showDialogNoData("")
             return
         }
         if (isConnection){
@@ -70,11 +70,27 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
             .placeholder(Util.circleLoading(this))
             .into(ivPoster)
         setOnSetChange(data.name ?: "")
-        tvBiography.text    = data.biography
+
+        var biography = ""
+        data.biography?.let {
+            biography = if (it.isNotEmpty()){
+                it
+            }else{
+                getString(R.string.biographyPeople,data.name)
+            }
+        } ?: kotlin.run {
+            biography = getString(R.string.biographyPeople,data.name)
+        }
+        tvBiography.text    = biography
+
         Util.makeTextViewResizable(tvBiography,7,"View More",true)
 
         tvGender.text       = presenter.getGender(data.gender)
-        tvBirthday.text     = "${Util.convertDate(data.birthday ?: "","yyyy-MM-dd","dd MMMM yyyy")} (${Util.getAge(data.birthday ?: "","yyyy-MM-dd")})"
+        var birthday        = "-"
+        data.birthday?.let {
+            birthday  = "${Util.convertDate(it,"yyyy-MM-dd","dd MMMM yyyy")} (${Util.getAge(it,"yyyy-MM-dd")})"
+        }
+        tvBirthday.text     = birthday
         tvPlaceBirth.text   = data.placeOfBirth
         tvKnownFor.text     = data.knownForDepartment
         tvKnownAs.text      = presenter.getKnowAs(data.alsoKnownAs)
@@ -131,7 +147,7 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
     override fun showDataFailed(message: String) {
         Log.e("ErrorDetail",message)
-        showDialogNoData()
+        showDialogNoData(message)
     }
 
     override fun setViewKnownFor(list: MutableList<CreditsItem?>) {
@@ -223,7 +239,7 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
         startActivity(intent)
     }
 
-    override fun showDialogNoData() {
+    override fun showDialogNoData(message: String) {
         Util.showRoundedDialog(this,getString(R.string.no_data),"",false,object : DialogListener {
             override fun onYes() {
                 finish()

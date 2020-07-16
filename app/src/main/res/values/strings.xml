@@ -73,4 +73,25 @@
     <string name="male">Male</string>
     <string name="overviewSeason">Season %1$d of %2$s on premiered on %3$s</string>
     <string name="bullet">•</string>
+    <string name="biographyPeople">We don\'t have a biography for %1$s</string>
+    <string name="sort">Sort</string>
+    <string-array name="arrayPopularity">
+        <item>Popularity</item>
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="arrayRating">
+        <item>Rating</item>
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="arrayDate">
+        <item>Release Date</item>
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+    <string-array name="arrayType">
+        <item>Movies</item>
+        <item>Tv Shows</item>
+    </string-array>
 </resources>

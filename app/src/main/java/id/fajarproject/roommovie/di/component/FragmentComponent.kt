@@ -21,4 +21,5 @@ interface FragmentComponent {
     fun inject(peopleFragment: PeopleFragment)
 
     fun inject(settingFragment: SettingFragment)
+
 }

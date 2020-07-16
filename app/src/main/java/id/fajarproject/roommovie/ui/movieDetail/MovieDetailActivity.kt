@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.util.Pair
 import androidx.core.app.ActivityCompat
@@ -29,6 +28,7 @@ import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
+import id.fajarproject.roommovie.ui.discover.DiscoverActivity
 import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.picture.PictureActivity
 import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
@@ -69,7 +69,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         id      = intent.getIntExtra(Constant.idMovie,0)
 
         if (id == 0){
-            showDialogNoData()
+            showDialogNoData("")
             return
         }
         if (isConnection) {
@@ -102,7 +102,7 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         tvBudget.text   = "$ ${Util.currencyFormatter(data.budget.toString())}"
         tvRevenue.text  = "$ ${Util.currencyFormatter(data.revenue.toString())}"
         tvGenre.text    = presenter.getGenre(data.genres)
-        setClickableSpan(tvGenre)
+        setClickableSpan(tvGenre,data.genres)
 
         data.external_ids?.let {
             setViewExternalIDs(it)
@@ -171,7 +171,9 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         chip.checkedIcon    = null
         chip.tag            = item?.name
         chip.setOnClickListener {
-
+            item?.id?.let {
+                moveToDiscover(item.name ?: "","",it.toString())
+            }
         }
         cgKeyword.addView(chip,i,params)
     }
@@ -327,22 +329,39 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         startActivity(intent)
     }
 
-    override fun setClickableSpan(textView : TextView){
+    override fun moveToDiscover(status: String, genre: String, keywords: String) {
+        val intent = Intent(activity,DiscoverActivity::class.java)
+        intent.putExtra(Constant.isMovie,true)
+        intent.putExtra(Constant.INTENT_STATUS,status)
+        intent.putExtra(Constant.keywords,keywords)
+        intent.putExtra(Constant.genre,genre)
+        startActivity(intent)
+    }
+
+    override fun setClickableSpan(textView : TextView,list: MutableList<GenresItem?>?){
         PatternEditableBuilder().addPattern(Pattern.compile("(\\w+) (\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
             object : SpannableClickedListener {
-                override fun onSpanClicked(text: String?) {
-                    Toast.makeText(
-                        this@MovieDetailActivity, "$text",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                override fun onSpanClicked(text: String) {
+                    val item = presenter.getItem(list,text)
+                    item?.id?.let {
+                        moveToDiscover(text,it.toString(),"")
+                    }
                 }
             }).addPattern(Pattern.compile("(\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
             object : SpannableClickedListener {
-                override fun onSpanClicked(text: String?) {
-                    Toast.makeText(
-                        this@MovieDetailActivity, "$text",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                override fun onSpanClicked(text: String) {
+                    val item = presenter.getItem(list,text)
+                    item?.id?.let {
+                        moveToDiscover(text,it.toString(),"")
+                    }
+                }
+            }).addPattern(Pattern.compile("(\\w+) & (\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
+            object : SpannableClickedListener {
+                override fun onSpanClicked(text: String) {
+                    val item = presenter.getItem(list,text)
+                    item?.id?.let {
+                        moveToDiscover(text,it.toString(),"")
+                    }
                 }
             }).into(textView)
         textView.highlightColor = Color.TRANSPARENT
@@ -409,11 +428,11 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
 
     override fun showDataFailed(message: String) {
         Log.e("ErrorDetail",message)
-        showDialogNoData()
+        showDialogNoData(message)
     }
 
-    override fun showDialogNoData() {
-        Util.showRoundedDialog(this,getString(R.string.no_data),"",false,object : DialogListener{
+    override fun showDialogNoData(message: String) {
+        Util.showRoundedDialog(this,getString(R.string.no_data),"",false,object : DialogListener {
             override fun onYes() {
                 finish()
             }

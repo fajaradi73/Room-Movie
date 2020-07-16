@@ -157,4 +157,46 @@
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
+    <style name="SpinnerTheme" parent="Material.Widget.Spinner">
+        <item name="spn_labelEnable">false</item>
+        <item name="spn_labelPadding">0dp</item>
+        <item name="spn_labelTextAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="spn_labelTextColor">@color/textColorPrimary</item>
+        <item name="spn_labelEllipsize">end</item>
+        <item name="spn_dividerColor">@color/iconColorPrimary</item>
+        <item name="spn_dividerHeight">0dp</item>
+        <item name="spn_dividerPadding">0dp</item>
+        <item name="spn_dividerAnimDuration">@android:integer/config_shortAnimTime</item>
+        <item name="spn_arrowColor">@color/iconColorPrimary</item>
+        <item name="spn_arrowSize">@dimen/itemBetweenMarginMedium</item>
+        <item name="spn_arrowPadding">@dimen/activityVerticalMargin</item>
+        <item name="spn_arrowSwitchMode">true</item>
+        <item name="spn_arrowAnimClockwise">true</item>
+        <item name="spn_arrowAnimDuration">300</item>
+<!--        <item name="rd_style">@style/Material.Drawable.Ripple.Wave</item>-->
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:background">@drawable/shape_rounded</item>
+        <item name="android:layout_height">@dimen/height_icon</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_margin">@dimen/activityVerticalMargin</item>
+    </style>
+    <style name="SpinnerThemeNoBackground" parent="Material.Widget.Spinner">
+        <item name="spn_labelEnable">false</item>
+        <item name="spn_labelPadding">0dp</item>
+        <item name="spn_labelTextAppearance">@style/TextAppearance.AppCompat.Caption</item>
+        <item name="spn_labelTextColor">@color/textColorPrimary</item>
+        <item name="spn_labelEllipsize">end</item>
+        <item name="spn_dividerColor">@color/iconColorPrimary</item>
+        <item name="spn_dividerHeight">0dp</item>
+        <item name="spn_dividerPadding">0dp</item>
+        <item name="spn_dividerAnimDuration">@android:integer/config_shortAnimTime</item>
+        <item name="spn_arrowColor">@color/iconColorPrimary</item>
+        <item name="spn_arrowSize">@dimen/itemBetweenMarginMedium</item>
+        <item name="spn_arrowPadding">@dimen/activityVerticalMargin</item>
+        <item name="spn_arrowSwitchMode">true</item>
+        <item name="spn_arrowAnimClockwise">true</item>
+        <item name="spn_arrowAnimDuration">300</item>
+        <!--        <item name="rd_style">@style/Material.Drawable.Ripple.Wave</item>-->
+        <item name="android:spinnerMode">dropdown</item>
+    </style>
 </resources>

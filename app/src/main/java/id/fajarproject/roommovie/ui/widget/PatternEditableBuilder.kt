@@ -36,7 +36,7 @@ class PatternEditableBuilder {
     /* This stores the click listener for a pattern item
        Used to handle clicks to a particular category of spans */
     interface SpannableClickedListener {
-        fun onSpanClicked(text: String?)
+        fun onSpanClicked(text: String)
     }
 
     /* This is the custom clickable span class used

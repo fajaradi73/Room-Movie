@@ -109,11 +109,17 @@
             android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.peopleDetail.PeopleDetailActivity"
+        <activity
+            android:name=".ui.peopleDetail.PeopleDetailActivity"
             android:configChanges="locale"
             android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.DarkStatusBar" />
+        <activity android:name=".ui.discover.DiscoverActivity"
+            android:configChanges="locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

@@ -139,10 +139,10 @@ class SearchAdapter(
         for (i in list.indices){
             val name = getGenre(list[i])
             if (name.isNotEmpty()){
-                nameGenre += if (i != list.lastIndex){
-                    "$name \u2022 "
-                }else{
+                nameGenre += if (i == list.size - 1){
                     name
+                }else{
+                    "$name \u2022 "
                 }
             }
         }

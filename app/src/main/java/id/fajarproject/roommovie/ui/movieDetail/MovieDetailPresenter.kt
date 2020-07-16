@@ -76,4 +76,17 @@ class MovieDetailPresenter : MovieDetailContract.Presenter {
         }
         return genre
     }
+
+    override fun getItem(list : MutableList<GenresItem?>?,name: String) : GenresItem?{
+        var item : GenresItem? = null
+        if (list != null){
+            for (data in list){
+                if (data?.name == name){
+                    item = data
+                    break
+                }
+            }
+        }
+        return item
+    }
 }

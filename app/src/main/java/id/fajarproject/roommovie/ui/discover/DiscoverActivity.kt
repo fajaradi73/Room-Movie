@@ -1,13 +1,13 @@
-package id.fajarproject.roommovie.ui.movieList
+package id.fajarproject.roommovie.ui.discover
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
@@ -15,21 +15,20 @@ import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
+import id.fajarproject.roommovie.ui.search.SearchAdapter
+import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_movie_list.*
+import kotlinx.android.synthetic.main.activity_discover.*
 import javax.inject.Inject
 
-/**
- * Create by Fajar Adi Prasetyo on 01/07/2020.
- */
-class MovieListActivity : BaseActivity(),MovieListContract.View {
+class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContract.View {
 
-    @Inject lateinit var presenter: MovieListContract.Presenter
+    @Inject lateinit var presenter : DiscoverContract.Presenter
     lateinit var layoutManager: GridLayoutManager
-    var adapter: MovieListAdapter? = null
+    var adapter: SearchAdapter? = null
     var isLoading = false
     var isLastPage = false
 
@@ -37,36 +36,38 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     var currentPage = 1
     var limit = 20
 
-    private var status : String = ""
+    private var status      : String = ""
+    private var sortBy      : String = ""
+    private var genre       : String = ""
+    private var keywords    : String = ""
+    private var isMovie = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_list)
+        setContentView(R.layout.activity_discover)
+
         injectDependency()
         presenter.attach<Activity>(this,this)
 
-        status = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
+        status      = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
+        sortBy      = intent.getStringExtra(Constant.sortBy) ?: "popularity.desc"
+        genre       = intent.getStringExtra(Constant.genre) ?: ""
+        keywords    = intent.getStringExtra(Constant.keywords) ?: ""
+        isMovie     = intent.getBooleanExtra(Constant.isMovie,true)
 
         setToolbar()
         setRecycleView()
         setUI()
         if (isConnection){
-            presenter.loadData(currentPage,status)
+            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
         }
-    }
 
-    override fun injectDependency() {
-        val activityComponent = DaggerActivityComponent.builder()
-            .activityModule(ActivityModule(this))
-            .build()
-
-        activityComponent.inject(this)
     }
 
     override fun setRecycleView() {
         val mNoOfColumns = Util.calculateNoOfColumns(this)
         layoutManager = GridLayoutManager(this,mNoOfColumns)
-        layoutManager.spanSizeLookup = object : SpanSizeLookup() {
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when {
                     adapter?.getItemViewType(position) == Constant.VIEW_TYPE_LOADING -> {
@@ -89,7 +90,7 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
-                presenter.loadData(currentPage, status)
+                presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
             }
 
             override fun getTotalPageCount(): Int {
@@ -117,8 +118,8 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     override fun showDataSuccess(list: MutableList<MovieItem?>) {
         countData = list.size
         if (currentPage == 1){
-            adapter = MovieListAdapter(
-                this,list
+            adapter = SearchAdapter(
+                this,list,isMovie
             )
             rvMovie.adapter = adapter
             setScrollRecycleView()
@@ -140,12 +141,6 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         })
         checkLastData()
         checkData()
-    }
-
-    fun moveToDetail(id : Int){
-        val intent = Intent(this,MovieDetailActivity::class.java)
-        intent.putExtra(Constant.idMovie,id)
-        startActivity(intent)
     }
 
     override fun showDataFailed(message: String) {
@@ -179,31 +174,29 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         }
     }
 
-    override fun getTitle(title: String) : String?{
-        return when (title){
-            getString(R.string.now_playing) -> {
-               getString(R.string.now_playing)
-            }
-            getString(R.string.top_rated) -> {
-                getString(R.string.top_rated)
-            }
-            getString(R.string.upcoming) -> {
-                getString(R.string.upcoming)
-            }
-            getString(R.string.trending) -> {
-                getString(R.string.trending)
-            }
-            else -> {
-                getString(R.string.what_s_popular)
-            }
-        }
+    override fun moveToDetail(id: Int) {
+        val intent = if (isMovie)
+            Intent(this, MovieDetailActivity::class.java)
+        else
+            Intent(this, TvDetailActivity::class.java)
+
+        intent.putExtra(Constant.idMovie,id)
+        startActivity(intent)
+    }
+
+    override fun injectDependency() {
+        val activityComponent = DaggerActivityComponent.builder()
+            .activityModule(ActivityModule(this))
+            .build()
+
+        activityComponent.inject(this)
     }
 
     override fun setToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
-        title = getTitle(status)
+        title = Util.toProperCaseMoreThanOneWord(status)
     }
 
     override fun onDestroy() {
@@ -217,7 +210,28 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         refreshLayout.setOnRefreshListener {
             refreshLayout.isRefreshing = false
             currentPage = 1
-            presenter.loadData(currentPage,status)
+            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+        }
+        cvSort.setOnClickListener {
+            val sheet = DiscoverFragment(this,true)
+            sheet.show(supportFragmentManager,"DiscoverFragment")
+        }
+
+        val adapter: ArrayAdapter<String?> = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.arrayType)
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spType.adapter = adapter
+        spType.setOnItemClickListener { _, _, position, _ ->
+            isMovie = position == 0
+            currentPage = 1
+            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+            true
+        }
+        if (isMovie){
+            spType.setSelection(0)
+        }else{
+            spType.setSelection(1)
         }
     }
 
@@ -232,6 +246,11 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         shimmerView.stopShimmer()
         shimmerView.visibility      = View.GONE
         refreshLayout.visibility    = View.VISIBLE
+    }
+
+    override fun onPassData(data: String) {
+        currentPage = 1
+        presenter.loadData(isMovie,data,genre,keywords,currentPage)
     }
 
 }

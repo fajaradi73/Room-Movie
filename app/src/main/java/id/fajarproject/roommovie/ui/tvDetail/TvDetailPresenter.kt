@@ -62,4 +62,21 @@ class TvDetailPresenter : TvDetailContract.Presenter {
         }
         return genre
     }
+    override fun getItem(list : MutableList<GenresItem?>?,name: String) : GenresItem?{
+        var item : GenresItem? = null
+        if (list != null){
+            for (data in list){
+                data?.name?.let {
+                    if (data.name == name){
+                        item = data
+                        return item
+                    }else if (data.name.contains(name)){
+                        item = data
+                        return item
+                    }
+                }
+            }
+        }
+        return item
+    }
 }

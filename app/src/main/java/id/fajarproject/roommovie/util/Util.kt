@@ -60,6 +60,8 @@ object Util {
     fun getOkHttp(): OkHttpClient {
         val interceptor =
             HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
@@ -666,5 +668,23 @@ object Util {
             e.printStackTrace()
         }
         return sec
+    }
+
+    fun toProperCase(s: String): String {
+        return s.substring(0, 1).toUpperCase() +
+                s.substring(1).toLowerCase()
+    }
+
+    fun toProperCaseMoreThanOneWord(s: String): String? {
+        var properCase = ""
+        val properCaseSplit = s.split(" ".toRegex()).toTypedArray()
+        return if (properCaseSplit.isNotEmpty()) {
+            for (proper in properCaseSplit) {
+                properCase = properCase + toProperCase(proper) + " "
+            }
+            properCase.trim { it <= ' ' }
+        } else {
+            null
+        }
     }
 }

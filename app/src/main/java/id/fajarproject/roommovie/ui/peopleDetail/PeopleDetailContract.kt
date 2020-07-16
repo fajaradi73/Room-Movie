@@ -20,7 +20,7 @@ class PeopleDetailContract {
         fun setViewExternalIDs(data: ExternalIds)
         fun setViewCredits(list: MutableList<CreditsItem?>)
         fun setOpenURL(url : String,status : String)
-        fun showDialogNoData()
+        fun showDialogNoData(message: String)
         fun setOnSetChange(name : String)
     }
 

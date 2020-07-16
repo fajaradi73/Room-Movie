@@ -13,9 +13,9 @@ class TvDetailContract {
     interface View : BaseContract.View{
         fun showDataSuccess(data: MovieItem)
         fun showDataFailed(message : String)
-        fun showDialogNoData()
+        fun showDialogNoData(message: String)
         fun setOnSetChange(name : String)
-        fun setClickableSpan(textView : TextView)
+        fun setClickableSpan(textView : TextView,list: MutableList<GenresItem?>?)
         fun setViewExternalIDs(data: ExternalIds)
         fun setOpenURL(url : String,status : String)
         fun setViewKeyword(list: MutableList<KeywordsItem?>)
@@ -29,10 +29,12 @@ class TvDetailContract {
         fun setViewSeason(list: MutableList<SeasonsItem?>,title :String)
         fun showPreviewImage(view : android.view.View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean)
         fun moveToPicture(title : String,list: MutableList<PicturesItem?>)
+        fun moveToDiscover(status: String,genre: String,keywords: String)
     }
 
     interface Presenter : BaseContract.Presenter<View>{
         fun loadData(id : Int)
         fun getGenre(list : MutableList<GenresItem?>?) : String
+        fun getItem(list : MutableList<GenresItem?>?,name: String) : GenresItem?
     }
 }
