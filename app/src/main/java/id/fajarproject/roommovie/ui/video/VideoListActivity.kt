@@ -26,6 +26,7 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
     @Inject lateinit var presenter: VideoListContract.Presenter
     lateinit var adapter: VideoListAdapter
     var idMovie : Int = -1
+    var isMovie = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +34,14 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
         injectDependency()
         presenter.attach(this,this)
         idMovie = intent.getIntExtra(Constant.idMovie,-1)
+        isMovie = intent.getBooleanExtra(Constant.isMovie,true)
         setToolbar()
         setUI()
 
         title    = intent.getStringExtra(Constant.title)
 
         if (idMovie != -1){
-            presenter.loadData(idMovie)
+            presenter.loadData(idMovie,isMovie)
         }else{
             checkData(false)
         }
@@ -128,7 +130,7 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
         btnBackToTop.setOnClickListener { rvVideo.smoothScrollToPosition(0) }
         refreshLayout.setOnRefreshListener {
             refreshLayout.isRefreshing = false
-            presenter.loadData(idMovie)
+            presenter.loadData(idMovie,isMovie)
         }
     }
 

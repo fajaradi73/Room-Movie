@@ -16,11 +16,12 @@ class DiscoverPresenter : BasePresenter(),DiscoverContract.Presenter {
 
     lateinit var view: DiscoverContract.View
 
-    override fun loadData(isMovie: Boolean, sortBy: String, genre: String, keywords: String,page : Int) {
+    override fun loadData(isMovie: Boolean, sortBy: String, genre: String, keywords: String,
+                          networks : String,page : Int) {
         if (page == 1){
             view.showLoading()
         }
-        val subscribe = checkData(isMovie, sortBy, genre, keywords, page).subscribeOn(Schedulers.io())
+        val subscribe = checkData(isMovie, sortBy, genre, keywords,networks, page).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({ movie : Movie? ->
                 view.hideLoading()
@@ -41,12 +42,13 @@ class DiscoverPresenter : BasePresenter(),DiscoverContract.Presenter {
         sortBy: String,
         genre: String,
         keywords: String,
+        networks : String,
         page : Int
     ): Observable<Movie> {
         return if (isMovie){
             api.getMovieDiscover(Constant.API_KEY,sortBy,genre,keywords,page)
         }else{
-            api.getTvDiscover(Constant.API_KEY,sortBy,genre,keywords,page)
+            api.getTvDiscover(Constant.API_KEY,sortBy,genre,keywords,networks,page)
         }
     }
 

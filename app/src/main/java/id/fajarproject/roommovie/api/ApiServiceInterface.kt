@@ -76,13 +76,13 @@ interface ApiServiceInterface {
     fun getLanguages(@Query("api_key") apiKey : String) : Observable<MutableList<LanguagesItem?>?>
 
     @GET("movie/{movie_id}/videos")
-    fun getMovieVideo(@Path("movie_id") movie_id : Int, @Query("api_key") apiKey: String) : Observable<Videos>
+    fun getMovieVideo(@Path("movie_id") movieId : Int, @Query("api_key") apiKey: String) : Observable<Videos>
 
     @GET("tv/{tv_id}/videos")
-    fun getTvVideo(@Path("tv_id") movie_id : Int, @Query("api_key") apiKey: String) : Observable<Videos>
+    fun getTvVideo(@Path("tv_id") tvId : Int, @Query("api_key") apiKey: String) : Observable<Videos>
 
     @GET("discover/tv")
-    fun getTvDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("page") page : Int) : Observable<Movie>
+    fun getTvDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("with_networks") withNetworks : String, @Query("page") page : Int) : Observable<Movie>
 
     @GET("discover/movie")
     fun getMovieDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("page") page : Int) : Observable<Movie>

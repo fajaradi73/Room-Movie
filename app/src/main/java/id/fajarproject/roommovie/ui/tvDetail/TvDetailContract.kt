@@ -29,7 +29,7 @@ class TvDetailContract {
         fun setViewSeason(list: MutableList<SeasonsItem?>,title :String)
         fun showPreviewImage(view : android.view.View, position: Int, data: MutableList<PicturesItem?>,isBackdrops : Boolean)
         fun moveToPicture(title : String,list: MutableList<PicturesItem?>)
-        fun moveToDiscover(status: String,genre: String,keywords: String)
+        fun moveToDiscover(status: String,genre: String,keywords: String,networks : String)
     }
 
     interface Presenter : BaseContract.Presenter<View>{

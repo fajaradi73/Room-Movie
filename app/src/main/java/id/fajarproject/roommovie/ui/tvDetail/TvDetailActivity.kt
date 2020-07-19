@@ -126,19 +126,39 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         }
         data.videos?.results?.let {
             if (it.size > 0) {
+                allVideo.visibility = View.VISIBLE
                 setViewVideo(it)
+                allVideo.setOnClickListener {
+                    val intent = Intent(this,VideoListActivity::class.java)
+                    intent.putExtra(Constant.title,data.name)
+                    intent.putExtra(Constant.idMovie,data.id)
+                    intent.putExtra(Constant.isMovie,false)
+                    startActivity(intent)
+                }
+            }else{
+                allVideo.visibility = View.GONE
             }
         }
         data.images?.backdrops?.let { list : MutableList<PicturesItem?> ->
-            setViewBackdrops(list)
-            allBackdrops.setOnClickListener {
-                moveToPicture(data.title ?: "",list)
+            if (list.size > 0){
+                allBackdrops.visibility = View.VISIBLE
+                setViewBackdrops(list)
+                allBackdrops.setOnClickListener {
+                    moveToPicture(data.name ?: "",list)
+                }
+            }else{
+                allBackdrops.visibility = View.GONE
             }
         }
         data.images?.posters?.let { list : MutableList<PicturesItem?> ->
-            setViewPosters(list)
-            allPosters.setOnClickListener {
-                moveToPicture(data.title ?: "",list)
+            if (list.size > 0){
+                allPosters.visibility = View.VISIBLE
+                setViewPosters(list)
+                allPosters.setOnClickListener {
+                    moveToPicture(data.name ?: "",list)
+                }
+            }else{
+                allPosters.visibility = View.GONE
             }
         }
         data.recommendations?.movieList?.let {
@@ -169,7 +189,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         link.setOnClickListener {
             data.homepage?.let {
                 if (it.isNotEmpty()) {
-                    setOpenURL("https://$it/", "homepage")
+                    setOpenURL("$it/", "homepage")
                 }else{
                     setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
                 }
@@ -177,12 +197,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
             }
         }
-        allVideo.setOnClickListener {
-            val intent = Intent(this,VideoListActivity::class.java)
-            intent.putExtra(Constant.title,data.name)
-            intent.putExtra(Constant.idMovie,data.id)
-            startActivity(intent)
-        }
+
     }
 
     override fun setViewKeyword(list: MutableList<KeywordsItem?>){
@@ -206,7 +221,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         chip.setTextAppearanceResource(R.style.ChipText)
         chip.setOnClickListener {
             item?.id?.let {
-                moveToDiscover(item.name ?: "","",it.toString())
+                moveToDiscover(item.name ?: "","",it.toString(),"")
             }
         }
         cgKeyword.addView(chip,i,params)
@@ -353,6 +368,14 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 list
             )
         rvNetwork.adapter            = adapter
+        adapter.setOnItemClickListener(object : OnItemClickListener{
+            override fun onItemClick(view: View?, position: Int) {
+                val item = adapter.getItem(position)
+                item?.id?.let {
+                    moveToDiscover(item.name ?: "","","",it.toString())
+                }
+            }
+        })
     }
 
     override fun setViewSeason(list: MutableList<SeasonsItem?>,title :String) {
@@ -387,12 +410,13 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         startActivity(intent)
     }
 
-    override fun moveToDiscover(status: String, genre: String, keywords: String) {
+    override fun moveToDiscover(status: String, genre: String, keywords: String,networks : String) {
         val intent = Intent(activity, DiscoverActivity::class.java)
         intent.putExtra(Constant.isMovie,false)
         intent.putExtra(Constant.INTENT_STATUS,status)
         intent.putExtra(Constant.keywords,keywords)
         intent.putExtra(Constant.genre,genre)
+        intent.putExtra(Constant.networks,networks)
         startActivity(intent)
     }
 
@@ -402,7 +426,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 override fun onSpanClicked(text: String) {
                     val item = presenter.getItem(list,text)
                     item?.id?.let {
-                        moveToDiscover(item.name ?: text,it.toString(),"")
+                        moveToDiscover(item.name ?: text,it.toString(),"","")
                     }
                 }
             }).addPattern(Pattern.compile("(\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
@@ -410,7 +434,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 override fun onSpanClicked(text: String) {
                     val item = presenter.getItem(list,text)
                     item?.id?.let {
-                        moveToDiscover(item.name ?: text,it.toString(),"")
+                        moveToDiscover(item.name ?: text,it.toString(),"","")
                     }
                 }
             }).addPattern(Pattern.compile("(\\w+) & (\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
@@ -418,7 +442,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 override fun onSpanClicked(text: String) {
                     val item = presenter.getItem(list,text)
                     item?.id?.let {
-                        moveToDiscover(item.name ?: text,it.toString(),"")
+                        moveToDiscover(item.name ?: text,it.toString(),"","")
                     }
                 }
             }).addPattern(Pattern.compile("(\\w+)-(\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
@@ -426,7 +450,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 override fun onSpanClicked(text: String) {
                     val item = presenter.getItem(list,text)
                     item?.id?.let {
-                        moveToDiscover(item.name ?: text,it.toString(),"")
+                        moveToDiscover(item.name ?: text,it.toString(),"","")
                     }
                 }
             }).addPattern(Pattern.compile("(\\w+)-(\\w+) & (\\w+)"),ContextCompat.getColor(this,R.color.textColorPrimary),
@@ -434,7 +458,7 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 override fun onSpanClicked(text: String) {
                     val item = presenter.getItem(list,text)
                     item?.id?.let {
-                        moveToDiscover(item.name ?: text,it.toString(),"")
+                        moveToDiscover(item.name ?: text,it.toString(),"","")
                     }
                 }
             }).into(textView)

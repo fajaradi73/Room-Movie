@@ -114,18 +114,39 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
             setViewCasts(it)
         }
         data.videos?.results?.let {
-            setViewVideo(it)
+            if (it.size > 0) {
+                allVideo.visibility = View.VISIBLE
+                setViewVideo(it)
+                allVideo.setOnClickListener {
+                    val intent = Intent(this,VideoListActivity::class.java)
+                    intent.putExtra(Constant.title,data.title)
+                    intent.putExtra(Constant.idMovie,data.id)
+                    startActivity(intent)
+                }
+            }else{
+                allVideo.visibility = View.GONE
+            }
         }
         data.images?.backdrops?.let { list : MutableList<PicturesItem?> ->
-            setViewBackdrops(list)
-            allBackdrops.setOnClickListener {
-                moveToPicture(data.title ?: "",list)
+            if (list.size > 0){
+                allBackdrops.visibility = View.VISIBLE
+                setViewBackdrops(list)
+                allBackdrops.setOnClickListener {
+                    moveToPicture(data.title ?: "",list)
+                }
+            }else{
+                allBackdrops.visibility = View.GONE
             }
         }
         data.images?.posters?.let { list : MutableList<PicturesItem?> ->
-            setViewPosters(list)
-            allPosters.setOnClickListener {
-                moveToPicture(data.title ?: "",list)
+            if (list.size > 0){
+                allPosters.visibility = View.VISIBLE
+                setViewPosters(list)
+                allPosters.setOnClickListener {
+                    moveToPicture(data.title ?: "",list)
+                }
+            }else{
+                allPosters.visibility = View.GONE
             }
         }
 
@@ -135,19 +156,13 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
         link.setOnClickListener {
             data.homepage?.let {
                 if (it.isNotEmpty()) {
-                    setOpenURL("https://$it/", "homepage")
+                    setOpenURL("$it/", "homepage")
                 }else{
                     setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
                 }
             } ?: kotlin.run {
                 setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
             }
-        }
-        allVideo.setOnClickListener {
-            val intent = Intent(this, VideoListActivity::class.java)
-            intent.putExtra(Constant.title,data.title)
-            intent.putExtra(Constant.idMovie,data.id)
-            startActivity(intent)
         }
     }
 

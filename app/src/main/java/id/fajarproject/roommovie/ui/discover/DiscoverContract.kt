@@ -31,7 +31,7 @@ class DiscoverContract {
     }
 
     interface Presenter : BaseContract.Presenter<View>{
-        fun loadData(isMovie : Boolean,sortBy : String,genre : String,keywords : String,page : Int)
-        fun checkData(isMovie: Boolean,sortBy : String,genre : String,keywords : String,page : Int) : Observable<Movie>
+        fun loadData(isMovie : Boolean,sortBy : String,genre : String,keywords : String,networks : String,page : Int)
+        fun checkData(isMovie: Boolean,sortBy : String,genre : String,keywords : String,networks : String,page : Int) : Observable<Movie>
     }
 }

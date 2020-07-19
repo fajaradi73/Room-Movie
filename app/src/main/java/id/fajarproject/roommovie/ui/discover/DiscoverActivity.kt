@@ -40,6 +40,7 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
     private var sortBy      : String = ""
     private var genre       : String = ""
     private var keywords    : String = ""
+    private var networks    : String = ""
     private var isMovie = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +54,14 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
         sortBy      = intent.getStringExtra(Constant.sortBy) ?: "popularity.desc"
         genre       = intent.getStringExtra(Constant.genre) ?: ""
         keywords    = intent.getStringExtra(Constant.keywords) ?: ""
+        networks    = intent.getStringExtra(Constant.networks) ?: ""
         isMovie     = intent.getBooleanExtra(Constant.isMovie,true)
 
         setToolbar()
         setRecycleView()
         setUI()
         if (isConnection){
-            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
         }
 
     }
@@ -90,7 +92,7 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
-                presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+                presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
             }
 
             override fun getTotalPageCount(): Int {
@@ -210,7 +212,7 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
         refreshLayout.setOnRefreshListener {
             refreshLayout.isRefreshing = false
             currentPage = 1
-            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
         }
         cvSort.setOnClickListener {
             val sheet = DiscoverFragment(this,true)
@@ -225,12 +227,15 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
         spType.setOnItemClickListener { _, _, position, _ ->
             isMovie = position == 0
             currentPage = 1
-            presenter.loadData(isMovie,sortBy,genre,keywords,currentPage)
+            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
             true
         }
         if (isMovie){
             spType.setSelection(0)
         }else{
+            if (networks.isNotEmpty()){
+                spType.isEnabled = false
+            }
             spType.setSelection(1)
         }
     }
@@ -250,7 +255,7 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
 
     override fun onPassData(data: String) {
         currentPage = 1
-        presenter.loadData(isMovie,data,genre,keywords,currentPage)
+        presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
     }
 
 }
