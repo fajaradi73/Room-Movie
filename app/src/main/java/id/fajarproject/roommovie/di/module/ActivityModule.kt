@@ -3,6 +3,8 @@ package id.fajarproject.roommovie.di.module
 import android.app.Activity
 import dagger.Module
 import dagger.Provides
+import id.fajarproject.roommovie.ui.credits.CreditsContract
+import id.fajarproject.roommovie.ui.credits.CreditsPresenter
 import id.fajarproject.roommovie.ui.discover.DiscoverContract
 import id.fajarproject.roommovie.ui.discover.DiscoverPresenter
 import id.fajarproject.roommovie.ui.home.HomeContract
@@ -76,5 +78,9 @@ class ActivityModule(private var activity: Activity) {
     @Provides
     fun provideDiscoverPresenter() : DiscoverContract.Presenter{
         return DiscoverPresenter()
+    }
+    @Provides
+    fun provideCreditsPresenter() : CreditsContract.Presenter{
+        return CreditsPresenter()
     }
 }

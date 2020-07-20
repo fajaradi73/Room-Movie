@@ -94,4 +94,7 @@
         <item>Movies</item>
         <item>Tv Shows</item>
     </string-array>
+    <string name="title_activity_credits">CreditsActivity</string>
+    <string name="tab_text_1">Cast</string>
+    <string name="tab_text_2">Crew</string>
 </resources>

@@ -28,6 +28,7 @@ import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.*
 import id.fajarproject.roommovie.ui.base.BaseActivity
+import id.fajarproject.roommovie.ui.credits.CreditsActivity
 import id.fajarproject.roommovie.ui.detailAdapter.*
 import id.fajarproject.roommovie.ui.discover.DiscoverActivity
 import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
@@ -121,7 +122,17 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
         }
         data.credits?.cast?.let {
             if (it.size > 0){
+                tvFullCast.visibility = View.VISIBLE
                 setViewCasts(it)
+                tvFullCast.setOnClickListener {
+                    val intent = Intent(activity, CreditsActivity::class.java)
+                    intent.putExtra(Constant.isMovie,false)
+                    intent.putExtra(Constant.INTENT_STATUS,data.name)
+                    intent.putExtra(Constant.idMovie,data.id)
+                    startActivity(intent)
+                }
+            }else{
+                tvFullCast.visibility   = View.GONE
             }
         }
         data.videos?.results?.let {

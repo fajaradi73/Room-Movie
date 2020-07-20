@@ -16,7 +16,6 @@ import android.widget.EditText
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import butterknife.ButterKnife
 import id.fajarproject.roommovie.ui.widget.DialogListener
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
@@ -28,7 +27,8 @@ import io.reactivex.disposables.CompositeDisposable
  * Create by Fajar Adi Prasetyo on 09/07/2020.
  */
 open class BaseActivity : AppCompatActivity() {
-    var activity: Activity? = null
+    lateinit var activity: Activity
+
     private val subscriptions = CompositeDisposable()
 
     var isConnection = true

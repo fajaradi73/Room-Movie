@@ -87,6 +87,12 @@ interface ApiServiceInterface {
     @GET("discover/movie")
     fun getMovieDiscover(@Query("api_key") apiKey : String, @Query("sort_by") sortBy : String, @Query("with_genres") withGenres : String, @Query("with_keywords") withKeywords : String, @Query("page") page : Int) : Observable<Movie>
 
+    @GET("tv/{tv_id}/credits")
+    fun getTvCredits(@Path("tv_id") tvId : Int, @Query("api_key") apiKey: String) : Observable<Credits>
+
+    @GET("movie/{movie_id}/credits")
+    fun getMovieCredits(@Path("movie_id") tvId : Int, @Query("api_key") apiKey: String) : Observable<Credits>
+
     companion object Factory {
         fun create(): ApiServiceInterface {
             val retrofit = retrofit2.Retrofit.Builder()

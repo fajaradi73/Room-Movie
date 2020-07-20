@@ -56,6 +56,7 @@
         <item name="android:windowContentTransitions">true</item>
 
     </style>
+
     <style name="AppTheme.DarkStatusBar" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimary</item>
@@ -98,6 +99,7 @@
         <item name="floatingSearch_suggestionRightIconColor">@color/iconColorPrimary</item>
         <item name="floatingSearch_actionMenuOverflowColor">@color/iconColorPrimary</item>
     </style>
+
     <style name="SearchViewWhite">
         <item name="floatingSearch_backgroundColor">@color/backgroundSearch</item>
         <item name="floatingSearch_dimBackground">false</item>
@@ -112,6 +114,7 @@
         <item name="floatingSearch_suggestionRightIconColor">@color/iconColorPrimary</item>
         <item name="floatingSearch_actionMenuOverflowColor">@color/iconColorPrimary</item>
     </style>
+
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/grey_600</item>
         <item name="android:fontFamily">@font/palatino_linotype</item>
@@ -132,31 +135,37 @@
         <item name="android:focusableInTouchMode">true</item>
         <item name="android:focusable">true</item>
     </style>
+
     <style name="child">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="toolbar">
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
+
     <style name="toolbar.title" parent="parent">
         <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">20sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">14dp</item>
     </style>
-    <style name="SwitchTheme" >
+
+    <style name="SwitchTheme">
         <item name="colorControlActivated">@color/colorSwitchActivated</item>
         <item name="colorSwitchThumbNormal">#414141</item>
         <item name="android:colorForeground">#42221f1f</item>
     </style>
+
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
+
     <style name="SpinnerTheme" parent="Material.Widget.Spinner">
         <item name="spn_labelEnable">false</item>
         <item name="spn_labelPadding">0dp</item>
@@ -173,13 +182,14 @@
         <item name="spn_arrowSwitchMode">true</item>
         <item name="spn_arrowAnimClockwise">true</item>
         <item name="spn_arrowAnimDuration">300</item>
-<!--        <item name="rd_style">@style/Material.Drawable.Ripple.Wave</item>-->
+        <!--        <item name="rd_style">@style/Material.Drawable.Ripple.Wave</item>-->
         <item name="android:spinnerMode">dropdown</item>
         <item name="android:background">@drawable/shape_rounded</item>
         <item name="android:layout_height">@dimen/height_icon</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_margin">@dimen/activityVerticalMargin</item>
     </style>
+
     <style name="SpinnerThemeNoBackground" parent="Material.Widget.Spinner">
         <item name="spn_labelEnable">false</item>
         <item name="spn_labelPadding">0dp</item>
@@ -199,4 +209,6 @@
         <!--        <item name="rd_style">@style/Material.Drawable.Ripple.Wave</item>-->
         <item name="android:spinnerMode">dropdown</item>
     </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

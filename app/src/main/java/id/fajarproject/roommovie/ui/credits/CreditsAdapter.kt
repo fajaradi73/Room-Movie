@@ -1,24 +1,25 @@
-package id.fajarproject.roommovie.ui.peopleDetail
+package id.fajarproject.roommovie.ui.credits
 
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.models.CreditsItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
+import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.adapter_people_detail_credits.view.*
+import kotlinx.android.synthetic.main.adapter_credits.view.*
 
 /**
- * Create by Fajar Adi Prasetyo on 14/07/2020.
+ * Create by Fajar Adi Prasetyo on 20/07/2020.
  */
 
-class PeopleDetailCreditsAdapter(
-    var activity: Activity,
+class CreditsAdapter(
+    var activity: Context,
     private var list: MutableList<CreditsItem?>
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -33,7 +34,7 @@ class PeopleDetailCreditsAdapter(
         return AdapterHolder(
             LayoutInflater.from(
                 parent.context
-            ).inflate(R.layout.adapter_people_detail_credits, parent, false)
+            ).inflate(R.layout.adapter_credits, parent, false)
             , this.onItemClickListener
         )
     }
@@ -44,25 +45,13 @@ class PeopleDetailCreditsAdapter(
         position: Int
     ) {
         val data = list[position] ?: CreditsItem()
-        holder.itemView.tvYear.text     =
-            Util.convertDate(
-                data.releaseDate ?: data.firstAirDate ?: "",
-                "yyyy-MM-dd",
-                "yyyy")
-
-        holder.itemView.tvTitle.text    = data.title ?: data.name
-        data.episodeCount?.let {
-            Util.setSpannable(holder.itemView.tvTitle,
-                " ($it ${activity.getString(R.string.episodes)})",
-                ContextCompat.getColor(activity,R.color.textColorSecondary))
-        }
-        var info = ""
-        data.character?.let {
-            info = "as $it"
-        } ?: data.job?.let {
-            info = "... $it"
-        }
-        holder.itemView.tvInfo.text = info
+        holder.itemView.tvName.text = data.name
+        holder.itemView.tvKnownFor.text = data.character ?: data.job
+        Glide.with(activity)
+            .load(Constant.BASE_IMAGE + data.profilePath)
+            .error(R.drawable.ic_placeholder)
+            .placeholder(Util.circleLoading(activity))
+            .into(holder.itemView.ivProfile)
     }
 
     override fun getItemCount(): Int {

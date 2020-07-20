@@ -2,6 +2,7 @@ package id.fajarproject.roommovie.di.component
 
 import dagger.Component
 import id.fajarproject.roommovie.di.module.FragmentModule
+import id.fajarproject.roommovie.ui.credits.CreditsFragment
 import id.fajarproject.roommovie.ui.movie.MovieFragment
 import id.fajarproject.roommovie.ui.people.PeopleFragment
 import id.fajarproject.roommovie.ui.setting.SettingFragment
@@ -21,5 +22,6 @@ interface FragmentComponent {
     fun inject(peopleFragment: PeopleFragment)
 
     fun inject(settingFragment: SettingFragment)
+    fun inject(creditsFragment: CreditsFragment)
 
 }

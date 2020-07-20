@@ -1,5 +1,7 @@
 package id.fajarproject.roommovie.util
 
+import id.fajarproject.roommovie.R
+
 
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
@@ -49,4 +51,8 @@ object Constant {
     const val EXTRA_STARTING_ALBUM_POSITION         = "extra_starting_item_position"
     const val EXTRA_CURRENT_ALBUM_POSITION          = "extra_current_item_position"
     const val SAVED_CURRENT_PAGE_POSITION           = "current_page_position"
+    val TAB_TITLES = arrayOf(
+        R.string.tab_text_1,
+        R.string.tab_text_2
+    )
 }

@@ -3,6 +3,7 @@ package id.fajarproject.roommovie.di.component
 import dagger.Component
 import id.fajarproject.roommovie.ui.movieList.MovieListActivity
 import id.fajarproject.roommovie.di.module.ActivityModule
+import id.fajarproject.roommovie.ui.credits.CreditsActivity
 import id.fajarproject.roommovie.ui.discover.DiscoverActivity
 import id.fajarproject.roommovie.ui.home.HomeActivity
 import id.fajarproject.roommovie.ui.movieDetail.MovieDetailActivity
@@ -36,4 +37,5 @@ interface ActivityComponent {
     fun inject(pictureActivity: PictureActivity)
     fun inject(peopleDetailActivity: PeopleDetailActivity)
     fun inject(discoverActivity: DiscoverActivity)
+    fun inject(creditsActivity: CreditsActivity)
 }
