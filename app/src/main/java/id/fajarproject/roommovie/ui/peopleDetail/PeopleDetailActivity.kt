@@ -240,7 +240,7 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun showDialogNoData(message: String) {
-        Util.showRoundedDialog(this,getString(R.string.no_data),"",false,object : DialogListener {
+        Util.showRoundedDialog(this,getString(R.string.no_data),message,false,object : DialogListener {
             override fun onYes() {
                 finish()
             }

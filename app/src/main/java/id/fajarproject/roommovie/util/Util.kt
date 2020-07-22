@@ -687,4 +687,7 @@ object Util {
             null
         }
     }
+    fun pxToDp(px: Int): Int {
+        return (px / Resources.getSystem().displayMetrics.density).toInt()
+    }
 }

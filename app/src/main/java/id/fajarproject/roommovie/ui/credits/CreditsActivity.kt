@@ -52,8 +52,8 @@ class CreditsActivity : BaseActivity(),CreditsContract.View{
         adapter = ViewPagerAdapter(
             supportFragmentManager
         )
-        adapter.addFrag(CreditsFragment(),"Cast")
-        adapter.addFrag(CreditsFragment(),"Crew")
+        adapter.addFrag(CreditsFragment(),getString(R.string.tab1))
+        adapter.addFrag(CreditsFragment(),getString(R.string.tab2))
         viewPager.adapter = adapter
         tabs.setupWithViewPager(viewPager)
     }

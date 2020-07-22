@@ -14,9 +14,9 @@ import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.ui.widget.DialogListener
+import id.fajarproject.roommovie.ui.widget.localeHelper.LocaleAwareCompatActivity
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
@@ -26,7 +26,8 @@ import io.reactivex.disposables.CompositeDisposable
 /**
  * Create by Fajar Adi Prasetyo on 09/07/2020.
  */
-open class BaseActivity : AppCompatActivity() {
+
+open class BaseActivity : LocaleAwareCompatActivity() {
     lateinit var activity: Activity
 
     private val subscriptions = CompositeDisposable()
@@ -110,4 +111,5 @@ open class BaseActivity : AppCompatActivity() {
             recreate()
         }
     }
+
 }

@@ -82,6 +82,8 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
 
     @SuppressLint("SetTextI18n")
     override fun showDataSuccess(data: MovieItem) {
+        tvGenre.text    = presenter.getGenre(data.genres)
+        setClickableSpan(tvGenre,data.genres)
 
         Glide.with(this)
             .load(Constant.BASE_IMAGE + data.posterPath)
@@ -102,19 +104,16 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
             }
         }
         tvRatting.text  = "${data.voteAverage.toString()}  •  ${data.firstAirDate} \u2022 ${runtime}m "
-
         tvOverview.text = data.overview
+
+        data.external_ids?.let {
+            setViewExternalIDs(it)
+        }
         tvStatus.text   = data.status
         tvName.text     = data.originalName
         tvLanguage.text = Util.getLanguage(data.originalLanguage,this)
         tvType.text     = data.type
 
-        tvGenre.text    = presenter.getGenre(data.genres)
-        setClickableSpan(tvGenre,data.genres)
-
-        data.external_ids?.let {
-            setViewExternalIDs(it)
-        }
         data.keywords?.results?.let {
             if (it.size > 0) {
                 setViewKeyword(it)
@@ -541,15 +540,16 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
     }
 
     override fun showDialogNoData(message: String) {
-        Util.showRoundedDialog(this,getString(R.string.no_data),"",false,object : DialogListener {
+        Util.showRoundedDialog(this,getString(R.string.no_data),message,false,object : DialogListener {
             override fun onYes() {
-                finish()
+//                finish()
             }
 
             override fun onNo() {
             }
         })
     }
+
     private val exitElementCallback = object : SharedElementCallback() {
         override fun onMapSharedElements(names: MutableList<String>, sharedElements: MutableMap<String, View>) {
             if (reenterState != null) {

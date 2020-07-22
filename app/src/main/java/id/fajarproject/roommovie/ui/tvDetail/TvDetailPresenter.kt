@@ -1,6 +1,7 @@
 package id.fajarproject.roommovie.ui.tvDetail
 
 import android.app.Activity
+import android.util.Log
 import id.fajarproject.roommovie.api.ApiServiceInterface
 import id.fajarproject.roommovie.models.GenresItem
 import id.fajarproject.roommovie.models.MovieItem
@@ -28,6 +29,7 @@ class TvDetailPresenter : TvDetailContract.Presenter {
                 view.hideLoading()
                 view.showDataSuccess(data)
             },{ error ->
+                error.printStackTrace()
                 view.hideLoading()
                 view.showDataFailed(error.message ?: "")
             })
@@ -48,7 +50,7 @@ class TvDetailPresenter : TvDetailContract.Presenter {
 
     override fun getGenre(list : MutableList<GenresItem?>?) : String{
         var genre = ""
-        if (list != null) {
+        if (list != null && list.size > 0) {
             for (i in list.indices){
                 val name    = list[i]?.name ?: ""
                 if (name.isNotEmpty()){
@@ -64,7 +66,7 @@ class TvDetailPresenter : TvDetailContract.Presenter {
     }
     override fun getItem(list : MutableList<GenresItem?>?,name: String) : GenresItem?{
         var item : GenresItem? = null
-        if (list != null){
+        if (list != null && list.size > 0){
             for (data in list){
                 data?.name?.let {
                     if (data.name == name){

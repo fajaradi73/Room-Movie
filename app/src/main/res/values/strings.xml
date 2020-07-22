@@ -1,100 +1,101 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Room Movie</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="yes">Iya</string>
+    <string name="no">Tidak</string>
     <string name="ok">OK</string>
-    <string name="no_data">No Data</string>
-    <string name="what_s_popular">What\'s Popular</string>
-    <string name="now_playing">Now Playing</string>
-    <string name="top_rated">Top Rated</string>
+    <string name="no_data">Tidak Ada Data</string>
+    <string name="what_s_popular" tools:ignore="Typos">Populer</string>
+    <string name="now_playing">Sedang Tayang</string>
+    <string name="top_rated">Ratting Teratas</string>
     <string name="trending">Trending</string>
     <string name="home">Home</string>
-    <string name="tv">TV Shows</string>
-    <string name="movie">Movie</string>
-    <string name="people">People</string>
+    <string name="tv">Serial TV</string>
+    <string name="movie">Film</string>
+    <string name="people">Orang</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="tv_airing_today">TV Airing Today</string>
-    <string name="tv_on_the_air">TV On The Air</string>
-    <string name="upcoming">Upcoming</string>
-    <string name="popular_people">Popular People</string>
-    <string name="setting">Settings</string>
+    <string name="tv_airing_today">Sedang Tayang</string>
+    <string name="tv_on_the_air">Tayang di Tv</string>
+    <string name="upcoming">Mendatang</string>
+    <string name="popular_people">Orang Terpopuler</string>
+    <string name="setting">Pengaturan</string>
     <string name="voice">Voice</string>
-    <string name="search_hint">Search for a </string>
-    <string name="clear_cache">Clear Cache</string>
-    <string name="app_version">App version</string>
-    <string name="terms_of_use">Terms Of Use</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="contribution">Contribution</string>
-    <string name="message_clear_cache">Successfully cleared the cache</string>
-    <string name="overview">Overview</string>
+    <string name="search_hint">Cari sebuah</string>
+    <string name="clear_cache">Bersihkan Cache</string>
+    <string name="app_version">Versi Aplikasi</string>
+    <string name="terms_of_use">Syarat dan Pengunaan</string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="contribution">Kontribusi</string>
+    <string name="message_clear_cache">Sukses membersihkan cache</string>
+    <string name="overview">Kilasan Singkat</string>
     <string name="status">Status</string>
-    <string name="original_language">Original Language</string>
-    <string name="budget">Budget</string>
-    <string name="revenue">Revenue</string>
-    <string name="keyword">Keyword</string>
-    <string name="top_billed_cast">Top Billed Cast</string>
-    <string name="full_cast_amp_crew"><![CDATA[Full Cast & Crew]]></string>
+    <string name="original_language">Bahasa Ucapan</string>
+    <string name="budget">Anggaran</string>
+    <string name="revenue">Pemasukan</string>
+    <string name="keyword">Kata Kunci</string>
+    <string name="top_billed_cast">Aktor Utama</string>
+    <string name="full_cast_amp_crew"><![CDATA[Kru & Aktor Lainnya]]></string>
     <string name="media">Media</string>
     <string name="video">Video</string>
-    <string name="backdrops">Backdrops</string>
-    <string name="posters">Posters</string>
-    <string name="view_all_videos">View All Videos</string>
-    <string name="view_all_backdrops">View All Backdrops</string>
-    <string name="view_all_posters">View All Posters</string>
-    <string name="recommendations">Recommendations</string>
-    <string name="facts">Facts</string>
+    <string name="backdrops">Gambar Latar</string>
+    <string name="posters">Poster</string>
+    <string name="view_all_videos">Lihat Semua Video</string>
+    <string name="view_all_backdrops">Lihat Semua Gambar Latar</string>
+    <string name="view_all_posters">Lihat Semua Poster</string>
+    <string name="recommendations">Disarankan</string>
+    <string name="facts">Umum</string>
     <string name="network">Network</string>
-    <string name="type">Type</string>
-    <string name="series_cast">Series Cast</string>
-    <string name="last_season">Last Season</string>
-    <string name="original_name">Original Name</string>
-    <string name="episodes">Episodes</string>
-    <string name="seasons">Seasons</string>
-    <string name="close">Close</string>
-    <string name="no_internet">No Internet Connection</string>
-    <string name="body_internet">You must have Cellular Data or wifi to access this. Press OK to activate the internet</string>
-    <string name="change_theme">Change Theme</string>
-    <string name="theme">Theme</string>
-    <string name="night_mode">Night Mode</string>
-    <string name="view_all_season">View All Season</string>
+    <string name="type">Jenis</string>
+    <string name="series_cast">Aktor Series</string>
+    <string name="last_season">Sesion Terakhir</string>
+    <string name="original_name">Nama Asli</string>
+    <string name="episodes">Episode</string>
+    <string name="seasons">Season</string>
+    <string name="close">Tutup</string>
+    <string name="no_internet">Tidak Ada Koneksi Internet</string>
+    <string name="body_internet">Anda harus mengaktifkan Data Seluler atau wifi untuk mengakses ini. Tekan OK untuk mengaktifkan internet</string>
+    <string name="change_theme">Ganti Tema</string>
+    <string name="theme">Tema</string>
+    <string name="night_mode">Mode Malam</string>
+    <string name="view_all_season">Lihat Semua Season</string>
     <string name="transition_name">hello</string>
     <string name="transition_title">item_%1$d</string>
-    <string name="biography">Biography</string>
-    <string name="personal_info">Personal Info</string>
-    <string name="known_for">Known For</string>
-    <string name="known_credits">Known Credits</string>
-    <string name="gender">Gender</string>
-    <string name="birthday">Birthday</string>
-    <string name="place_of_birth">Place of Birth</string>
-    <string name="also_known_as">Also Known As</string>
-    <string name="acting">Acting</string>
-    <string name="crew">Crew</string>
-    <string name="female">Female</string>
-    <string name="male">Male</string>
-    <string name="overviewSeason">Season %1$d of %2$s on premiered on %3$s</string>
+    <string name="biography">Biografi</string>
+    <string name="personal_info">Tentang</string>
+    <string name="known_for">Peran</string>
+    <string name="known_credits">Jumlah Reputasi</string>
+    <string name="gender">Jenis Kelamin</string>
+    <string name="birthday">Kelahiran</string>
+    <string name="place_of_birth">Lokasi Kelahiran</string>
+    <string name="also_known_as">Juga Dikenal Sebagai</string>
+    <string name="acting">Riwayat Perfilman</string>
+    <string name="crew">Kru</string>
+    <string name="female">Wanita</string>
+    <string name="male">Pria</string>
+    <string name="overviewSeason">%2$s Season %1$d ditayangkan pada %3$s</string>
     <string name="bullet">•</string>
-    <string name="biographyPeople">We don\'t have a biography for %1$s</string>
-    <string name="sort">Sort</string>
+    <string name="biographyPeople">Kami tidak memiliki biografi untuk %1$s</string>
+    <string name="sort">Urutkan</string>
     <string-array name="arrayPopularity">
-        <item>Popularity</item>
-        <item>Ascending</item>
-        <item>Descending</item>
+        <item>Popularitas</item>
+        <item>Naik</item>
+        <item>Turun</item>
     </string-array>
     <string-array name="arrayRating">
-        <item>Rating</item>
-        <item>Ascending</item>
-        <item>Descending</item>
+        <item>Nilai</item>
+        <item>Naik</item>
+        <item>Turun</item>
     </string-array>
     <string-array name="arrayDate">
-        <item>Release Date</item>
-        <item>Ascending</item>
-        <item>Descending</item>
+        <item>Tangal Rilis</item>
+        <item>Naik</item>
+        <item>Turun</item>
     </string-array>
     <string-array name="arrayType">
-        <item>Movies</item>
-        <item>Tv Shows</item>
+        <item>Film</item>
+        <item>Serial Tv</item>
     </string-array>
     <string name="title_activity_credits">CreditsActivity</string>
-    <string name="tab_text_1">Cast</string>
-    <string name="tab_text_2">Crew</string>
+    <string name="tab1">Aktor</string>
+    <string name="tab2">Kru</string>
+    <string name="language">Bahasa</string>
 </resources>

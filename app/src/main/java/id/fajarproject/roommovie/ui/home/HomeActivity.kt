@@ -70,33 +70,33 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
             override fun onNavigationItemSelected(item: MenuItem): Boolean {
                 when(item.itemId){
                     R.id.action_home -> {
-                        addFragment(MovieFragment(),getString(R.string.movie))
+                        addFragment(MovieFragment(),Constant.movie)
                         setHintSearch(getString(R.string.movie))
                         changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.movie))
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.movie)
                         return true
                     }
                     R.id.action_tv -> {
                         if (!checkDataPreferences(Constant.genreTv)){
                             presenter.loadDataTv()
                         }
-                        addFragment(TvFragment(),getString(R.string.tv))
+                        addFragment(TvFragment(),Constant.tv)
                         setHintSearch(getString(R.string.tv))
                         changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.tv))
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.tv)
                         return true
                     }
                     R.id.action_people -> {
-                        addFragment(PeopleFragment(),getString(R.string.people))
+                        addFragment(PeopleFragment(),Constant.people)
                         setHintSearch(getString(R.string.people))
                         changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.people))
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.people)
                         return true
                     }
                     R.id.action_setting -> {
-                        addFragment(SettingFragment(),getString(R.string.setting))
+                        addFragment(SettingFragment(),Constant.setting)
                         changeToolbar(false)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,getString(R.string.setting))
+                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.setting)
                         return true
                     }
                 }
@@ -163,7 +163,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
             fragment = fragments
             fragmentTransaction.add(container.id, fragment, tag)
         } else {
-            if (tag == getString(R.string.setting)){
+            if (tag == Constant.setting){
                 fragmentTransaction.detach(fragment).
                 attach(fragment)
                 fragmentTransaction.show(fragment)
@@ -217,14 +217,15 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun setOpenFragment() {
-        when (AppPreference.getStringPreferenceByName(this,Constant.tag)) {
-            getString(R.string.tv) -> {
+        val tag = AppPreference.getStringPreferenceByName(this,Constant.tag)
+        when (tag) {
+            Constant.tv -> {
                 nav_view.selectedItemId = R.id.action_tv
             }
-            getString(R.string.people) -> {
+            Constant.people -> {
                 nav_view.selectedItemId = R.id.action_people
             }
-            getString(R.string.setting)-> {
+            Constant.setting-> {
                 nav_view.selectedItemId = R.id.action_setting
             }
             else -> {

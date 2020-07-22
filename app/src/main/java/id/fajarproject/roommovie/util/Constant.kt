@@ -26,6 +26,7 @@ object Constant {
     const val home              = "Home"
     const val tv                = "TV"
     const val people            = "People"
+    const val setting           = "Setting"
     const val REQUEST_VOICE     = 9999
     const val INTENT_STATUS     = "INTENT_STATUS"
     const val genreMovie        = "GenreMovie"
@@ -48,11 +49,9 @@ object Constant {
     const val genre             = "Genre"
     const val keywords          = "Keywords"
     const val networks          = "Networks"
+    const val locale            = "Locale"
     const val EXTRA_STARTING_ALBUM_POSITION         = "extra_starting_item_position"
     const val EXTRA_CURRENT_ALBUM_POSITION          = "extra_current_item_position"
     const val SAVED_CURRENT_PAGE_POSITION           = "current_page_position"
-    val TAB_TITLES = arrayOf(
-        R.string.tab_text_1,
-        R.string.tab_text_2
-    )
+
 }

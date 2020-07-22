@@ -1,8 +1,10 @@
 package id.fajarproject.roommovie.ui.base
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import id.fajarproject.roommovie.ui.widget.MyContextWrapper
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import io.reactivex.disposables.CompositeDisposable

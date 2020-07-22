@@ -1,10 +1,14 @@
 package id.fajarproject.roommovie
 
+import android.app.Activity
 import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.di.component.ApplicationComponent
 import id.fajarproject.roommovie.di.component.DaggerApplicationComponent
 import id.fajarproject.roommovie.di.module.ApplicationModule
+import id.fajarproject.roommovie.ui.widget.MyContextWrapper
+import id.fajarproject.roommovie.ui.widget.localeHelper.LocaleAwareApplication
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 
@@ -12,7 +16,7 @@ import id.fajarproject.roommovie.util.Constant
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class BaseApp: Application() {
+class BaseApp: LocaleAwareApplication() {
 
     lateinit var component: ApplicationComponent
 
@@ -23,11 +27,12 @@ class BaseApp: Application() {
         }else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
+
         instance = this
         setup()
     }
 
-    fun setup() {
+    private fun setup() {
         component = DaggerApplicationComponent.builder()
             .applicationModule(ApplicationModule(this)).build()
         component.inject(this)
