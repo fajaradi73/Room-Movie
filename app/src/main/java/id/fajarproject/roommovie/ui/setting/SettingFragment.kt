@@ -52,6 +52,9 @@ class SettingFragment : BaseFragment(),SettingContract.View {
         cvTermsOfUse.setOnClickListener {
             moveToDetail(getString(R.string.terms_of_use))
         }
+        cvContribution.setOnClickListener {
+            moveToDetail(getString(R.string.contribution))
+        }
 
         switchMode.isChecked = AppPreference.getBooleanPreferenceByName(requireContext(),Constant.isNightMode)
 

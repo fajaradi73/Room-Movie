@@ -1,6 +1,8 @@
 package id.fajarproject.roommovie.ui.setting
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -41,16 +43,35 @@ class WebViewActivity : AppCompatActivity() {
     private fun setWebView(){
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                val host = Uri.parse(url).host
+                host?.let {
+                    if (host.contains("android_asset")) {
+                        // This is my web site, so do not override; let my WebView load the page
+                        return false
+                    }
+                }
+                // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                startActivity(intent)
+                return true
+            }
             override fun onPageFinished(view: WebView, url: String) {
                 // Inject CSS on PageFinished
                 injectCSS(AppPreference.getBooleanPreferenceByName(this@WebViewActivity,Constant.isNightMode))
                 super.onPageFinished(view, url)
             }
         }
-        if (intentStatus == getString(R.string.privacy_policy)){
-            webView.loadUrl("file:///android_asset/privacy_policy.html")
-        }else if (intentStatus == getString(R.string.terms_of_use)){
-            webView.loadUrl("file:///android_asset/term_of_use.html")
+        when (intentStatus) {
+            getString(R.string.privacy_policy) -> {
+                webView.loadUrl("file:///android_asset/privacy_policy.html")
+            }
+            getString(R.string.terms_of_use) -> {
+                webView.loadUrl("file:///android_asset/term_of_use.html")
+            }
+            getString(R.string.contribution) -> {
+                webView.loadUrl("file:///android_asset/contribution.html")
+            }
         }
     }
 
@@ -71,6 +92,14 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         return true
+    }
+
+    override fun onBackPressed() {
+        if (webView.canGoBack()){
+            webView.goBack()
+        }else{
+            super.onBackPressed()
+        }
     }
 
     private fun injectCSS(isNightMode: Boolean) {
