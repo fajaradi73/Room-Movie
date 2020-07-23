@@ -443,12 +443,14 @@ class MovieDetailActivity : BaseActivity(),MovieDetailContract.View {
     override fun setOnSetChange(name : String){
         appbar.addOnOffsetChangedListener(object : AppBarStateChangeListener(){
             override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
-                if (state == State.EXPANDED){
-                    tvTitle.text    = name
-                    title           = ""
-                }else if (state == State.COLLAPSED){
-                    tvTitle.text    = ""
-                    title           = name
+                appbar.post {
+                    if (state == State.EXPANDED){
+                        tvTitle.text    = name
+                        title           = ""
+                    }else if (state == State.COLLAPSED){
+                        tvTitle.text    = ""
+                        title           = name
+                    }
                 }
             }
         })

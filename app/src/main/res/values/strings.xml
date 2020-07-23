@@ -71,7 +71,7 @@
     <string name="crew">Kru</string>
     <string name="female">Wanita</string>
     <string name="male">Pria</string>
-    <string name="overviewSeason">%2$s Season %1$d ditayangkan pada %3$s</string>
+    <string name="overviewSeason">%2$s %1$s ditayangkan pada %3$s</string>
     <string name="bullet">•</string>
     <string name="biographyPeople">Kami tidak memiliki biografi untuk %1$s</string>
     <string name="sort">Urutkan</string>
@@ -98,4 +98,5 @@
     <string name="tab1">Aktor</string>
     <string name="tab2">Kru</string>
     <string name="language">Bahasa</string>
+    <string name="noOverview">Kami belum memiliki kilasan singkat</string>
 </resources>

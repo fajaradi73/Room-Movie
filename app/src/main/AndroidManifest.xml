@@ -21,6 +21,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup"
         tools:targetApi="q">
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="id.fajarproject.roommovie"
@@ -120,9 +121,13 @@
             android:label=""
             android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.credits.CreditsActivity"
+            android:configChanges="locale"
+            android:label=""
+            android:screenOrientation="nosensor"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.seasons.SeasonActivity"
             android:configChanges="locale"
             android:label=""
             android:screenOrientation="nosensor"

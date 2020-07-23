@@ -101,22 +101,21 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
             setViewExternalIDs(it)
         }
         val listCredits : MutableList<CreditsItem?> = arrayListOf()
+        val listKnown   : MutableList<CreditsItem?> = arrayListOf()
 
         if (data.knownForDepartment == "Acting"){
             data.combinedCredits?.cast?.let {
-                Collections.sort(it,presenter.sortKnown())
-                setViewKnownFor(it)
+                listKnown.addAll(it)
                 listCredits.addAll(it)
             }
         }else{
             data.combinedCredits?.crew?.let {
-                Collections.sort(it,presenter.sortKnown())
-                setViewKnownFor(presenter.getKnownFor(data.knownForDepartment ?: "",it))
+                listKnown.addAll(presenter.getKnownFor(data.knownForDepartment ?: "",it))
                 listCredits.addAll(it)
             }
         }
 
-        Collections.sort(listCredits,presenter.sortYear())
+        setViewKnownFor(listKnown)
         setViewCredits(listCredits)
 
         link.setOnClickListener {
@@ -130,27 +129,33 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
                 setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
             }
         }
+        hideLoading()
     }
 
     override fun setOnSetChange(name : String){
         appbar.addOnOffsetChangedListener(object : AppBarStateChangeListener(){
             override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
-                if (state == State.EXPANDED){
-                    tvTitle.text    = name
-                    title           = ""
-                }else if (state == State.COLLAPSED){
-                    tvTitle.text    = ""
-                    title           = name
+                appbar.post{
+                    if (state == State.EXPANDED){
+                        tvTitle.text    = name
+                        title           = ""
+                    }else if (state == State.COLLAPSED){
+                        tvTitle.text    = ""
+                        title           = name
+                    }
                 }
             }
         })
     }
+
     override fun showDataFailed(message: String) {
         Log.e("ErrorDetail",message)
         showDialogNoData(message)
     }
 
     override fun setViewKnownFor(list: MutableList<CreditsItem?>) {
+        list.sortWith(presenter.sortKnown())
+//        Collections.sort(list,presenter.sortKnown())
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
         rvKnownFor.layoutManager    = layoutManager
@@ -160,9 +165,9 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 val intent = if (item?.media_type == "tv"){
-                    Intent(this@PeopleDetailActivity,TvDetailActivity::class.java)
+                    Intent(activity,TvDetailActivity::class.java)
                 }else {
-                    Intent(this@PeopleDetailActivity,MovieDetailActivity::class.java)
+                    Intent(activity,MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
                     intent.putExtra(Constant.idMovie,it)
@@ -200,6 +205,8 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun setViewCredits(list: MutableList<CreditsItem?>) {
+        list.sortWith(presenter.sortYear())
+//        Collections.sort(list,presenter.sortYear())
         val layoutManager           = LinearLayoutManager(this)
         layoutManager.orientation   = LinearLayoutManager.VERTICAL
         rvActing.layoutManager      = layoutManager
@@ -209,9 +216,9 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 val intent = if (item?.media_type == "tv"){
-                    Intent(this@PeopleDetailActivity,TvDetailActivity::class.java)
+                    Intent(activity,TvDetailActivity::class.java)
                 }else {
-                    Intent(this@PeopleDetailActivity,MovieDetailActivity::class.java)
+                    Intent(activity,MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
                     intent.putExtra(Constant.idMovie,it)

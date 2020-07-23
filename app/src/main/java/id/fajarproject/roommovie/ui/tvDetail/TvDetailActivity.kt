@@ -34,6 +34,7 @@ import id.fajarproject.roommovie.ui.discover.DiscoverActivity
 import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.picture.PictureActivity
 import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
+import id.fajarproject.roommovie.ui.seasons.SeasonActivity
 import id.fajarproject.roommovie.ui.video.VideoPlayerActivity
 import id.fajarproject.roommovie.ui.video.VideoListActivity
 import id.fajarproject.roommovie.ui.widget.AppBarStateChangeListener
@@ -181,7 +182,9 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 setViewNetwork(it)
             }
         }
+
         data.seasons?.let { list : MutableList<SeasonsItem?> ->
+            tvFullSeason.visibility = View.VISIBLE
             val last : MutableList<SeasonsItem?> = arrayListOf()
 
             list[list.size - 1]?.airDate?.let {
@@ -194,6 +197,14 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
                 }
             }
             setViewSeason(last,data.name ?: "")
+            tvFullSeason.setOnClickListener {
+                val intent = Intent(activity,SeasonActivity::class.java)
+                intent.putExtra(Constant.title,data.name)
+                intent.putExtra(Constant.season,Parcels.wrap(list))
+                startActivity(intent)
+            }
+        } ?: kotlin.run {
+            tvFullSeason.visibility = View.GONE
         }
 
         link.setOnClickListener {
@@ -523,12 +534,14 @@ class TvDetailActivity : BaseActivity(),TvDetailContract.View {
     override fun setOnSetChange(name : String){
         appbar.addOnOffsetChangedListener(object : AppBarStateChangeListener(){
             override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
-                if (state == State.EXPANDED){
-                    tvTitle.text    = name
-                    title           = ""
-                }else if (state == State.COLLAPSED){
-                    tvTitle.text    = ""
-                    title           = name
+                appbar.post {
+                    if (state == State.EXPANDED){
+                        tvTitle.text    = name
+                        title           = ""
+                    }else if (state == State.COLLAPSED){
+                        tvTitle.text    = ""
+                        title           = name
+                    }
                 }
             }
         })

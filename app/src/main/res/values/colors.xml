@@ -9,8 +9,8 @@
     <color name="iconColorPrimary">#212121</color>
     <color name="colorBottomNavigation">#ffc730</color>
     <color name="colorSwitchActivated">#ffc730</color>
-    <color name="background">#ffffff</color>
-    <color name="cardBackgroundColor">#f8f8f8</color>
+    <color name="background">#f6f6f6</color>
+    <color name="cardBackgroundColor">#ffffff</color>
     <color name="backgroundSearch">#ffffff</color>
     <color name="colorWhite">#fff</color>
     <color name="colorBlack">#000</color>

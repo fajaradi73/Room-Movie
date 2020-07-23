@@ -11,6 +11,7 @@ import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.picture.PictureActivity
 import id.fajarproject.roommovie.ui.previewPicture.PreviewPictureActivity
 import id.fajarproject.roommovie.ui.search.SearchActivity
+import id.fajarproject.roommovie.ui.seasons.SeasonActivity
 import id.fajarproject.roommovie.ui.setting.WebViewActivity
 import id.fajarproject.roommovie.ui.tvDetail.TvDetailActivity
 import id.fajarproject.roommovie.ui.tvList.TvListActivity
@@ -38,4 +39,5 @@ interface ActivityComponent {
     fun inject(peopleDetailActivity: PeopleDetailActivity)
     fun inject(discoverActivity: DiscoverActivity)
     fun inject(creditsActivity: CreditsActivity)
+    fun inject(seasonActivity: SeasonActivity)
 }

@@ -24,7 +24,6 @@ class PeopleDetailPresenter : BasePresenter(),PeopleDetailContract.Presenter {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({ data : PeopleItem ->
-                view.hideLoading()
                 view.showDataSuccess(data)
             },{ error ->
                 view.hideLoading()

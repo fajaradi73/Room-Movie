@@ -1,4 +1,4 @@
-package id.fajarproject.roommovie.ui.detailAdapter
+package id.fajarproject.roommovie.ui.seasons
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -16,10 +16,10 @@ import kotlinx.android.synthetic.main.adapter_season.view.*
 
 
 /**
- * Create by Fajar Adi Prasetyo on 09/07/2020.
+ * Create by Fajar Adi Prasetyo on 23/07/2020.
  */
 
-class DetailSeasonAdapter(
+class SeasonAdapter(
     var activity: Activity,
     private var list: MutableList<SeasonsItem?>,
     var title : String
@@ -76,7 +76,7 @@ class DetailSeasonAdapter(
         }
 
         holder.itemView.tvOverview.text = overview
-            Glide.with(activity)
+        Glide.with(activity)
             .load(Constant.BASE_IMAGE + data.posterPath)
             .error(R.drawable.ic_placeholder)
             .placeholder(Util.circleLoading(activity))

@@ -55,12 +55,14 @@ import kotlin.math.roundToInt
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
+
+@Suppress("DEPRECATION")
 object Util {
 
     fun getOkHttp(): OkHttpClient {
         val interceptor =
             HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
+//        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder()
             .connectTimeout(60, TimeUnit.SECONDS)
@@ -433,8 +435,12 @@ object Util {
         val intent = Intent(Intent.ACTION_VIEW)
         try {
             context.packageManager.getPackageInfo("com.facebook.katana", 0)
-            val versionCode: Int =
-                context.packageManager.getPackageInfo("com.facebook.katana", 0).versionCode
+            val versionCode =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    context.packageManager.getPackageInfo("com.facebook.katana", 0).longVersionCode
+                } else {
+                    context.packageManager.getPackageInfo("com.facebook.katana", 0).versionCode.toLong()
+                }
             if (versionCode >= 3002850) { //newer versions of fb app
                 intent.data = Uri.parse("fb://facewebmodal/f?href=${Constant.URL_FACEBOOK}${facebook}")
             } else { //older versions of fb app
@@ -671,8 +677,8 @@ object Util {
     }
 
     fun toProperCase(s: String): String {
-        return s.substring(0, 1).toUpperCase() +
-                s.substring(1).toLowerCase()
+        return s.substring(0, 1).toUpperCase(Locale.getDefault()) +
+                s.substring(1).toLowerCase(Locale.getDefault())
     }
 
     fun toProperCaseMoreThanOneWord(s: String): String? {
