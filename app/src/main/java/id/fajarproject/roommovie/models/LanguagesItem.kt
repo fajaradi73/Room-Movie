@@ -1,7 +1,9 @@
 package id.fajarproject.roommovie.models
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 
+@Keep
 data class LanguagesItem(
 
 	@field:SerializedName("name")
