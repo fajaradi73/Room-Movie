@@ -48,3 +48,6 @@ long consumerIndex;
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef { rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 -dontnote rx.internal.util.PlatformDependent
+
+-keep class java.lang.reflect.** { *; }
+-keepclassmembers public class java.lang.reflect.**

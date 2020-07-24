@@ -1,13 +1,9 @@
 package id.fajarproject.roommovie
 
-import android.app.Activity
-import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.di.component.ApplicationComponent
 import id.fajarproject.roommovie.di.component.DaggerApplicationComponent
 import id.fajarproject.roommovie.di.module.ApplicationModule
-import id.fajarproject.roommovie.ui.widget.MyContextWrapper
 import id.fajarproject.roommovie.ui.widget.localeHelper.LocaleAwareApplication
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
@@ -30,6 +26,7 @@ class BaseApp: LocaleAwareApplication() {
 
         instance = this
         setup()
+
     }
 
     private fun setup() {

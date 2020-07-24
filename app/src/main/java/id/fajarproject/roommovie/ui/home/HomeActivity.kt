@@ -13,12 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.arlib.floatingsearchview.FloatingSearchView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import id.fajarproject.roommovie.R
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
-import id.fajarproject.roommovie.models.GenresItem
 import id.fajarproject.roommovie.ui.base.BaseActivity
 import id.fajarproject.roommovie.ui.movie.MovieFragment
 import id.fajarproject.roommovie.ui.people.PeopleFragment
@@ -30,7 +27,6 @@ import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Constant.REQUEST_VOICE
 import id.fajarproject.roommovie.util.Util
 import kotlinx.android.synthetic.main.activity_home.*
-import java.lang.reflect.Type
 import javax.inject.Inject
 
 
@@ -53,10 +49,10 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
         presenter.attach<Activity>(this,this)
         setToolbar()
         if (isConnection){
-            if (!checkDataPreferences(Constant.language)){
+            if (!presenter.checkDataPreferences(Constant.language)){
                 presenter.loadDataLanguage()
             }else {
-                if (!checkDataPreferences(Constant.genreMovie)) {
+                if (!presenter.checkDataPreferences(Constant.genreMovie)) {
                     presenter.loadData()
                 } else {
                     setUI()
@@ -77,7 +73,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
                         return true
                     }
                     R.id.action_tv -> {
-                        if (!checkDataPreferences(Constant.genreTv)){
+                        if (!presenter.checkDataPreferences(Constant.genreTv)){
                             presenter.loadDataTv()
                         }
                         addFragment(TvFragment(),Constant.tv)
@@ -121,15 +117,18 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun showLoading() {
+        loading.visibility      = View.VISIBLE
+        clContainer.visibility  = View.GONE
+
         window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         )
-        loading.visibility = View.VISIBLE
     }
 
     override fun hideLoading() {
-        loading.visibility = View.GONE
+        loading.visibility      = View.GONE
+        clContainer.visibility  = View.VISIBLE
         window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -176,20 +175,6 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
         fragmentTransaction.commit()
     }
 
-    override fun saveGenres(list: MutableList<GenresItem?>?,prefName : String) {
-        val type: Type? = object : TypeToken<MutableList<GenresItem?>?>() {}.type
-        val json: String = Gson().toJson(list, type)
-        AppPreference.writePreference(this,prefName,json)
-        setUI()
-    }
-
-    override fun checkDataPreferences(prefName: String) : Boolean {
-        var isNotEmpty = true
-        if (AppPreference.getStringPreferenceByName(this,prefName).isEmpty()){
-            isNotEmpty = false
-        }
-        return isNotEmpty
-    }
 
     @SuppressLint("DefaultLocale")
     override fun setHintSearch(status: String) {
@@ -217,8 +202,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun setOpenFragment() {
-        val tag = AppPreference.getStringPreferenceByName(this,Constant.tag)
-        when (tag) {
+        when (AppPreference.getStringPreferenceByName(this,Constant.tag)) {
             Constant.tv -> {
                 nav_view.selectedItemId = R.id.action_tv
             }

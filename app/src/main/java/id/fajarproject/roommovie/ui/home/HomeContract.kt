@@ -13,8 +13,6 @@ class HomeContract {
 
     interface View : BaseContract.View{
         fun addFragment(fragments: Fragment, tag: String)
-        fun saveGenres(list: MutableList<GenresItem?>?,prefName : String)
-        fun checkDataPreferences(prefName: String) : Boolean
         fun setHintSearch(status : String)
         fun moveToSearch(voiceSearch : String)
         fun changeToolbar(isSearch : Boolean)
@@ -24,6 +22,8 @@ class HomeContract {
     interface Presenter : BaseContract.Presenter<View>{
         fun loadDataLanguage()
         fun saveLanguage(list: MutableList<LanguagesItem?>?)
+        fun saveGenres(list: MutableList<GenresItem?>?,prefName : String)
+        fun checkDataPreferences(prefName: String) : Boolean
         fun loadData()
         fun loadDataTv()
     }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.Shimmer
@@ -72,8 +71,8 @@ class SeasonActivity : BaseActivity(),SeasonContract.View {
         rvSeason.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val firstVisibleItem    = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
-                val lastVisibleItem     = (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                val firstVisibleItem    = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+                val lastVisibleItem     = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 if (lastVisibleItem < adapter.itemCount){
                     btnBackToTop.show()
                 }else{

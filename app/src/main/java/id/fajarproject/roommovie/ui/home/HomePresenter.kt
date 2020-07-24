@@ -2,10 +2,12 @@ package id.fajarproject.roommovie.ui.home
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import id.fajarproject.roommovie.api.ApiServiceInterface
 import id.fajarproject.roommovie.models.Genre
+import id.fajarproject.roommovie.models.GenresItem
 import id.fajarproject.roommovie.models.LanguagesItem
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
@@ -37,7 +39,7 @@ class HomePresenter : HomeContract.Presenter{
                 Log.e("ErrorGenre",error?.message ?: "")
             })
 
-        if (!view.checkDataPreferences(Constant.genreMovie)){
+        if (!checkDataPreferences(Constant.genreMovie)){
             loadData()
         }else{
             view.setUI()
@@ -58,11 +60,10 @@ class HomePresenter : HomeContract.Presenter{
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({ movie : Genre? ->
                 view.hideLoading()
-                view.saveGenres(movie?.genreList,Constant.genreMovie)
+                saveGenres(movie?.genreList,Constant.genreMovie)
             },{ error ->
                 view.hideLoading()
-                view.setUI()
-                Log.e("ErrorGenre",error?.message ?: "")
+                Toast.makeText(activity,"Error Genre ${error.message}",Toast.LENGTH_LONG).show()
             })
         subscriptions.add(subscribe)
     }
@@ -73,14 +74,29 @@ class HomePresenter : HomeContract.Presenter{
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe ({ movie : Genre? ->
                 view.hideLoading()
-                view.saveGenres(movie?.genreList,Constant.genreTv)
+                saveGenres(movie?.genreList,Constant.genreTv)
             },{ error ->
                 view.hideLoading()
-                Log.e("ErrorGenre",error?.message ?: "")
+                Toast.makeText(activity,"Error Genre ${error.message}",Toast.LENGTH_LONG).show()
             })
         subscriptions.add(subscribe)
     }
 
+    override fun saveGenres(list: MutableList<GenresItem?>?, prefName : String) {
+        val type: Type? = object : TypeToken<MutableList<GenresItem?>?>() {}.type
+        val json: String = Gson().toJson(list, type)
+        AppPreference.writePreference(activity,prefName,json)
+        view.setUI()
+    }
+
+    override fun checkDataPreferences(prefName: String) : Boolean {
+        var isNotEmpty = true
+        if (AppPreference.getStringPreferenceByName(activity,prefName).isEmpty()){
+            isNotEmpty = false
+        }
+        return isNotEmpty
+    }
+    
     override fun subscribe() {
 
     }

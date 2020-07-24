@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "752167423903",
+    "firebase_url": "https://roommovie-77385.firebaseio.com",
+    "project_id": "roommovie-77385",
+    "storage_bucket": "roommovie-77385.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752167423903:android:f253c900aa518e1d9db7aa",
+        "android_client_info": {
+          "package_name": "id.fajarproject.roommovie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752167423903-me10s3k79mlvmak2c8diiqu4ort42hks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.fajarproject.roommovie",
+            "certificate_hash": "128fa87d6d5fc3dc411555bf944f4dc398c0afb2"
+          }
+        },
+        {
+          "client_id": "752167423903-idk6jmnkeuk6d6su745ejn77cn0dknt3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyybmi0-aT0_OsPahhSTY0rvD2qDfyyPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752167423903-idk6jmnkeuk6d6su745ejn77cn0dknt3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -169,10 +169,10 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
 
     override fun showData(isShow: Boolean) {
         if (isShow){
-            refreshLayout.visibility    = View.VISIBLE
+            viewPopular.visibility      = View.VISIBLE
             noData.visibility           = View.GONE
         }else{
-            refreshLayout.visibility    = View.GONE
+            viewPopular.visibility      = View.GONE
             noData.visibility           = View.VISIBLE
         }
     }
@@ -202,7 +202,8 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
         shimmerView.visibility  = View.VISIBLE
         shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
         shimmerView.startShimmer()
-        refreshLayout.visibility = View.GONE
+        refreshLayout.visibility    = View.GONE
+        noData.visibility           = View.GONE
     }
 
     override fun hideLoading() {
