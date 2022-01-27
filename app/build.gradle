@@ -1,24 +1,26 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 32
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "id.fajarproject.roommovie"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 32
         versionCode 2
         versionName "1.0.1-build${getDate()}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-
     }
 
     buildTypes {
@@ -26,11 +28,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
     }
 }
 
@@ -42,15 +39,15 @@ static def getDate() {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.1'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.30"
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.6.0-alpha02'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
@@ -59,31 +56,31 @@ dependencies {
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:19.0.8'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'junit:junit:4.13.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     ////Shape View
     implementation 'com.github.florent37:shapeofview:1.3.2'
 
     ///// Glide Library
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation('com.github.bumptech.glide:okhttp3-integration:4.7.1') {
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation('com.github.bumptech.glide:okhttp3-integration:4.12.0') {
         exclude group: 'glide-parent'
     }
 
     ///// ButterKnife Library
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    kapt 'com.jakewharton:butterknife-compiler:10.2.3'
 
     ///// Retrofit Library
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation "com.squareup.retrofit2:converter-jackson:2.4.0"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.retrofit2:converter-jackson:2.9.0"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
 
     // rx
     implementation "io.reactivex.rxjava2:rxjava:$rxjava2_version"
@@ -92,6 +89,7 @@ dependencies {
 
     // dependency injection
     implementation "com.google.dagger:dagger:2.27"
+    //noinspection OutdatedLibrary
     implementation "com.google.dagger:dagger-android:$dagger2_version"
     implementation "com.google.dagger:dagger-android-support:$dagger2_version"
     kapt "com.google.dagger:dagger-compiler:$dagger2_version"
@@ -104,7 +102,7 @@ dependencies {
     implementation 'com.ethanhua:skeleton:1.1.2'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation 'com.faltenreich:skeletonlayout:2.0.1'
+    implementation 'com.faltenreich:skeletonlayout:4.0.0'
 
     //// Loading
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
@@ -133,6 +131,6 @@ dependencies {
     annotationProcessor 'org.parceler:parceler:1.1.12'
 
     //// Material Design
-    implementation 'com.github.rey5137:material:1.3.0'
+    implementation 'com.github.rey5137:material:1.3.1'
 
 }

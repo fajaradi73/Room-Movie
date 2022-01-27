@@ -28,7 +28,7 @@ class FragmentModule {
     }
 
     @Provides
-    fun providePoplePresenter() : PeopleContract.Presenter{
+    fun providePeoplePresenter() : PeopleContract.Presenter{
         return PeoplePresenter()
     }
 

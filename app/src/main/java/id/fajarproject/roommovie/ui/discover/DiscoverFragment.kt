@@ -8,41 +8,46 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import com.andrefrsousa.superbottomsheet.SuperBottomSheetFragment
 import id.fajarproject.roommovie.R
-import kotlinx.android.synthetic.main.fragment_discover.*
+import id.fajarproject.roommovie.databinding.FragmentDiscoverBinding
 
-class DiscoverFragment(private var viewContract : DiscoverContract.Parsing,private var isMovie : Boolean) : SuperBottomSheetFragment(),DiscoverContract.Fragment {
+class DiscoverFragment(
+    private var viewContract: DiscoverContract.Parsing,
+    private var isMovie: Boolean
+) : SuperBottomSheetFragment(), DiscoverContract.Fragment {
 
-    private lateinit var arrayPopular : Array<String>
-    private lateinit var arrayRating : Array<String>
-    private lateinit var arrayDate : Array<String>
+    private lateinit var arrayPopular: Array<String>
+    private lateinit var arrayRating: Array<String>
+    private lateinit var arrayDate: Array<String>
+    private lateinit var discoverBinding: FragmentDiscoverBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_discover, container, false)
+        discoverBinding = FragmentDiscoverBinding.inflate(inflater, container, false)
+        return discoverBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arrayPopular = resources.getStringArray(R.array.arrayPopularity)
-        arrayDate    = resources.getStringArray(R.array.arrayDate)
-        arrayRating  = resources.getStringArray(R.array.arrayRating)
+        arrayDate = resources.getStringArray(R.array.arrayDate)
+        arrayRating = resources.getStringArray(R.array.arrayRating)
         setViewSpinner()
         setAction()
     }
 
 
-    override fun setViewSpinner(){
-        spPopular.adapter   = getAdapter(arrayPopular)
-        spRating.adapter    = getAdapter(arrayRating)
-        spDate.adapter      = getAdapter(arrayDate)
+    override fun setViewSpinner() {
+        discoverBinding.spPopular.adapter = getAdapter(arrayPopular)
+        discoverBinding.spRating.adapter = getAdapter(arrayRating)
+        discoverBinding.spDate.adapter = getAdapter(arrayDate)
     }
 
-    override fun setAction(){
-        spPopular.setOnItemClickListener { _, _, position, _ ->
+    override fun setAction() {
+        discoverBinding.spPopular.setOnItemClickListener { _, _, position, _ ->
             when (position) {
                 1 -> {
                     viewContract.onPassData("popularity.asc")
@@ -59,7 +64,7 @@ class DiscoverFragment(private var viewContract : DiscoverContract.Parsing,priva
                 }
             }
         }
-        spRating.setOnItemClickListener { _, _, position, _ ->
+        discoverBinding.spRating.setOnItemClickListener { _, _, position, _ ->
             when (position) {
                 1 -> {
                     viewContract.onPassData("vote_average.asc")
@@ -76,9 +81,9 @@ class DiscoverFragment(private var viewContract : DiscoverContract.Parsing,priva
                 }
             }
         }
-        spDate.setOnItemClickListener { _, _, position, _ ->
+        discoverBinding.spDate.setOnItemClickListener { _, _, position, _ ->
             var date = "release_date"
-            if (!isMovie){
+            if (!isMovie) {
                 date = "first_air_date"
             }
             when (position) {
@@ -99,7 +104,7 @@ class DiscoverFragment(private var viewContract : DiscoverContract.Parsing,priva
         }
     }
 
-    override fun getAdapter(list: Array<String>) : ArrayAdapter<String?>{
+    override fun getAdapter(list: Array<String>): ArrayAdapter<String?> {
         val adapter: ArrayAdapter<String?> = ArrayAdapter(
             requireActivity(), android.R.layout.simple_spinner_item, list
         )
@@ -108,7 +113,7 @@ class DiscoverFragment(private var viewContract : DiscoverContract.Parsing,priva
     }
 
     override fun getBackgroundColor(): Int {
-        return ContextCompat.getColor(requireContext(),R.color.background)
+        return ContextCompat.getColor(requireContext(), R.color.background)
     }
 
     override fun getCornerRadius(): Float {

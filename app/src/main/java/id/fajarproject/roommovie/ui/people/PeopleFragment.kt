@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.FragmentPeopleBinding
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.people.PeopleItem
@@ -19,16 +20,15 @@ import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.fragment_people.*
-import org.parceler.Parcels
 import javax.inject.Inject
 
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class PeopleFragment : BaseFragment() , PeopleContract.View{
+class PeopleFragment : BaseFragment(), PeopleContract.View {
 
-    @Inject lateinit var presenter : PeopleContract.Presenter
+    @Inject
+    lateinit var presenter: PeopleContract.Presenter
     lateinit var layoutManager: GridLayoutManager
     var adapter: PeopleAdapter? = null
     var isLoading = false
@@ -37,6 +37,7 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
     private var countData = 0
     var currentPage = 1
     var limit = 20
+    private lateinit var fragmentPeopleBinding: FragmentPeopleBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,8 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_people, container, false)
+        fragmentPeopleBinding = FragmentPeopleBinding.inflate(inflater, container, false)
+        return fragmentPeopleBinding.root
     }
 
     override fun onDestroy() {
@@ -58,7 +60,7 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.attach<Fragment>(this,this)
+        presenter.attach<Fragment>(this, this)
 
         setRecycleView()
         setUI()
@@ -67,7 +69,7 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
 
     override fun setRecycleView() {
         val mNoOfColumns = Util.calculateNoOfColumns(requireContext())
-        layoutManager = GridLayoutManager(requireContext(),mNoOfColumns)
+        layoutManager = GridLayoutManager(requireContext(), mNoOfColumns)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when {
@@ -83,11 +85,12 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
                 }
             }
         }
-        rvPopular.layoutManager = layoutManager
+        fragmentPeopleBinding.rvPopular.layoutManager = layoutManager
     }
 
     override fun setScrollRecycleView() {
-        rvPopular.addOnScrollListener(object : PaginationScrollListener(layoutManager){
+        fragmentPeopleBinding.rvPopular.addOnScrollListener(object :
+            PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
@@ -108,9 +111,9 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
 
             override fun backToTop(isShow: Boolean) {
                 if (isShow)
-                    btnBackToTop.show()
+                    fragmentPeopleBinding.btnBackToTop.show()
                 else
-                    btnBackToTop.hide()
+                    fragmentPeopleBinding.btnBackToTop.hide()
             }
 
         })
@@ -118,13 +121,13 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
 
     override fun showDataSuccess(list: MutableList<PeopleItem?>) {
         countData = list.size
-        if (currentPage == 1){
+        if (currentPage == 1) {
             adapter = PeopleAdapter(
-                requireActivity(),list
+                requireActivity(), list
             )
-            rvPopular.adapter = adapter
+            fragmentPeopleBinding.rvPopular.adapter = adapter
             setScrollRecycleView()
-        }else{
+        } else {
             adapter?.removeLoadingFooter()
             isLoading = false
             adapter?.addData(list)
@@ -136,8 +139,8 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter?.getItem(position)
                 item?.id.let {
-                    val intent = Intent(requireContext(),PeopleDetailActivity::class.java)
-                    intent.putExtra(Constant.idPeople,it)
+                    val intent = Intent(requireContext(), PeopleDetailActivity::class.java)
+                    intent.putExtra(Constant.idPeople, it)
                     startActivity(intent)
                 }
             }
@@ -147,33 +150,33 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
     }
 
     override fun showDataFailed(message: String) {
-        Log.d("ErrorFavorite",message)
+        Log.d("ErrorFavorite", message)
         showData(false)
     }
 
     override fun checkLastData() {
-        if (countData == limit){
+        if (countData == limit) {
             adapter?.addLoadingFooter()
-        }else{
+        } else {
             isLastPage = true
         }
     }
 
     override fun checkData() {
-        if (adapter?.itemCount == 0){
+        if (adapter?.itemCount == 0) {
             showData(false)
-        }else{
+        } else {
             showData(true)
         }
     }
 
     override fun showData(isShow: Boolean) {
-        if (isShow){
-            viewPopular.visibility      = View.VISIBLE
-            noData.visibility           = View.GONE
-        }else{
-            viewPopular.visibility      = View.GONE
-            noData.visibility           = View.VISIBLE
+        if (isShow) {
+            fragmentPeopleBinding.viewPopular.visibility = View.VISIBLE
+            fragmentPeopleBinding.noData.visibility = View.GONE
+        } else {
+            fragmentPeopleBinding.viewPopular.visibility = View.GONE
+            fragmentPeopleBinding.noData.visibility = View.VISIBLE
         }
     }
 
@@ -189,27 +192,33 @@ class PeopleFragment : BaseFragment() , PeopleContract.View{
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        btnBackToTop.setOnClickListener { rvPopular.smoothScrollToPosition(0) }
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
+        fragmentPeopleBinding.btnBackToTop.hide()
+        fragmentPeopleBinding.btnBackToTop.setOnClickListener {
+            fragmentPeopleBinding.rvPopular.smoothScrollToPosition(
+                0
+            )
+        }
+        fragmentPeopleBinding.refreshLayout.setOnRefreshListener {
+            fragmentPeopleBinding.refreshLayout.isRefreshing = false
             currentPage = 1
             presenter.loadData(currentPage)
         }
     }
 
     override fun showLoading() {
-        shimmerView.visibility  = View.VISIBLE
-        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-        shimmerView.startShimmer()
-        refreshLayout.visibility    = View.GONE
-        noData.visibility           = View.GONE
+        fragmentPeopleBinding.shimmerView.visibility = View.VISIBLE
+        fragmentPeopleBinding.shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+        )
+        fragmentPeopleBinding.shimmerView.startShimmer()
+        fragmentPeopleBinding.refreshLayout.visibility = View.GONE
+        fragmentPeopleBinding.noData.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        shimmerView.stopShimmer()
-        shimmerView.visibility      = View.GONE
-        refreshLayout.visibility    = View.VISIBLE
+        fragmentPeopleBinding.shimmerView.stopShimmer()
+        fragmentPeopleBinding.shimmerView.visibility = View.GONE
+        fragmentPeopleBinding.refreshLayout.visibility = View.VISIBLE
     }
 
 }

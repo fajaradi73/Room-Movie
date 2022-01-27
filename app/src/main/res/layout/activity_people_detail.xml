@@ -140,10 +140,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <include layout="@layout/activity_people_detail_overview"/>
-                <include layout="@layout/activity_people_detail_info"/>
-                <include layout="@layout/activity_people_detail_known_for"/>
-                <include layout="@layout/activity_people_detail_cast"/>
+                <include
+                    android:id="@+id/peopleDetailOverview"
+                    layout="@layout/activity_people_detail_overview"/>
+                <include
+                    android:id="@+id/peopleDetailInfo"
+                    layout="@layout/activity_people_detail_info"/>
+                <include
+                    android:id="@+id/peopleDetailKnown"
+                    layout="@layout/activity_people_detail_known_for"/>
+                <include
+                    android:id="@+id/peopleDetailCast"
+                    layout="@layout/activity_people_detail_cast"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

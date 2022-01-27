@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityVideoListBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.VideosItem
@@ -18,39 +19,41 @@ import id.fajarproject.roommovie.ui.widget.GridSpacingItemDecoration
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_video_list.*
 import javax.inject.Inject
 
-class VideoListActivity : BaseActivity(),VideoListContract.View {
+class VideoListActivity : BaseActivity(), VideoListContract.View {
 
-    @Inject lateinit var presenter: VideoListContract.Presenter
+    @Inject
+    lateinit var presenter: VideoListContract.Presenter
     lateinit var adapter: VideoListAdapter
-    var idMovie : Int = -1
+    var idMovie: Int = -1
     var isMovie = true
+    private lateinit var videoListBinding: ActivityVideoListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_video_list)
+        videoListBinding = ActivityVideoListBinding.inflate(layoutInflater)
+        setContentView(videoListBinding.root)
         injectDependency()
-        presenter.attach(this,this)
-        idMovie = intent.getIntExtra(Constant.idMovie,-1)
-        isMovie = intent.getBooleanExtra(Constant.isMovie,true)
+        presenter.attach(this, this)
+        idMovie = intent.getIntExtra(Constant.idMovie, -1)
+        isMovie = intent.getBooleanExtra(Constant.isMovie, true)
         setToolbar()
         setUI()
 
-        title    = intent.getStringExtra(Constant.title)
+        title = intent.getStringExtra(Constant.title)
 
-        if (idMovie != -1){
-            presenter.loadData(idMovie,isMovie)
-        }else{
+        if (idMovie != -1) {
+            presenter.loadData(idMovie, isMovie)
+        } else {
             checkData(false)
         }
     }
 
     override fun showDataSuccess(list: MutableList<VideosItem?>) {
         checkData(true)
-        rvVideo.layoutManager = GridLayoutManager(this,2)
-        rvVideo.addItemDecoration(
+        videoListBinding.rvVideo.layoutManager = GridLayoutManager(this, 2)
+        videoListBinding.rvVideo.addItemDecoration(
             GridSpacingItemDecoration(
                 activity,
                 2,
@@ -58,15 +61,15 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
                 true
             )
         )
-        rvVideo.itemAnimator    = DefaultItemAnimator()
-        adapter                 = VideoListAdapter(this,list)
-        rvVideo.adapter         = adapter
+        videoListBinding.rvVideo.itemAnimator = DefaultItemAnimator()
+        adapter = VideoListAdapter(this, list)
+        videoListBinding.rvVideo.adapter = adapter
         adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 item?.key?.let {
                     val intent = Intent(this@VideoListActivity, VideoPlayerActivity::class.java)
-                    intent.putExtra(Constant.keyVideo,it)
+                    intent.putExtra(Constant.keyVideo, it)
                     startActivity(intent)
                 }
             }
@@ -76,38 +79,40 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
 
 
     override fun showDataFailed(message: String) {
-        Log.e("ErrorVideo",message)
+        Log.e("ErrorVideo", message)
         checkData(false)
     }
 
     override fun checkData(isShow: Boolean) {
-        if (isShow){
-            refreshLayout.visibility    = View.VISIBLE
-            noData.visibility           = View.GONE
-        }else{
-            refreshLayout.visibility    = View.GONE
-            noData.visibility           = View.VISIBLE
+        if (isShow) {
+            videoListBinding.refreshLayout.visibility = View.VISIBLE
+            videoListBinding.noData.visibility = View.GONE
+        } else {
+            videoListBinding.refreshLayout.visibility = View.GONE
+            videoListBinding.noData.visibility = View.VISIBLE
         }
     }
 
     override fun setViewBackToTop() {
-        rvVideo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        videoListBinding.rvVideo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val firstVisibleItem    = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
-                val lastVisibleItem     = (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
-                if (lastVisibleItem < adapter.itemCount){
-                    btnBackToTop.show()
-                }else{
-                    btnBackToTop.hide()
+                val firstVisibleItem =
+                    (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+                val lastVisibleItem =
+                    (recyclerView.layoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                if (lastVisibleItem < adapter.itemCount) {
+                    videoListBinding.btnBackToTop.show()
+                } else {
+                    videoListBinding.btnBackToTop.hide()
                 }
-                if (firstVisibleItem == 0){
-                    btnBackToTop.hide()
+                if (firstVisibleItem == 0) {
+                    videoListBinding.btnBackToTop.hide()
                 }
             }
         })
-        btnBackToTop.setOnClickListener {
-            rvVideo.smoothScrollToPosition(0)
+        videoListBinding.btnBackToTop.setOnClickListener {
+            videoListBinding.rvVideo.smoothScrollToPosition(0)
         }
     }
 
@@ -120,31 +125,40 @@ class VideoListActivity : BaseActivity(),VideoListContract.View {
     }
 
     override fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(videoListBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
+        Util.setColorFilter(
+            videoListBinding.toolbar.navigationIcon!!,
+            ContextCompat.getColor(this, R.color.iconColorPrimary)
+        )
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        btnBackToTop.setOnClickListener { rvVideo.smoothScrollToPosition(0) }
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
-            presenter.loadData(idMovie,isMovie)
+        videoListBinding.btnBackToTop.hide()
+        videoListBinding.btnBackToTop.setOnClickListener {
+            videoListBinding.rvVideo.smoothScrollToPosition(
+                0
+            )
+        }
+        videoListBinding.refreshLayout.setOnRefreshListener {
+            videoListBinding.refreshLayout.isRefreshing = false
+            presenter.loadData(idMovie, isMovie)
         }
     }
 
     override fun showLoading() {
-        shimmerView.visibility  = View.VISIBLE
-        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-        shimmerView.startShimmer()
-        refreshLayout.visibility = View.GONE
+        videoListBinding.shimmerView.visibility = View.VISIBLE
+        videoListBinding.shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+        )
+        videoListBinding.shimmerView.startShimmer()
+        videoListBinding.refreshLayout.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        shimmerView.stopShimmer()
-        shimmerView.visibility      = View.GONE
-        refreshLayout.visibility    = View.VISIBLE
+        videoListBinding.shimmerView.stopShimmer()
+        videoListBinding.shimmerView.visibility = View.GONE
+        videoListBinding.refreshLayout.visibility = View.VISIBLE
     }
 
 }

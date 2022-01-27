@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityDiscoverBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
@@ -21,54 +22,57 @@ import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_discover.*
 import javax.inject.Inject
 
-class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContract.View {
+class DiscoverActivity : BaseActivity(), DiscoverContract.Parsing, DiscoverContract.View {
 
-    @Inject lateinit var presenter : DiscoverContract.Presenter
-    lateinit var layoutManager: GridLayoutManager
-    var adapter: SearchAdapter? = null
-    var isLoading = false
-    var isLastPage = false
+    @Inject
+    lateinit var presenter: DiscoverContract.Presenter
+    private lateinit var layoutManager: GridLayoutManager
+    private var adapter: SearchAdapter? = null
+    private var isLoading = false
+    private var isLastPage = false
 
     private var countData = 0
-    var currentPage = 1
-    var limit = 20
+    private var currentPage = 1
+    private var limit = 20
 
-    private var status      : String = ""
-    private var sortBy      : String = ""
-    private var genre       : String = ""
-    private var keywords    : String = ""
-    private var networks    : String = ""
+    private var status: String = ""
+    private var sortBy: String = ""
+    private var genre: String = ""
+    private var keywords: String = ""
+    private var networks: String = ""
     private var isMovie = true
+
+    private lateinit var discoverBinding: ActivityDiscoverBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_discover)
+        discoverBinding = ActivityDiscoverBinding.inflate(layoutInflater)
+        setContentView(discoverBinding.root)
 
         injectDependency()
-        presenter.attach<Activity>(this,this)
+        presenter.attach<Activity>(this, this)
 
-        status      = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
-        sortBy      = intent.getStringExtra(Constant.sortBy) ?: "popularity.desc"
-        genre       = intent.getStringExtra(Constant.genre) ?: ""
-        keywords    = intent.getStringExtra(Constant.keywords) ?: ""
-        networks    = intent.getStringExtra(Constant.networks) ?: ""
-        isMovie     = intent.getBooleanExtra(Constant.isMovie,true)
+        status = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
+        sortBy = intent.getStringExtra(Constant.sortBy) ?: "popularity.desc"
+        genre = intent.getStringExtra(Constant.genre) ?: ""
+        keywords = intent.getStringExtra(Constant.keywords) ?: ""
+        networks = intent.getStringExtra(Constant.networks) ?: ""
+        isMovie = intent.getBooleanExtra(Constant.isMovie, true)
 
         setToolbar()
         setRecycleView()
         setUI()
-        if (isConnection){
-            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
+        if (isConnection) {
+            presenter.loadData(isMovie, sortBy, genre, keywords, networks, currentPage)
         }
 
     }
 
     override fun setRecycleView() {
         val mNoOfColumns = Util.calculateNoOfColumns(this)
-        layoutManager = GridLayoutManager(this,mNoOfColumns)
+        layoutManager = GridLayoutManager(this, mNoOfColumns)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when {
@@ -84,15 +88,16 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
                 }
             }
         }
-        rvMovie.layoutManager = layoutManager
+        discoverBinding.rvMovie.layoutManager = layoutManager
     }
 
     override fun setScrollRecycleView() {
-        rvMovie.addOnScrollListener(object : PaginationScrollListener(layoutManager){
+        discoverBinding.rvMovie.addOnScrollListener(object :
+            PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
-                presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
+                presenter.loadData(isMovie, sortBy, genre, keywords, networks, currentPage)
             }
 
             override fun getTotalPageCount(): Int {
@@ -109,9 +114,9 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
 
             override fun backToTop(isShow: Boolean) {
                 if (isShow)
-                    btnBackToTop.show()
+                    discoverBinding.btnBackToTop.show()
                 else
-                    btnBackToTop.hide()
+                    discoverBinding.btnBackToTop.hide()
             }
 
         })
@@ -119,13 +124,13 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
 
     override fun showDataSuccess(list: MutableList<MovieItem?>) {
         countData = list.size
-        if (currentPage == 1){
+        if (currentPage == 1) {
             adapter = SearchAdapter(
-                this,list,isMovie
+                this, list, isMovie
             )
-            rvMovie.adapter = adapter
+            discoverBinding.rvMovie.adapter = adapter
             setScrollRecycleView()
-        }else{
+        } else {
             adapter?.removeLoadingFooter()
             isLoading = false
             adapter?.addData(list)
@@ -146,33 +151,33 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
     }
 
     override fun showDataFailed(message: String) {
-        Log.d("ErrorFavorite",message)
+        Log.d("ErrorFavorite", message)
         showData(false)
     }
 
     override fun checkLastData() {
-        if (countData == limit){
+        if (countData == limit) {
             adapter?.addLoadingFooter()
-        }else{
+        } else {
             isLastPage = true
         }
     }
 
     override fun checkData() {
-        if (adapter?.itemCount == 0){
+        if (adapter?.itemCount == 0) {
             showData(false)
-        }else{
+        } else {
             showData(true)
         }
     }
 
     override fun showData(isShow: Boolean) {
-        if (isShow){
-            rvMovie.visibility  = View.VISIBLE
-            noData.visibility   = View.GONE
-        }else{
-            rvMovie.visibility  = View.GONE
-            noData.visibility   = View.VISIBLE
+        if (isShow) {
+            discoverBinding.rvMovie.visibility = View.VISIBLE
+            discoverBinding.noData.visibility = View.GONE
+        } else {
+            discoverBinding.rvMovie.visibility = View.GONE
+            discoverBinding.noData.visibility = View.VISIBLE
         }
     }
 
@@ -182,7 +187,7 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
         else
             Intent(this, TvDetailActivity::class.java)
 
-        intent.putExtra(Constant.idMovie,id)
+        intent.putExtra(Constant.idMovie, id)
         startActivity(intent)
     }
 
@@ -195,9 +200,12 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
     }
 
     override fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(discoverBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
+        Util.setColorFilter(
+            discoverBinding.toolbar.navigationIcon!!,
+            ContextCompat.getColor(this, R.color.iconColorPrimary)
+        )
         title = Util.toProperCaseMoreThanOneWord(status)
     }
 
@@ -207,55 +215,61 @@ class DiscoverActivity : BaseActivity(),DiscoverContract.Parsing,DiscoverContrac
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        btnBackToTop.setOnClickListener { rvMovie.smoothScrollToPosition(0) }
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
-            currentPage = 1
-            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
+        discoverBinding.btnBackToTop.hide()
+        discoverBinding.btnBackToTop.setOnClickListener {
+            discoverBinding.rvMovie.smoothScrollToPosition(
+                0
+            )
         }
-        cvSort.setOnClickListener {
-            val sheet = DiscoverFragment(this,true)
-            sheet.show(supportFragmentManager,"DiscoverFragment")
+        discoverBinding.refreshLayout.setOnRefreshListener {
+            discoverBinding.refreshLayout.isRefreshing = false
+            currentPage = 1
+            presenter.loadData(isMovie, sortBy, genre, keywords, networks, currentPage)
+        }
+        discoverBinding.cvSort.setOnClickListener {
+            val sheet = DiscoverFragment(this, true)
+            sheet.show(supportFragmentManager, "DiscoverFragment")
         }
 
         val adapter: ArrayAdapter<String?> = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.arrayType)
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spType.adapter = adapter
-        spType.setOnItemClickListener { _, _, position, _ ->
+        discoverBinding.spType.adapter = adapter
+        discoverBinding.spType.setOnItemClickListener { _, _, position, _ ->
             isMovie = position == 0
             currentPage = 1
-            presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
+            presenter.loadData(isMovie, sortBy, genre, keywords, networks, currentPage)
             true
         }
-        if (isMovie){
-            spType.setSelection(0)
-        }else{
-            if (networks.isNotEmpty()){
-                spType.isEnabled = false
+        if (isMovie) {
+            discoverBinding.spType.setSelection(0)
+        } else {
+            if (networks.isNotEmpty()) {
+                discoverBinding.spType.isEnabled = false
             }
-            spType.setSelection(1)
+            discoverBinding.spType.setSelection(1)
         }
     }
 
     override fun showLoading() {
-        shimmerView.visibility  = View.VISIBLE
-        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-        shimmerView.startShimmer()
-        refreshLayout.visibility = View.GONE
+        discoverBinding.shimmerView.visibility = View.VISIBLE
+        discoverBinding.shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+        )
+        discoverBinding.shimmerView.startShimmer()
+        discoverBinding.refreshLayout.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        shimmerView.stopShimmer()
-        shimmerView.visibility      = View.GONE
-        refreshLayout.visibility    = View.VISIBLE
+        discoverBinding.shimmerView.stopShimmer()
+        discoverBinding.shimmerView.visibility = View.GONE
+        discoverBinding.refreshLayout.visibility = View.VISIBLE
     }
 
     override fun onPassData(data: String) {
         currentPage = 1
-        presenter.loadData(isMovie,sortBy,genre,keywords,networks,currentPage)
+        presenter.loadData(isMovie, sortBy, genre, keywords, networks, currentPage)
     }
 
 }

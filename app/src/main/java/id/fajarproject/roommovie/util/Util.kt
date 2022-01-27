@@ -1,5 +1,6 @@
 package id.fajarproject.roommovie.util
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -56,6 +57,7 @@ import kotlin.math.roundToInt
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
 
+@SuppressLint("StaticFieldLeak")
 @Suppress("DEPRECATION")
 object Util {
 
@@ -71,35 +73,37 @@ object Util {
             .addInterceptor(interceptor).build()
     }
 
-    fun circleLoading(context: Context) : CircularProgressDrawable{
-        val circularProgressDrawable            = CircularProgressDrawable(context)
-        circularProgressDrawable.strokeWidth    = 5f
-        circularProgressDrawable.centerRadius   = 30f
+    fun circleLoading(context: Context): CircularProgressDrawable {
+        val circularProgressDrawable = CircularProgressDrawable(context)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
         return circularProgressDrawable
     }
-    private var dialog : Dialog? = null
 
-    private fun progressBar(context : Context){
+    private var dialog: Dialog? = null
+
+    private fun progressBar(context: Context) {
         dialog = Dialog(context)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.setCancelable(false)
     }
 
-    fun showLoading(context: Context){
+    fun showLoading(context: Context) {
         progressBar(context)
-        if (dialog != null && dialog?.isShowing != true){
+        if (dialog != null && dialog?.isShowing != true) {
             dialog?.show()
             dialog?.setContentView(R.layout.progress)
         }
     }
 
-    fun hideLoading(){
-        if(dialog != null && dialog?.isShowing != true){
+    fun hideLoading() {
+        if (dialog != null && dialog?.isShowing != true) {
             dialog?.dismiss()
             dialog?.setContentView(R.layout.progress)
         }
     }
+
     fun requestFocus(view: View, activity: Activity?) {
         if (view.requestFocus()) {
             activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
@@ -128,63 +132,59 @@ object Util {
             drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
     }
+
     @Suppress("DEPRECATION")
     fun isInternetAvailable(context: Context): Boolean {
         var result = false
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            cm?.run {
-                cm.getNetworkCapabilities(cm.activeNetwork)?.run {
-                    result = when {
-                        hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                        hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-                        else -> false
-                    }
-                }
-            }
-        } else {
-            cm?.run {
-                cm.activeNetworkInfo?.run {
-                    if (type == ConnectivityManager.TYPE_WIFI) {
-                        result = true
-                    } else if (type == ConnectivityManager.TYPE_MOBILE) {
-                        result = true
-                    }
+        cm?.run {
+            cm.getNetworkCapabilities(cm.activeNetwork)?.run {
+                result = when {
+                    hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                    hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+                    else -> false
                 }
             }
         }
         return result
     }
-    private var alertDialog : AlertDialog? = null
-    private var btnYes : CardView? = null
-    private var btnNo : CardView? = null
-    private var textYes : TextView? = null
-    private fun initShowDialog(activity: Activity,title : String, message : String, isTwoButton : Boolean){
-        if (alertDialog != null && alertDialog?.isShowing == true  || activity.isFinishing){
+
+    private var alertDialog: AlertDialog? = null
+    private var btnYes: CardView? = null
+    private var btnNo: CardView? = null
+    private var textYes: TextView? = null
+    private fun initShowDialog(
+        activity: Activity,
+        title: String,
+        message: String,
+        isTwoButton: Boolean
+    ) {
+        if (alertDialog != null && alertDialog?.isShowing == true || activity.isFinishing) {
             // A dialog is already open, wait for it to be dismissed, do nothing
             println("alert dialog is not null or alert dialog is showing or context (activity) is finishing")
-        }else{
-            alertDialog         = AlertDialog.Builder(activity).create()
-            val inflater        = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val viewDialog      = inflater.inflate(R.layout.show_dialog,null)
-            val titleDialog     = viewDialog.findViewById<TextView>(R.id.title_dialog)
-            val messageDialog   = viewDialog.findViewById<TextView>(R.id.message_dialog)
-            btnYes              = viewDialog.findViewById(R.id.btn_yes)
-            btnNo               = viewDialog.findViewById(R.id.btn_no)
-            textYes             = viewDialog.findViewById(R.id.tvYes)
+        } else {
+            alertDialog = AlertDialog.Builder(activity).create()
+            val inflater =
+                activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val viewDialog = inflater.inflate(R.layout.show_dialog, null)
+            val titleDialog = viewDialog.findViewById<TextView>(R.id.title_dialog)
+            val messageDialog = viewDialog.findViewById<TextView>(R.id.message_dialog)
+            btnYes = viewDialog.findViewById(R.id.btn_yes)
+            btnNo = viewDialog.findViewById(R.id.btn_no)
+            textYes = viewDialog.findViewById(R.id.tvYes)
             alertDialog?.setView(viewDialog)
             alertDialog?.setCancelable(false)
-            titleDialog.text    = title
-            messageDialog.text  = message
-            if (message.isNotEmpty()){
+            titleDialog.text = title
+            messageDialog.text = message
+            if (message.isNotEmpty()) {
                 messageDialog.visibility = View.VISIBLE
             }
-            if (title.isEmpty()){
+            if (title.isEmpty()) {
                 titleDialog.visibility = View.GONE
             }
-            if (isTwoButton){
-                btnNo?.visibility       = View.VISIBLE
+            if (isTwoButton) {
+                btnNo?.visibility = View.VISIBLE
                 textYes?.text = activity.resources.getString(R.string.yes)
             }
             alertDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -192,14 +192,14 @@ object Util {
         }
     }
 
-    fun showDialogInternet(activity: Activity,dialogListener: DialogListener){
-        val alertDialog     = AlertDialog.Builder(activity).create()
-        val inflater        = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val viewDialog      = inflater.inflate(R.layout.dialog_no_internet,null)
+    fun showDialogInternet(activity: Activity, dialogListener: DialogListener) {
+        val alertDialog = AlertDialog.Builder(activity).create()
+        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val viewDialog = inflater.inflate(R.layout.dialog_no_internet, null)
         alertDialog.setView(viewDialog)
         alertDialog.setCancelable(false)
         alertDialog.setCanceledOnTouchOutside(false)
-        viewDialog.findViewById<Button>(R.id.btnOk).setOnClickListener{
+        viewDialog.findViewById<Button>(R.id.btnOk).setOnClickListener {
             alertDialog.dismiss()
             dialogListener.onYes()
         }
@@ -207,8 +207,14 @@ object Util {
         alertDialog.show()
     }
 
-    fun showRoundedDialog(activity: Activity,title : String,message: String,isTwoButton: Boolean,dialogListener: DialogListener){
-        initShowDialog(activity,title,message,isTwoButton)
+    fun showRoundedDialog(
+        activity: Activity,
+        title: String,
+        message: String,
+        isTwoButton: Boolean,
+        dialogListener: DialogListener
+    ) {
+        initShowDialog(activity, title, message, isTwoButton)
         btnYes?.setOnClickListener {
             alertDialog?.dismiss()
             dialogListener.onYes()
@@ -218,8 +224,14 @@ object Util {
             dialogListener.onNo()
         }
     }
-    fun showRoundedDialog(activity: Activity,title : String,message: String,isTwoButton: Boolean){
-        initShowDialog(activity,title,message,isTwoButton)
+
+    fun showRoundedDialog(
+        activity: Activity,
+        title: String,
+        message: String,
+        isTwoButton: Boolean
+    ) {
+        initShowDialog(activity, title, message, isTwoButton)
         btnYes?.setOnClickListener {
             alertDialog?.dismiss()
         }
@@ -227,6 +239,7 @@ object Util {
             alertDialog?.dismiss()
         }
     }
+
     fun getStatusBarHeight(context: Context): Int {
         var result = 0
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -252,13 +265,14 @@ object Util {
             ""
         }
     }
+
     fun calculateNoOfColumns(context: Context): Int {
         val displayMetrics = context.resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         return (dpWidth / 180).toInt()
     }
 
-    fun getGenre(context: Context,prefName : String) : MutableList<GenresItem?>?{
+    fun getGenre(context: Context, prefName: String): MutableList<GenresItem?>? {
         val type: Type? =
             object : TypeToken<MutableList<GenresItem?>?>() {}.type
         return Gson()
@@ -279,7 +293,7 @@ object Util {
         context.startActivityForResult(intent, Constant.REQUEST_VOICE)
     }
 
-    fun initializeCache(context: Context) : Long{
+    fun initializeCache(context: Context): Long {
         var size: Long = 0
         size += getDirSize(context.cacheDir)
         if (context.externalCacheDir != null) {
@@ -318,7 +332,11 @@ object Util {
             deleteDir(dir)
             val ext = context.externalCacheDir
             deleteDir(ext)
-            Toast.makeText(context,context.getString(R.string.message_clear_cache),Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                context.getString(R.string.message_clear_cache),
+                Toast.LENGTH_LONG
+            ).show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -342,22 +360,24 @@ object Util {
         }
     }
 
-    fun setViewPercents(context: Context,views : Array<View>){
-        for (view in views){
-            val width = context.resources.displayMetrics.widthPixels * 3/5
+    fun setViewPercents(context: Context, views: Array<View>) {
+        for (view in views) {
+            val width = context.resources.displayMetrics.widthPixels * 3 / 5
             val layoutParams = view.layoutParams
             layoutParams.width = width
             view.layoutParams = layoutParams
         }
     }
-    fun setViewPercents(context: Context,views : Array<View>,percents : Double){
-        for (view in views){
+
+    fun setViewPercents(context: Context, views: Array<View>, percents: Double) {
+        for (view in views) {
             val width = context.resources.displayMetrics.widthPixels * percents
             val layoutParams = view.layoutParams
             layoutParams.width = width.roundToInt()
             view.layoutParams = layoutParams
         }
     }
+
     fun changeFocusable(views: Array<View>, state: Boolean) {
         for (view in views) {
             view.isFocusable = state
@@ -375,12 +395,14 @@ object Util {
             view.isEnabled = state
         }
     }
-    fun getAppVersion() : String? {
+
+    fun getAppVersion(): String? {
         val tmpVersionName: String = BuildConfig.VERSION_NAME
         val versionCode: Int = BuildConfig.VERSION_CODE
         val versionName = tmpVersionName.substring(0, 3)
         return "$versionName ($versionCode)"
     }
+
     fun currencyFormatter(num: String): String? {
         val m = num.toDouble()
         val currentLocale = Locale.getDefault()
@@ -391,7 +413,7 @@ object Util {
         return formatter.format(m)
     }
 
-    fun setSpannable(view: TextView,spannable : String,color: Int) {
+    fun setSpannable(view: TextView, spannable: String, color: Int) {
         val str2 = SpannableString(spannable)
         str2.setSpan(ForegroundColorSpan(color), 0, str2.length, 0)
         view.append(str2)
@@ -414,7 +436,7 @@ object Util {
         }
     }
 
-    fun startTwitter(context: Context,userName : String) : Intent?{
+    fun startTwitter(context: Context, userName: String): Intent? {
         return try {
             // get the Twitter app if possible
             context.packageManager.getPackageInfo("com.twitter.android", 0)
@@ -431,7 +453,7 @@ object Util {
         }
     }
 
-    fun startFacebook(context: Context,facebook: String) :Intent?{
+    fun startFacebook(context: Context, facebook: String): Intent? {
         val intent = Intent(Intent.ACTION_VIEW)
         try {
             context.packageManager.getPackageInfo("com.facebook.katana", 0)
@@ -439,10 +461,14 @@ object Util {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     context.packageManager.getPackageInfo("com.facebook.katana", 0).longVersionCode
                 } else {
-                    context.packageManager.getPackageInfo("com.facebook.katana", 0).versionCode.toLong()
+                    context.packageManager.getPackageInfo(
+                        "com.facebook.katana",
+                        0
+                    ).versionCode.toLong()
                 }
             if (versionCode >= 3002850) { //newer versions of fb app
-                intent.data = Uri.parse("fb://facewebmodal/f?href=${Constant.URL_FACEBOOK}${facebook}")
+                intent.data =
+                    Uri.parse("fb://facewebmodal/f?href=${Constant.URL_FACEBOOK}${facebook}")
             } else { //older versions of fb app
                 intent.data = Uri.parse("fb://page/$facebook")
             }
@@ -455,13 +481,16 @@ object Util {
         return intent
     }
 
-    fun getLanguage(string: String?,context: Context) : String{
+    fun getLanguage(string: String?, context: Context): String {
         var language = ""
         val type: Type? = object : TypeToken<MutableList<LanguagesItem?>?>() {}.type
-        val list :MutableList<LanguagesItem?>? = Gson().fromJson(AppPreference.getStringPreferenceByName(context, Constant.language), type)
+        val list: MutableList<LanguagesItem?>? = Gson().fromJson(
+            AppPreference.getStringPreferenceByName(context, Constant.language),
+            type
+        )
         if (list != null) {
-            for (data in list){
-                if (data?.iso6391 == string){
+            for (data in list) {
+                if (data?.iso6391 == string) {
                     language = data?.englishName ?: ""
                     break
                 }
@@ -470,7 +499,7 @@ object Util {
         return language
     }
 
-    fun getScriptAutoPlayYoutube(keyVideo : String?) : String{
+    fun getScriptAutoPlayYoutube(keyVideo: String?): String {
         return """
         <html>
             <body style='margin:0px;padding:0px;'>
@@ -503,11 +532,13 @@ object Util {
             </body>
         </html>"""
     }
+
     fun convertDpToPixel(dp: Float): Int {
         val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
         val px: Float = dp * (metrics.densityDpi / 160f)
         return px.roundToInt()
     }
+
     fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
         if (view.layoutParams is ViewGroup.MarginLayoutParams) {
             val p = view.layoutParams as ViewGroup.MarginLayoutParams
@@ -515,6 +546,7 @@ object Util {
             view.requestLayout()
         }
     }
+
     private fun addClickablePartTextViewResizable(
         strSpanned: Spanned, tv: TextView,
         maxLine: Int, spannableText: String, viewMore: Boolean
@@ -548,7 +580,7 @@ object Util {
             tv.tag = tv.text
         }
         val vto: ViewTreeObserver = tv.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+        vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val text: String
                 val lineEndIndex: Int
@@ -581,6 +613,7 @@ object Util {
             }
         })
     }
+
     fun justify(textView: TextView) {
         val isJustify =
             AtomicBoolean(false)
@@ -632,7 +665,7 @@ object Util {
         }
     }
 
-    fun getAge(birthday: String,format: String): String? {
+    fun getAge(birthday: String, format: String): String? {
         val sdf = SimpleDateFormat(format, Locale.ENGLISH)
         val dobCal = Calendar.getInstance()
         dobCal.time = sdf.parse(birthday) ?: Date()
@@ -663,9 +696,9 @@ object Util {
         return ageS
     }
 
-    fun dateTimeToMillis(dateString: String,format: String): Long {
+    fun dateTimeToMillis(dateString: String, format: String): Long {
         var sec: Long = 0
-        val df = SimpleDateFormat(format,Locale.getDefault())
+        val df = SimpleDateFormat(format, Locale.getDefault())
         try {
             val time = df.parse(dateString)
             val millis = time?.time
@@ -693,6 +726,7 @@ object Util {
             null
         }
     }
+
     fun pxToDp(px: Int): Int {
         return (px / Resources.getSystem().displayMetrics.density).toInt()
     }

@@ -40,24 +40,27 @@
         <com.rey.material.widget.Spinner
             android:id="@+id/spPopular"
             style="@style/SpinnerTheme"
-            app:layout_constraintTop_toBottomOf="@id/line"
+            android:layout_height="48dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line" />
 
         <com.rey.material.widget.Spinner
             android:id="@+id/spRating"
             style="@style/SpinnerTheme"
-            app:layout_constraintTop_toBottomOf="@id/spPopular"
+            android:layout_height="48dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spPopular" />
 
         <com.rey.material.widget.Spinner
             android:id="@+id/spDate"
             style="@style/SpinnerTheme"
-            app:layout_constraintTop_toBottomOf="@id/spRating"
+            android:layout_height="48dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/spRating" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

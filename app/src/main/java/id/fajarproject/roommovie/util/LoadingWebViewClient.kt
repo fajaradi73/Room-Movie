@@ -24,7 +24,7 @@ class LoadingWebViewClient(var context: Context) : WebViewClient() {
 
     override fun shouldOverrideUrlLoading(
         view: WebView,
-        url: String?
+        url: String
     ): Boolean {
         view.loadUrl(url)
         return true

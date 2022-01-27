@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.AdapterSeasonBinding
 import id.fajarproject.roommovie.models.SeasonsItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.adapter_season.view.*
 
 
 /**
@@ -22,9 +22,9 @@ import kotlinx.android.synthetic.main.adapter_season.view.*
 class SeasonAdapter(
     var activity: Activity,
     private var list: MutableList<SeasonsItem?>,
-    var title : String
+    var title: String
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<AdapterHolder<AdapterSeasonBinding>>() {
 
     private var onItemClickListener: OnItemClickListener? = null
 
@@ -32,55 +32,63 @@ class SeasonAdapter(
         this.onItemClickListener = onItemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AdapterHolder<AdapterSeasonBinding> {
         return AdapterHolder(
-            LayoutInflater.from(
-                parent.context
-            ).inflate(R.layout.adapter_season, parent, false)
-            , this.onItemClickListener
+            AdapterSeasonBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), this.onItemClickListener
         )
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: AdapterHolder<AdapterSeasonBinding>,
         position: Int
     ) {
         val data = list[position] ?: SeasonsItem()
-        val name = if (data.name != null && data.name.isNotEmpty() && !data.name.contains(title)){
+        val name = if (data.name != null && data.name.isNotEmpty() && !data.name.contains(title)) {
             data.name
-        }else{
+        } else {
             "${activity.getString(R.string.seasons)} ${data.seasonNumber}"
         }
 
-        holder.itemView.tvTitle.text    = name
-        val date = if (data.airDate != null && data.airDate.isNotEmpty()){
-            Util.convertDate(data.airDate,"yyyy-MM-dd","yyyy")
-        }else{
+        holder.binding.tvTitle.text = name
+        val date = if (data.airDate != null && data.airDate.isNotEmpty()) {
+            Util.convertDate(data.airDate, "yyyy-MM-dd", "yyyy")
+        } else {
             "-"
         }
 
-        holder.itemView.tvDate.text     = " $date| ${data.episodeCount} ${activity.getString(
-            R.string.episodes)}"
+        holder.binding.tvDate.text = " $date| ${data.episodeCount} ${
+            activity.getString(
+                R.string.episodes
+            )
+        }"
 
-        val overview = if (data.overview != null && data.overview.isNotEmpty()){
+        val overview = if (data.overview != null && data.overview.isNotEmpty()) {
             data.overview
-        }else{
-            if (data.airDate != null && data.airDate.isNotEmpty()){
+        } else {
+            if (data.airDate != null && data.airDate.isNotEmpty()) {
                 activity.getString(
-                    R.string.overviewSeason,name,title,
-                    Util.convertDate(data.airDate,"yyyy-MM-dd","MMMM d,yyyy"))
-            }else{
+                    R.string.overviewSeason, name, title,
+                    Util.convertDate(data.airDate, "yyyy-MM-dd", "MMMM d,yyyy")
+                )
+            } else {
                 activity.getString(R.string.noOverview)
             }
         }
 
-        holder.itemView.tvOverview.text = overview
+        holder.binding.tvOverview.text = overview
         Glide.with(activity)
             .load(Constant.BASE_IMAGE + data.posterPath)
             .error(R.drawable.ic_placeholder)
             .placeholder(Util.circleLoading(activity))
-            .into(holder.itemView.ivSeason)
+            .into(holder.binding.ivSeason)
     }
 
     override fun getItemCount(): Int {

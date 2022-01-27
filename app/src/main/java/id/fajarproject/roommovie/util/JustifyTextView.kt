@@ -16,7 +16,7 @@ import kotlin.math.ceil
  */
 
 class JustifyTextView(
-    context: Context?,
+    context: Context,
     attrs: AttributeSet?
 ) :
     AppCompatTextView(context, attrs) {

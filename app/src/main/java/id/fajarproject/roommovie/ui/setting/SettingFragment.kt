@@ -9,19 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.FragmentSettingBinding
 import id.fajarproject.roommovie.ui.base.BaseFragment
 import id.fajarproject.roommovie.ui.home.HomeActivity
 import id.fajarproject.roommovie.ui.widget.SpinnerImageAdapter
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.fragment_setting.*
 import java.util.*
 
 
-class SettingFragment : BaseFragment(),SettingContract.View {
+class SettingFragment : BaseFragment(), SettingContract.View {
 
     lateinit var activity: HomeActivity
+    private lateinit var settingBinding: FragmentSettingBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,49 +32,51 @@ class SettingFragment : BaseFragment(),SettingContract.View {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
+        settingBinding = FragmentSettingBinding.inflate(inflater, container, false)
+        return settingBinding.root
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val size = Util.initializeCache(requireContext())
-        tvSize.text = Util.readableFileSize(size)
-        cvCache.setOnClickListener {
+        settingBinding.tvSize.text = Util.readableFileSize(size)
+        settingBinding.cvCache.setOnClickListener {
             Util.deleteCache(requireContext())
             updateFragment()
         }
-        tvVersion.text = "${getString(R.string.app_version)} ${Util.getAppVersion()}"
-        cvPrivacyPolicy.setOnClickListener {
+        settingBinding.tvVersion.text = "${getString(R.string.app_version)} ${Util.getAppVersion()}"
+        settingBinding.cvPrivacyPolicy.setOnClickListener {
             moveToDetail(getString(R.string.privacy_policy))
         }
-        cvTermsOfUse.setOnClickListener {
+        settingBinding.cvTermsOfUse.setOnClickListener {
             moveToDetail(getString(R.string.terms_of_use))
         }
-        cvContribution.setOnClickListener {
+        settingBinding.cvContribution.setOnClickListener {
             moveToDetail(getString(R.string.contribution))
         }
 
-        switchMode.isChecked = AppPreference.getBooleanPreferenceByName(requireContext(),Constant.isNightMode)
+        settingBinding.switchMode.isChecked =
+            AppPreference.getBooleanPreferenceByName(requireContext(), Constant.isNightMode)
 
-        switchMode.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                AppPreference.writePreference(requireContext(),Constant.isNightMode,true)
+        settingBinding.switchMode.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                AppPreference.writePreference(requireContext(), Constant.isNightMode, true)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }else{
-                AppPreference.writePreference(requireContext(),Constant.isNightMode,false)
+            } else {
+                AppPreference.writePreference(requireContext(), Constant.isNightMode, false)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
             refreshActivity()
         }
 
-        cvNightMode.setOnClickListener {
-            switchMode.isChecked = !switchMode.isChecked
+        settingBinding.cvNightMode.setOnClickListener {
+            settingBinding.switchMode.isChecked = !settingBinding.switchMode.isChecked
         }
-        cvLanguage.setOnClickListener {
-            spLanguage.callOnClick()
+        settingBinding.cvLanguage.setOnClickListener {
+            settingBinding.spLanguage.callOnClick()
         }
 
         val adapter = SpinnerImageAdapter(
@@ -83,49 +86,46 @@ class SettingFragment : BaseFragment(),SettingContract.View {
                 R.drawable.ic_england
             )
         )
-        Log.d("Locale","${Locale.getDefault()}")
+        Log.d("Locale", "${Locale.getDefault()}")
 
-        spLanguage.adapter = adapter
-        spLanguage.setOnItemClickListener { _, _, position, _ ->
-            if (position == 0){
-                AppPreference.writePreference(activity,Constant.locale,"in")
-                activity.updateLocale(Locale("in","ID"))
-            }else{
-                AppPreference.writePreference(activity,Constant.locale,"en")
+        settingBinding.spLanguage.adapter = adapter
+        settingBinding.spLanguage.setOnItemClickListener { _, _, position, _ ->
+            if (position == 0) {
+                AppPreference.writePreference(activity, Constant.locale, "in")
+                activity.updateLocale(Locale("in", "ID"))
+            } else {
+                AppPreference.writePreference(activity, Constant.locale, "en")
                 activity.updateLocale(Locale.ENGLISH)
             }
             true
         }
 
-        when (AppPreference.getStringPreferenceByName(activity,Constant.locale)) {
+        when (AppPreference.getStringPreferenceByName(activity, Constant.locale)) {
             "en" -> {
-                spLanguage.setSelection(1)
+                settingBinding.spLanguage.setSelection(1)
             }
             "in" -> {
-                spLanguage.setSelection(0)
+                settingBinding.spLanguage.setSelection(0)
             }
             else -> {
-                spLanguage.setSelection(0)
+                settingBinding.spLanguage.setSelection(0)
             }
         }
     }
 
-    override fun updateFragment(){
-        requireFragmentManager().beginTransaction().
-        detach(this).
-        attach(this).
-        setPrimaryNavigationFragment(this).
-        commit()
+    override fun updateFragment() {
+        parentFragmentManager.beginTransaction().detach(this).attach(this)
+            .setPrimaryNavigationFragment(this).commit()
     }
 
-    override fun moveToDetail(status : String){
-        val intent = Intent(requireContext(),WebViewActivity::class.java)
-        intent.putExtra(Constant.INTENT_STATUS,status)
+    override fun moveToDetail(status: String) {
+        val intent = Intent(requireContext(), WebViewActivity::class.java)
+        intent.putExtra(Constant.INTENT_STATUS, status)
         startActivity(intent)
     }
 
     override fun refreshActivity() {
-        val intent = Intent(requireContext(),HomeActivity::class.java)
+        val intent = Intent(requireContext(), HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         requireActivity().overridePendingTransition(

@@ -2,7 +2,6 @@ package id.fajarproject.roommovie.ui.search
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.text.TextUtils
@@ -14,6 +13,7 @@ import com.arlib.floatingsearchview.FloatingSearchView
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivitySearchBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
@@ -27,17 +27,16 @@ import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
-class SearchActivity : BaseActivity(),SearchContract.View {
+class SearchActivity : BaseActivity(), SearchContract.View {
 
-    @Inject lateinit var presenter : SearchContract.Presenter
+    @Inject
+    lateinit var presenter: SearchContract.Presenter
     lateinit var layoutManager: GridLayoutManager
     private var adapterMovie: SearchAdapter? = null
-    private var adapterPeople : PeopleAdapter? = null
+    private var adapterPeople: PeopleAdapter? = null
     var isLoading = false
     var isLastPage = false
     var isPeople = false
@@ -46,32 +45,40 @@ class SearchActivity : BaseActivity(),SearchContract.View {
     var currentPage = 1
     var limit = 20
 
-    private var status : String = ""
-    private var query : String = ""
+    private var status: String = ""
+    private var query: String = ""
+    private lateinit var searchBinding: ActivitySearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        searchBinding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(searchBinding.root)
         injectDependency()
-        presenter.attach(this,this)
+        presenter.attach(this, this)
 
-        status  = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
-        query   = intent.getStringExtra(Constant.voiceSearch) ?: ""
+        status = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
+        query = intent.getStringExtra(Constant.voiceSearch) ?: ""
 
-        if (status.contains(getString(R.string.people))){
+        if (status.contains(getString(R.string.people))) {
             isPeople = true
         }
         setToolbar()
         setRecycleView()
         setUI()
-        searchBar.setSearchHint("${getString(R.string.search_hint)} ${status.toLowerCase(Locale.getDefault())}")
+        searchBinding.searchBar.setSearchHint(
+            "${getString(R.string.search_hint)} ${
+                status.toLowerCase(
+                    Locale.getDefault()
+                )
+            }"
+        )
 
         if (isConnection)
-            if (query.isNotEmpty()){
-                presenter.checkData(currentPage,query,status)
-                searchBar.setSearchText(query)
-            }else{
-                searchBar.setSearchFocused(true)
+            if (query.isNotEmpty()) {
+                presenter.checkData(currentPage, query, status)
+                searchBinding.searchBar.setSearchText(query)
+            } else {
+                searchBinding.searchBar.setSearchFocused(true)
             }
     }
 
@@ -82,7 +89,7 @@ class SearchActivity : BaseActivity(),SearchContract.View {
 
     override fun setRecycleView() {
         val mNoOfColumns = Util.calculateNoOfColumns(this)
-        layoutManager = GridLayoutManager(this,mNoOfColumns)
+        layoutManager = GridLayoutManager(this, mNoOfColumns)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when {
@@ -98,23 +105,24 @@ class SearchActivity : BaseActivity(),SearchContract.View {
                 }
             }
         }
-        rvSearch.layoutManager = layoutManager
+        searchBinding.rvSearch.layoutManager = layoutManager
     }
 
-    override fun checkAdapter(isPeople: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        return if (isPeople){
+    override fun checkAdapter(isPeople: Boolean): RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        return if (isPeople) {
             adapterPeople as RecyclerView.Adapter<RecyclerView.ViewHolder>
-        }else{
+        } else {
             adapterMovie as RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
     override fun setScrollRecycleView() {
-        rvSearch.addOnScrollListener(object : PaginationScrollListener(layoutManager){
+        searchBinding.rvSearch.addOnScrollListener(object :
+            PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
-                presenter.checkData(currentPage,query,status)
+                presenter.checkData(currentPage, query, status)
             }
 
             override fun getTotalPageCount(): Int {
@@ -131,23 +139,23 @@ class SearchActivity : BaseActivity(),SearchContract.View {
 
             override fun backToTop(isShow: Boolean) {
                 if (isShow)
-                    btnBackToTop.show()
+                    searchBinding.btnBackToTop.show()
                 else
-                    btnBackToTop.hide()
+                    searchBinding.btnBackToTop.hide()
             }
 
         })
     }
 
-    override fun showDataMovieSuccess(list: MutableList<MovieItem?>,isMovie : Boolean) {
+    override fun showDataMovieSuccess(list: MutableList<MovieItem?>, isMovie: Boolean) {
         countData = list.size
-        if (currentPage == 1){
+        if (currentPage == 1) {
             adapterMovie = SearchAdapter(
-                this,list,isMovie
+                this, list, isMovie
             )
-            rvSearch.adapter = adapterMovie
+            searchBinding.rvSearch.adapter = adapterMovie
             setScrollRecycleView()
-        }else{
+        } else {
             adapterMovie?.removeLoadingFooter()
             isLoading = false
             adapterMovie?.addData(list)
@@ -159,7 +167,7 @@ class SearchActivity : BaseActivity(),SearchContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapterMovie?.getMovie(position)
                 item?.id?.let {
-                    moveToDetail(it,isMovie)
+                    moveToDetail(it, isMovie)
                 }
             }
         })
@@ -167,30 +175,30 @@ class SearchActivity : BaseActivity(),SearchContract.View {
         checkData()
     }
 
-    override fun moveToDetail(id : Int,isMovie: Boolean){
+    override fun moveToDetail(id: Int, isMovie: Boolean) {
         val intent = if (isMovie)
             Intent(this, MovieDetailActivity::class.java)
         else
             Intent(this, TvDetailActivity::class.java)
 
-        intent.putExtra(Constant.idMovie,id)
+        intent.putExtra(Constant.idMovie, id)
         startActivity(intent)
     }
 
     override fun showDataMovieFailed(message: String) {
-        Log.d("ErrorSearch",message)
+        Log.d("ErrorSearch", message)
         showData(false)
     }
 
     override fun showDataPeopleSuccess(list: MutableList<PeopleItem?>) {
         countData = list.size
-        if (currentPage == 1){
+        if (currentPage == 1) {
             adapterPeople = PeopleAdapter(
-                this,list
+                this, list
             )
-            rvSearch.adapter = adapterPeople
+            searchBinding.rvSearch.adapter = adapterPeople
             setScrollRecycleView()
-        }else{
+        } else {
             adapterPeople?.removeLoadingFooter()
             isLoading = false
             adapterPeople?.addData(list)
@@ -203,7 +211,7 @@ class SearchActivity : BaseActivity(),SearchContract.View {
                 val item = adapterPeople?.getItem(position)
                 item?.id.let {
                     val intent = Intent(activity, PeopleDetailActivity::class.java)
-                    intent.putExtra(Constant.idPeople,it)
+                    intent.putExtra(Constant.idPeople, it)
                     startActivity(intent)
                 }
             }
@@ -213,44 +221,44 @@ class SearchActivity : BaseActivity(),SearchContract.View {
     }
 
     override fun showDataPeopleFailed(message: String) {
-        Log.d("ErrorFavorite",message)
+        Log.d("ErrorFavorite", message)
         showData(false)
     }
 
     override fun checkLastData() {
-        if (countData == limit){
-            if (isPeople){
+        if (countData == limit) {
+            if (isPeople) {
                 adapterPeople?.addLoadingFooter()
-            }else{
+            } else {
                 adapterMovie?.addLoadingFooter()
             }
-        }else{
+        } else {
             isLastPage = true
         }
     }
 
     override fun checkData() {
-        if (checkAdapter(isPeople).itemCount == 0){
+        if (checkAdapter(isPeople).itemCount == 0) {
             showData(false)
-        }else{
+        } else {
             showData(true)
         }
     }
 
     override fun showData(isShow: Boolean) {
-        if (isShow){
-            rvSearch.visibility  = View.VISIBLE
-            noData.visibility   = View.GONE
-        }else{
-            rvSearch.visibility  = View.GONE
-            noData.visibility   = View.VISIBLE
+        if (isShow) {
+            searchBinding.rvSearch.visibility = View.VISIBLE
+            searchBinding.noData.visibility = View.GONE
+        } else {
+            searchBinding.rvSearch.visibility = View.GONE
+            searchBinding.noData.visibility = View.VISIBLE
         }
     }
 
     override fun search(search: String) {
         query = search
         currentPage = 1
-        presenter.checkData(currentPage,search,status)
+        presenter.checkData(currentPage, search, status)
     }
 
     override fun injectDependency() {
@@ -265,13 +273,17 @@ class SearchActivity : BaseActivity(),SearchContract.View {
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        btnBackToTop.setOnClickListener { rvSearch.smoothScrollToPosition(0) }
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
+        searchBinding.btnBackToTop.hide()
+        searchBinding.btnBackToTop.setOnClickListener {
+            searchBinding.rvSearch.smoothScrollToPosition(
+                0
+            )
+        }
+        searchBinding.refreshLayout.setOnRefreshListener {
+            searchBinding.refreshLayout.isRefreshing = false
             search(query)
         }
-        searchBar.setOnSearchListener(object : FloatingSearchView.OnSearchListener{
+        searchBinding.searchBar.setOnSearchListener(object : FloatingSearchView.OnSearchListener {
             override fun onSearchAction(currentQuery: String?) {
                 search(currentQuery ?: "")
             }
@@ -280,38 +292,41 @@ class SearchActivity : BaseActivity(),SearchContract.View {
             }
 
         })
-        searchBar.setOnHomeActionClickListener { onBackPressed() }
-        searchBar.setOnMenuItemClickListener { item ->
-            if (item?.itemId == R.id.action_voice){
+        searchBinding.searchBar.setOnHomeActionClickListener { onBackPressed() }
+        searchBinding.searchBar.setOnMenuItemClickListener { item ->
+            if (item?.itemId == R.id.action_voice) {
                 Util.onVoiceClicked(this)
             }
         }
     }
 
     override fun showLoading() {
-        if (isPeople){
-            shimmerViewPeople.visibility  = View.VISIBLE
-            shimmerViewPeople.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-            shimmerViewPeople.startShimmer()
-        }else{
-            shimmerView.visibility  = View.VISIBLE
-            shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-            shimmerView.startShimmer()
+        if (isPeople) {
+            searchBinding.shimmerViewPeople.visibility = View.VISIBLE
+            searchBinding.shimmerViewPeople.setShimmer(
+                Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+            )
+            searchBinding.shimmerViewPeople.startShimmer()
+        } else {
+            searchBinding.shimmerView.visibility = View.VISIBLE
+            searchBinding.shimmerView.setShimmer(
+                Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+            )
+            searchBinding.shimmerView.startShimmer()
         }
-        refreshLayout.visibility = View.GONE
+        searchBinding.refreshLayout.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        if (isPeople){
-            shimmerViewPeople.stopShimmer()
-            shimmerViewPeople.visibility      = View.GONE
-        }else{
-            shimmerView.stopShimmer()
-            shimmerView.visibility      = View.GONE
+        if (isPeople) {
+            searchBinding.shimmerViewPeople.stopShimmer()
+            searchBinding.shimmerViewPeople.visibility = View.GONE
+        } else {
+            searchBinding.shimmerView.stopShimmer()
+            searchBinding.shimmerView.visibility = View.GONE
         }
-        refreshLayout.visibility    = View.VISIBLE
+        searchBinding.refreshLayout.visibility = View.VISIBLE
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -321,7 +336,7 @@ class SearchActivity : BaseActivity(),SearchContract.View {
             if (matches.size > 0) {
                 val searchWrd = matches[0]
                 if (!TextUtils.isEmpty(searchWrd)) {
-                    searchBar.setSearchText(searchWrd)
+                    searchBinding.searchBar.setSearchText(searchWrd)
                     search(searchWrd)
                 }
             }

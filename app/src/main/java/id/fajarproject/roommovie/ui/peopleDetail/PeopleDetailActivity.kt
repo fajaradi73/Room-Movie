@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.facebook.shimmer.Shimmer
 import com.google.android.material.appbar.AppBarLayout
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityPeopleDetailBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.CreditsItem
@@ -29,36 +30,34 @@ import id.fajarproject.roommovie.ui.widget.DialogListener
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_people_detail_info.*
-import kotlinx.android.synthetic.main.activity_people_detail.*
-import kotlinx.android.synthetic.main.activity_people_detail_cast.*
-import kotlinx.android.synthetic.main.activity_people_detail_known_for.*
-import kotlinx.android.synthetic.main.activity_people_detail_overview.*
 import org.parceler.Parcels
-import java.util.*
 import javax.inject.Inject
 
-class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
+class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
 
-    @Inject lateinit var presenter : PeopleDetailContract.Presenter
+    @Inject
+    lateinit var presenter: PeopleDetailContract.Presenter
     private var id = -1
-    private var listKnownForItem : MutableList<KnownForItem?>? = null
+    private var listKnownForItem: MutableList<KnownForItem?>? = null
+
+    private lateinit var peopleDetailBinding: ActivityPeopleDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_people_detail)
+        peopleDetailBinding = ActivityPeopleDetailBinding.inflate(layoutInflater)
+        setContentView(peopleDetailBinding.root)
         injectDependency()
-        presenter.attach(this,this)
+        presenter.attach(this, this)
         setToolbar()
         setUI()
-        id                  = intent.getIntExtra(Constant.idPeople,-1)
-        listKnownForItem    = Parcels.unwrap(intent.getParcelableExtra(Constant.dataKnownFor))
+        id = intent.getIntExtra(Constant.idPeople, -1)
+        listKnownForItem = Parcels.unwrap(intent.getParcelableExtra(Constant.dataKnownFor))
 
-        if (id == -1){
+        if (id == -1) {
             showDialogNoData("")
             return
         }
-        if (isConnection){
+        if (isConnection) {
             presenter.loadData(id)
         }
     }
@@ -68,49 +67,60 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
         Glide.with(this)
             .load(Constant.BASE_IMAGE + data.profilePath)
             .placeholder(Util.circleLoading(this))
-            .into(ivPoster)
+            .into(peopleDetailBinding.ivPoster)
         setOnSetChange(data.name ?: "")
 
         var biography = ""
         data.biography?.let {
-            biography = if (it.isNotEmpty()){
-                it
-            }else{
-                getString(R.string.biographyPeople,data.name)
+            biography = it.ifEmpty {
+                getString(R.string.biographyPeople, data.name)
             }
         } ?: kotlin.run {
-            biography = getString(R.string.biographyPeople,data.name)
+            biography = getString(R.string.biographyPeople, data.name)
         }
-        tvBiography.text    = biography
+        peopleDetailBinding.peopleDetailOverview.tvBiography.text = biography
 
-        Util.makeTextViewResizable(tvBiography,7,"View More",true)
+        Util.makeTextViewResizable(
+            peopleDetailBinding.peopleDetailOverview.tvBiography,
+            7,
+            "View More",
+            true
+        )
 
-        tvGender.text       = presenter.getGender(data.gender)
-        var birthday        = "-"
+        peopleDetailBinding.peopleDetailInfo.tvGender.text = presenter.getGender(data.gender)
+        var birthday = "-"
         data.birthday?.let {
-            birthday  = "${Util.convertDate(it,"yyyy-MM-dd","dd MMMM yyyy")} (${Util.getAge(it,"yyyy-MM-dd")})"
+            birthday = "${Util.convertDate(it, "yyyy-MM-dd", "dd MMMM yyyy")} (${
+                Util.getAge(
+                    it,
+                    "yyyy-MM-dd"
+                )
+            })"
         }
-        tvBirthday.text     = birthday
-        tvPlaceBirth.text   = data.placeOfBirth
-        tvKnownFor.text     = data.knownForDepartment
-        tvKnownAs.text      = presenter.getKnowAs(data.alsoKnownAs)
-        tvKnownCredits.text = "${presenter.getKnownCredits(data.combinedCredits?.cast).plus(presenter.getKnownCredits(data.combinedCredits?.crew))}"
-        acting.text         = data.knownForDepartment
+        peopleDetailBinding.peopleDetailInfo.tvBirthday.text = birthday
+        peopleDetailBinding.peopleDetailInfo.tvPlaceBirth.text = data.placeOfBirth
+        peopleDetailBinding.peopleDetailInfo.tvKnownFor.text = data.knownForDepartment
+        peopleDetailBinding.peopleDetailInfo.tvKnownAs.text = presenter.getKnowAs(data.alsoKnownAs)
+        peopleDetailBinding.peopleDetailInfo.tvKnownCredits.text = "${
+            presenter.getKnownCredits(data.combinedCredits?.cast)
+                .plus(presenter.getKnownCredits(data.combinedCredits?.crew))
+        }"
+        peopleDetailBinding.peopleDetailCast.acting.text = data.knownForDepartment
 
         data.external_ids?.let {
             setViewExternalIDs(it)
         }
-        val listCredits : MutableList<CreditsItem?> = arrayListOf()
-        val listKnown   : MutableList<CreditsItem?> = arrayListOf()
+        val listCredits: MutableList<CreditsItem?> = arrayListOf()
+        val listKnown: MutableList<CreditsItem?> = arrayListOf()
 
-        if (data.knownForDepartment == "Acting"){
+        if (data.knownForDepartment == "Acting") {
             data.combinedCredits?.cast?.let {
                 listKnown.addAll(it)
                 listCredits.addAll(it)
             }
-        }else{
+        } else {
             data.combinedCredits?.crew?.let {
-                listKnown.addAll(presenter.getKnownFor(data.knownForDepartment ?: "",it))
+                listKnown.addAll(presenter.getKnownFor(data.knownForDepartment ?: "", it))
                 listCredits.addAll(it)
             }
         }
@@ -118,30 +128,30 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
         setViewKnownFor(listKnown)
         setViewCredits(listCredits)
 
-        link.setOnClickListener {
+        peopleDetailBinding.peopleDetailInfo.link.setOnClickListener {
             data.homepage?.let {
                 if (it.isNotEmpty()) {
                     setOpenURL("https://$it/", "homepage")
-                }else{
-                    setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
+                } else {
+                    setOpenURL(Constant.BASE_THE_MOVIE_DB, "homepage")
                 }
             } ?: kotlin.run {
-                setOpenURL(Constant.BASE_THE_MOVIE_DB,"homepage")
+                setOpenURL(Constant.BASE_THE_MOVIE_DB, "homepage")
             }
         }
         hideLoading()
     }
 
-    override fun setOnSetChange(name : String){
-        appbar.addOnOffsetChangedListener(object : AppBarStateChangeListener(){
+    override fun setOnSetChange(name: String) {
+        peopleDetailBinding.appbar.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
             override fun onStateChanged(appBarLayout: AppBarLayout?, state: State?) {
-                appbar.post{
-                    if (state == State.EXPANDED){
-                        tvTitle.text    = name
-                        title           = ""
-                    }else if (state == State.COLLAPSED){
-                        tvTitle.text    = ""
-                        title           = name
+                peopleDetailBinding.appbar.post {
+                    if (state == State.EXPANDED) {
+                        peopleDetailBinding.tvTitle.text = name
+                        title = ""
+                    } else if (state == State.COLLAPSED) {
+                        peopleDetailBinding.tvTitle.text = ""
+                        title = name
                     }
                 }
             }
@@ -149,28 +159,28 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun showDataFailed(message: String) {
-        Log.e("ErrorDetail",message)
+        Log.e("ErrorDetail", message)
         showDialogNoData(message)
     }
 
     override fun setViewKnownFor(list: MutableList<CreditsItem?>) {
         list.sortWith(presenter.sortKnown())
 //        Collections.sort(list,presenter.sortKnown())
-        val layoutManager           = LinearLayoutManager(this)
-        layoutManager.orientation   = LinearLayoutManager.HORIZONTAL
-        rvKnownFor.layoutManager    = layoutManager
-        val adapter                 = PeopleDetailKnownForAdapter(this,list)
-        rvKnownFor.adapter          = adapter
-        adapter.setOnItemClickListener(object : OnItemClickListener{
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        peopleDetailBinding.peopleDetailKnown.rvKnownFor.layoutManager = layoutManager
+        val adapter = PeopleDetailKnownForAdapter(this, list)
+        peopleDetailBinding.peopleDetailKnown.rvKnownFor.adapter = adapter
+        adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
-                val intent = if (item?.media_type == "tv"){
-                    Intent(activity,TvDetailActivity::class.java)
-                }else {
-                    Intent(activity,MovieDetailActivity::class.java)
+                val intent = if (item?.media_type == "tv") {
+                    Intent(activity, TvDetailActivity::class.java)
+                } else {
+                    Intent(activity, MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
-                    intent.putExtra(Constant.idMovie,it)
+                    intent.putExtra(Constant.idMovie, it)
                     startActivity(intent)
                 }
             }
@@ -179,65 +189,65 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
 
     override fun setViewExternalIDs(data: ExternalIds) {
         data.facebookId?.let { s: String ->
-            facebook.visibility = View.VISIBLE
-            facebook.setOnClickListener {
-                setOpenURL(s,"facebook")
+            peopleDetailBinding.peopleDetailInfo.facebook.visibility = View.VISIBLE
+            peopleDetailBinding.peopleDetailInfo.facebook.setOnClickListener {
+                setOpenURL(s, "facebook")
             }
         } ?: kotlin.run {
-            facebook.visibility = View.GONE
+            peopleDetailBinding.peopleDetailInfo.facebook.visibility = View.GONE
         }
         data.twitterId?.let { s: String ->
-            twitter.visibility = View.VISIBLE
-            twitter.setOnClickListener {
-                setOpenURL(s,"twitter")
+            peopleDetailBinding.peopleDetailInfo.twitter.visibility = View.VISIBLE
+            peopleDetailBinding.peopleDetailInfo.twitter.setOnClickListener {
+                setOpenURL(s, "twitter")
             }
         } ?: kotlin.run {
-            twitter.visibility = View.GONE
+            peopleDetailBinding.peopleDetailInfo.twitter.visibility = View.GONE
         }
         data.instagramId?.let { s: String ->
-            instagram.visibility = View.VISIBLE
-            instagram.setOnClickListener {
-                setOpenURL(s,"instagram")
+            peopleDetailBinding.peopleDetailInfo.instagram.visibility = View.VISIBLE
+            peopleDetailBinding.peopleDetailInfo.instagram.setOnClickListener {
+                setOpenURL(s, "instagram")
             }
         } ?: kotlin.run {
-            instagram.visibility = View.GONE
+            peopleDetailBinding.peopleDetailInfo.instagram.visibility = View.GONE
         }
     }
 
     override fun setViewCredits(list: MutableList<CreditsItem?>) {
         list.sortWith(presenter.sortYear())
 //        Collections.sort(list,presenter.sortYear())
-        val layoutManager           = LinearLayoutManager(this)
-        layoutManager.orientation   = LinearLayoutManager.VERTICAL
-        rvActing.layoutManager      = layoutManager
-        val adapter                 = PeopleDetailCreditsAdapter(this,list)
-        rvActing.adapter            = adapter
-        adapter.setOnItemClickListener(object : OnItemClickListener{
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        peopleDetailBinding.peopleDetailCast.rvActing.layoutManager = layoutManager
+        val adapter = PeopleDetailCreditsAdapter(this, list)
+        peopleDetailBinding.peopleDetailCast.rvActing.adapter = adapter
+        adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
-                val intent = if (item?.media_type == "tv"){
-                    Intent(activity,TvDetailActivity::class.java)
-                }else {
-                    Intent(activity,MovieDetailActivity::class.java)
+                val intent = if (item?.media_type == "tv") {
+                    Intent(activity, TvDetailActivity::class.java)
+                } else {
+                    Intent(activity, MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
-                    intent.putExtra(Constant.idMovie,it)
+                    intent.putExtra(Constant.idMovie, it)
                     startActivity(intent)
                 }
             }
         })
     }
 
-    override fun setOpenURL(url: String,status : String) {
-        val intent : Intent? = when (status) {
+    override fun setOpenURL(url: String, status: String) {
+        val intent: Intent? = when (status) {
             "facebook" -> {
-                Util.startFacebook(this,url)
+                Util.startFacebook(this, url)
             }
             "instagram" -> {
-                Util.startInstagram(this,url)
+                Util.startInstagram(this, url)
             }
-            "twitter" ->{
-                Util.startTwitter(this,url)
+            "twitter" -> {
+                Util.startTwitter(this, url)
             }
             else -> {
                 Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -247,14 +257,19 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun showDialogNoData(message: String) {
-        Util.showRoundedDialog(this,getString(R.string.no_data),message,false,object : DialogListener {
-            override fun onYes() {
-                finish()
-            }
+        Util.showRoundedDialog(
+            this,
+            getString(R.string.no_data),
+            message,
+            false,
+            object : DialogListener {
+                override fun onYes() {
+                    finish()
+                }
 
-            override fun onNo() {
-            }
-        })
+                override fun onNo() {
+                }
+            })
     }
 
     override fun injectDependency() {
@@ -266,10 +281,10 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(peopleDetailBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         Util.setColorFilter(
-            toolbar.navigationIcon!!,
+            peopleDetailBinding.toolbar.navigationIcon!!,
             ContextCompat.getColor(this, R.color.iconColorPrimary)
         )
 
@@ -287,37 +302,39 @@ class PeopleDetailActivity : BaseActivity(),PeopleDetailContract.View {
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
+        peopleDetailBinding.btnBackToTop.hide()
+        peopleDetailBinding.refreshLayout.setOnRefreshListener {
+            peopleDetailBinding.refreshLayout.isRefreshing = false
             presenter.loadData(id)
         }
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
-            val scrollY = scrollView.scrollY
-            if (scrollY > 0){
-                btnBackToTop.show()
-            }else{
-                btnBackToTop.hide()
+        peopleDetailBinding.scrollView.viewTreeObserver.addOnScrollChangedListener {
+            val scrollY = peopleDetailBinding.scrollView.scrollY
+            if (scrollY > 0) {
+                peopleDetailBinding.btnBackToTop.show()
+            } else {
+                peopleDetailBinding.btnBackToTop.hide()
             }
         }
-        btnBackToTop.setOnClickListener {
-            scrollView.smoothScrollTo(0,0)
+        peopleDetailBinding.btnBackToTop.setOnClickListener {
+            peopleDetailBinding.scrollView.smoothScrollTo(0, 0)
         }
     }
 
     override fun showLoading() {
-        refreshLayout.visibility    = View.GONE
-        appbar.visibility           = View.GONE
-        shimmerView.visibility  = View.VISIBLE
-        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-        shimmerView.startShimmer()
+        peopleDetailBinding.refreshLayout.visibility = View.GONE
+        peopleDetailBinding.appbar.visibility = View.GONE
+        peopleDetailBinding.shimmerView.visibility = View.VISIBLE
+        peopleDetailBinding.shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+        )
+        peopleDetailBinding.shimmerView.startShimmer()
     }
 
     override fun hideLoading() {
-        shimmerView.stopShimmer()
-        shimmerView.visibility      = View.GONE
-        refreshLayout.visibility    = View.VISIBLE
-        appbar.visibility           = View.VISIBLE
+        peopleDetailBinding.shimmerView.stopShimmer()
+        peopleDetailBinding.shimmerView.visibility = View.GONE
+        peopleDetailBinding.refreshLayout.visibility = View.VISIBLE
+        peopleDetailBinding.appbar.visibility = View.VISIBLE
     }
 
 }

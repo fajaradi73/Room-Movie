@@ -8,12 +8,12 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.AdapterMovieDetailPostersBinding
 import id.fajarproject.roommovie.models.PicturesItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.adapter_movie_detail_posters.view.*
 
 
 /**
@@ -23,26 +23,30 @@ class DetailPostersAdapter(
     var activity: Activity,
     private var list: MutableList<PicturesItem?>
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<AdapterHolder<AdapterMovieDetailPostersBinding>>() {
 
-    private var onItemClickListener : OnItemClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?){
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
         this.onItemClickListener = onItemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AdapterHolder<AdapterMovieDetailPostersBinding> {
         return AdapterHolder(
-            LayoutInflater.from(
-                parent.context
-            ).inflate(R.layout.adapter_movie_detail_posters, parent, false)
-            , this.onItemClickListener
+            AdapterMovieDetailPostersBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), this.onItemClickListener
         )
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: AdapterHolder<AdapterMovieDetailPostersBinding>,
         position: Int
     ) {
         val data = list[position] ?: PicturesItem()
@@ -50,10 +54,10 @@ class DetailPostersAdapter(
             .load(Constant.BASE_IMAGE + data.filePath)
             .error(R.drawable.ic_placeholder)
             .placeholder(Util.circleLoading(activity))
-            .into(holder.itemView.ivPicture)
-        val transitionName = activity.getString(R.string.transition_title,position)
+            .into(holder.binding.ivPicture)
+        val transitionName = activity.getString(R.string.transition_title, position)
         holder.itemView.tag = transitionName
-        ViewCompat.setTransitionName(holder.itemView,transitionName)
+        ViewCompat.setTransitionName(holder.itemView, transitionName)
     }
 
     override fun getItemCount(): Int {

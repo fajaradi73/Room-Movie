@@ -3,6 +3,7 @@
 /local.properties
 /gradle.properties
 /gradlew.bat
+/.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml

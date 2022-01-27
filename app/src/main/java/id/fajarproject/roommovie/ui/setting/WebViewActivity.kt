@@ -11,21 +11,24 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityWebViewBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_web_view.*
 
 
 class WebViewActivity : AppCompatActivity() {
 
-    private var intentStatus : String? = ""
+    private var intentStatus: String? = ""
+    private lateinit var webViewBinding: ActivityWebViewBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web_view)
+        webViewBinding = ActivityWebViewBinding.inflate(layoutInflater)
+        setContentView(webViewBinding.root)
         injectDependency()
         intentStatus = intent.getStringExtra(Constant.INTENT_STATUS)
         setToolbar()
@@ -33,16 +36,19 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     private fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(webViewBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
+        Util.setColorFilter(
+            webViewBinding.toolbar.navigationIcon!!,
+            ContextCompat.getColor(this, R.color.iconColorPrimary)
+        )
         title = intentStatus
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun setWebView(){
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = object : WebViewClient() {
+    private fun setWebView() {
+        webViewBinding.webView.settings.javaScriptEnabled = true
+        webViewBinding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 val host = Uri.parse(url).host
                 host?.let {
@@ -56,21 +62,27 @@ class WebViewActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+
             override fun onPageFinished(view: WebView, url: String) {
                 // Inject CSS on PageFinished
-                injectCSS(AppPreference.getBooleanPreferenceByName(this@WebViewActivity,Constant.isNightMode))
+                injectCSS(
+                    AppPreference.getBooleanPreferenceByName(
+                        this@WebViewActivity,
+                        Constant.isNightMode
+                    )
+                )
                 super.onPageFinished(view, url)
             }
         }
         when (intentStatus) {
             getString(R.string.privacy_policy) -> {
-                webView.loadUrl("file:///android_asset/privacy_policy.html")
+                webViewBinding.webView.loadUrl("file:///android_asset/privacy_policy.html")
             }
             getString(R.string.terms_of_use) -> {
-                webView.loadUrl("file:///android_asset/term_of_use.html")
+                webViewBinding.webView.loadUrl("file:///android_asset/term_of_use.html")
             }
             getString(R.string.contribution) -> {
-                webView.loadUrl("file:///android_asset/contribution.html")
+                webViewBinding.webView.loadUrl("file:///android_asset/contribution.html")
             }
         }
     }
@@ -84,7 +96,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home){
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
         }
         return super.onOptionsItemSelected(item)
@@ -95,26 +107,26 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (webView.canGoBack()){
-            webView.goBack()
-        }else{
+        if (webViewBinding.webView.canGoBack()) {
+            webViewBinding.webView.goBack()
+        } else {
             super.onBackPressed()
         }
     }
 
     private fun injectCSS(isNightMode: Boolean) {
         if (isNightMode) {
-            webView.loadUrl(
+            webViewBinding.webView.loadUrl(
                 "javascript:document.body.style.setProperty(\"color\", \"white\");"
             )
-            webView.loadUrl(
+            webViewBinding.webView.loadUrl(
                 "javascript:document.body.style.setProperty(\"background-color\", \"black\");"
             )
-        }else{
-            webView.loadUrl(
+        } else {
+            webViewBinding.webView.loadUrl(
                 "javascript:document.body.style.setProperty(\"color\", \"black\");"
             )
-            webView.loadUrl(
+            webViewBinding.webView.loadUrl(
                 "javascript:document.body.style.setProperty(\"background-color\", \"white\");"
             )
         }

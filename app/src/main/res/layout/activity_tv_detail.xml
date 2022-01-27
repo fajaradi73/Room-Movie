@@ -130,12 +130,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-                <include layout="@layout/activity_tv_detail_overview"/>
-                <include layout="@layout/activity_tv_detail_info"/>
-                <include layout="@layout/activity_tv_detail_people"/>
-                <include layout="@layout/activity_tv_detail_season"/>
-                <include layout="@layout/activity_movie_detail_media"/>
-                <include layout="@layout/activity_movie_detail_recommendation"/>
+                <include
+                    android:id="@+id/tvDetailOverview"
+                    layout="@layout/activity_tv_detail_overview"/>
+                <include
+                    android:id="@+id/tvDetailInfo"
+                    layout="@layout/activity_tv_detail_info"/>
+                <include
+                    android:id="@+id/tvDetailPeople"
+                    layout="@layout/activity_tv_detail_people"/>
+                <include
+                    android:id="@+id/tvDetailSeason"
+                    layout="@layout/activity_tv_detail_season"/>
+                <include
+                    android:id="@+id/tvDetailMedia"
+                    layout="@layout/activity_movie_detail_media"/>
+                <include
+                    android:id="@+id/tvDetailRecommendation"
+                    layout="@layout/activity_movie_detail_recommendation"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

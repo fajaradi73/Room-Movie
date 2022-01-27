@@ -31,11 +31,11 @@ class CustomWebView : WebView {
     private var videoEnabledWebChromeClient: VideoWebChromeClient? = null
     private var addedJavascriptInterface: Boolean
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
         addedJavascriptInterface = false
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(
+    constructor(context: Context, attrs: AttributeSet?) : super(
         context,
         attrs
     ) {
@@ -43,7 +43,7 @@ class CustomWebView : WebView {
     }
 
     constructor(
-        context: Context?,
+        context: Context,
         attrs: AttributeSet?,
         defStyle: Int
     ) : super(context, attrs, defStyle) {
@@ -72,7 +72,7 @@ class CustomWebView : WebView {
     }
 
     override fun loadData(
-        data: String?,
+        data: String,
         mimeType: String?,
         encoding: String?
     ) {
@@ -82,7 +82,7 @@ class CustomWebView : WebView {
 
     override fun loadDataWithBaseURL(
         baseUrl: String?,
-        data: String?,
+        data: String,
         mimeType: String?,
         encoding: String?,
         historyUrl: String?
@@ -91,14 +91,14 @@ class CustomWebView : WebView {
         super.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl)
     }
 
-    override fun loadUrl(url: String?) {
+    override fun loadUrl(url: String) {
         addJavascriptInterface()
         super.loadUrl(url)
     }
 
     override fun loadUrl(
-        url: String?,
-        additionalHttpHeaders: Map<String?, String?>?
+        url: String,
+        additionalHttpHeaders: Map<String?, String?>
     ) {
         addJavascriptInterface()
         super.loadUrl(url, additionalHttpHeaders)

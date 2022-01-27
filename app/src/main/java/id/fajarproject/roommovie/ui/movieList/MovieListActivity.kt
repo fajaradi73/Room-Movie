@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.facebook.shimmer.Shimmer
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityMovieListBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.models.MovieItem
@@ -19,15 +20,15 @@ import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.PaginationScrollListener
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_movie_list.*
 import javax.inject.Inject
 
 /**
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
-class MovieListActivity : BaseActivity(),MovieListContract.View {
+class MovieListActivity : BaseActivity(), MovieListContract.View {
 
-    @Inject lateinit var presenter: MovieListContract.Presenter
+    @Inject
+    lateinit var presenter: MovieListContract.Presenter
     lateinit var layoutManager: GridLayoutManager
     var adapter: MovieListAdapter? = null
     var isLoading = false
@@ -37,21 +38,23 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     var currentPage = 1
     var limit = 20
 
-    private var status : String = ""
+    private var status: String = ""
+    private lateinit var movieListBinding: ActivityMovieListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movie_list)
+        movieListBinding = ActivityMovieListBinding.inflate(layoutInflater)
+        setContentView(movieListBinding.root)
         injectDependency()
-        presenter.attach<Activity>(this,this)
+        presenter.attach<Activity>(this, this)
 
         status = intent.getStringExtra(Constant.INTENT_STATUS) ?: ""
 
         setToolbar()
         setRecycleView()
         setUI()
-        if (isConnection){
-            presenter.loadData(currentPage,status)
+        if (isConnection) {
+            presenter.loadData(currentPage, status)
         }
     }
 
@@ -65,7 +68,7 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
 
     override fun setRecycleView() {
         val mNoOfColumns = Util.calculateNoOfColumns(this)
-        layoutManager = GridLayoutManager(this,mNoOfColumns)
+        layoutManager = GridLayoutManager(this, mNoOfColumns)
         layoutManager.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when {
@@ -81,11 +84,12 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
                 }
             }
         }
-        rvMovie.layoutManager = layoutManager
+        movieListBinding.rvMovie.layoutManager = layoutManager
     }
 
     override fun setScrollRecycleView() {
-        rvMovie.addOnScrollListener(object : PaginationScrollListener(layoutManager){
+        movieListBinding.rvMovie.addOnScrollListener(object :
+            PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 isLoading = true
                 currentPage += 1
@@ -106,9 +110,9 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
 
             override fun backToTop(isShow: Boolean) {
                 if (isShow)
-                    btnBackToTop.show()
+                    movieListBinding.btnBackToTop.show()
                 else
-                    btnBackToTop.hide()
+                    movieListBinding.btnBackToTop.hide()
             }
 
         })
@@ -116,13 +120,13 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
 
     override fun showDataSuccess(list: MutableList<MovieItem?>) {
         countData = list.size
-        if (currentPage == 1){
+        if (currentPage == 1) {
             adapter = MovieListAdapter(
-                this,list
+                this, list
             )
-            rvMovie.adapter = adapter
+            movieListBinding.rvMovie.adapter = adapter
             setScrollRecycleView()
-        }else{
+        } else {
             adapter?.removeLoadingFooter()
             isLoading = false
             adapter?.addData(list)
@@ -142,47 +146,47 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
         checkData()
     }
 
-    fun moveToDetail(id : Int){
-        val intent = Intent(this,MovieDetailActivity::class.java)
-        intent.putExtra(Constant.idMovie,id)
+    fun moveToDetail(id: Int) {
+        val intent = Intent(this, MovieDetailActivity::class.java)
+        intent.putExtra(Constant.idMovie, id)
         startActivity(intent)
     }
 
     override fun showDataFailed(message: String) {
-        Log.d("ErrorFavorite",message)
+        Log.d("ErrorFavorite", message)
         showData(false)
     }
 
     override fun checkLastData() {
-        if (countData == limit){
+        if (countData == limit) {
             adapter?.addLoadingFooter()
-        }else{
+        } else {
             isLastPage = true
         }
     }
 
     override fun checkData() {
-        if (adapter?.itemCount == 0){
+        if (adapter?.itemCount == 0) {
             showData(false)
-        }else{
+        } else {
             showData(true)
         }
     }
 
     override fun showData(isShow: Boolean) {
-        if (isShow){
-            rvMovie.visibility  = View.VISIBLE
-            noData.visibility   = View.GONE
-        }else{
-            rvMovie.visibility  = View.GONE
-            noData.visibility   = View.VISIBLE
+        if (isShow) {
+            movieListBinding.rvMovie.visibility = View.VISIBLE
+            movieListBinding.noData.visibility = View.GONE
+        } else {
+            movieListBinding.rvMovie.visibility = View.GONE
+            movieListBinding.noData.visibility = View.VISIBLE
         }
     }
 
-    override fun getTitle(title: String) : String?{
-        return when (title){
+    override fun getTitle(title: String): String {
+        return when (title) {
             getString(R.string.now_playing) -> {
-               getString(R.string.now_playing)
+                getString(R.string.now_playing)
             }
             getString(R.string.top_rated) -> {
                 getString(R.string.top_rated)
@@ -200,9 +204,12 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     }
 
     override fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(movieListBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        Util.setColorFilter(toolbar.navigationIcon!!, ContextCompat.getColor(this, R.color.iconColorPrimary))
+        Util.setColorFilter(
+            movieListBinding.toolbar.navigationIcon!!,
+            ContextCompat.getColor(this, R.color.iconColorPrimary)
+        )
         title = getTitle(status)
     }
 
@@ -212,26 +219,32 @@ class MovieListActivity : BaseActivity(),MovieListContract.View {
     }
 
     override fun setUI() {
-        btnBackToTop.hide()
-        btnBackToTop.setOnClickListener { rvMovie.smoothScrollToPosition(0) }
-        refreshLayout.setOnRefreshListener {
-            refreshLayout.isRefreshing = false
+        movieListBinding.btnBackToTop.hide()
+        movieListBinding.btnBackToTop.setOnClickListener {
+            movieListBinding.rvMovie.smoothScrollToPosition(
+                0
+            )
+        }
+        movieListBinding.refreshLayout.setOnRefreshListener {
+            movieListBinding.refreshLayout.isRefreshing = false
             currentPage = 1
-            presenter.loadData(currentPage,status)
+            presenter.loadData(currentPage, status)
         }
     }
 
     override fun showLoading() {
-        shimmerView.visibility  = View.VISIBLE
-        shimmerView.setShimmer(Shimmer.AlphaHighlightBuilder().setDuration(1150L).build())
-        shimmerView.startShimmer()
-        refreshLayout.visibility = View.GONE
+        movieListBinding.shimmerView.visibility = View.VISIBLE
+        movieListBinding.shimmerView.setShimmer(
+            Shimmer.AlphaHighlightBuilder().setDuration(1150L).build()
+        )
+        movieListBinding.shimmerView.startShimmer()
+        movieListBinding.refreshLayout.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        shimmerView.stopShimmer()
-        shimmerView.visibility      = View.GONE
-        refreshLayout.visibility    = View.VISIBLE
+        movieListBinding.shimmerView.stopShimmer()
+        movieListBinding.shimmerView.visibility = View.GONE
+        movieListBinding.refreshLayout.visibility = View.VISIBLE
     }
 
 }

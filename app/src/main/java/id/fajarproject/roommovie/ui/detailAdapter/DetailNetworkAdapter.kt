@@ -7,41 +7,47 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.AdapterMovieDetailNetworkBinding
 import id.fajarproject.roommovie.models.NetworksItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.adapter_movie_detail_posters.view.*
 
 
 /**
  * Create by Fajar Adi Prasetyo on 08/07/2020.
  */
+
+
 class DetailNetworkAdapter(
     var activity: Activity,
     private var list: MutableList<NetworksItem?>
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<AdapterHolder<AdapterMovieDetailNetworkBinding>>() {
 
-    private var onItemClickListener : OnItemClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?){
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
         this.onItemClickListener = onItemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AdapterHolder<AdapterMovieDetailNetworkBinding> {
         return AdapterHolder(
-            LayoutInflater.from(
-                parent.context
-            ).inflate(R.layout.adapter_movie_detail_network, parent, false)
-            , this.onItemClickListener
+            AdapterMovieDetailNetworkBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ), this.onItemClickListener
         )
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: AdapterHolder<AdapterMovieDetailNetworkBinding>,
         position: Int
     ) {
         val data = list[position] ?: NetworksItem()
@@ -49,7 +55,7 @@ class DetailNetworkAdapter(
             .load(Constant.BASE_IMAGE + data.logoPath)
             .error(R.drawable.ic_placeholder)
             .placeholder(Util.circleLoading(activity))
-            .into(holder.itemView.ivPicture)
+            .into(holder.binding.ivPicture)
     }
 
     override fun getItemCount(): Int {

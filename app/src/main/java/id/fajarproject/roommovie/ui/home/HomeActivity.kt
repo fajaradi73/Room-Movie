@@ -6,14 +6,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.text.TextUtils
-import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.arlib.floatingsearchview.FloatingSearchView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.ActivityHomeBinding
 import id.fajarproject.roommovie.di.component.DaggerActivityComponent
 import id.fajarproject.roommovie.di.module.ActivityModule
 import id.fajarproject.roommovie.ui.base.BaseActivity
@@ -26,7 +25,6 @@ import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Constant.REQUEST_VOICE
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
 
@@ -34,24 +32,28 @@ import javax.inject.Inject
  * Create by Fajar Adi Prasetyo on 01/07/2020.
  */
 
-class HomeActivity : BaseActivity() ,HomeContract.View{
+class HomeActivity : BaseActivity(), HomeContract.View {
 
-    @Inject lateinit var presenter: HomeContract.Presenter
+    @Inject
+    lateinit var presenter: HomeContract.Presenter
+
+    private lateinit var homeBinding: ActivityHomeBinding
 
     private val fragmentManager = supportFragmentManager
-    private var currentFragment : Fragment? = null
+    private var currentFragment: Fragment? = null
     private var intentStatus = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        homeBinding = ActivityHomeBinding.inflate(layoutInflater)
+        setContentView(homeBinding.root)
         injectDependency()
-        presenter.attach<Activity>(this,this)
+        presenter.attach<Activity>(this, this)
         setToolbar()
-        if (isConnection){
-            if (!presenter.checkDataPreferences(Constant.language)){
+        if (isConnection) {
+            if (!presenter.checkDataPreferences(Constant.language)) {
                 presenter.loadDataLanguage()
-            }else {
+            } else {
                 if (!presenter.checkDataPreferences(Constant.genreMovie)) {
                     presenter.loadData()
                 } else {
@@ -62,63 +64,75 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun setUI() {
-        nav_view.setOnNavigationItemSelectedListener(object : BottomNavigationView.OnNavigationItemSelectedListener{
-            override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                when(item.itemId){
-                    R.id.action_home -> {
-                        addFragment(MovieFragment(),Constant.movie)
-                        setHintSearch(getString(R.string.movie))
-                        changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.movie)
-                        return true
-                    }
-                    R.id.action_tv -> {
-                        if (!presenter.checkDataPreferences(Constant.genreTv)){
-                            presenter.loadDataTv()
-                        }
-                        addFragment(TvFragment(),Constant.tv)
-                        setHintSearch(getString(R.string.tv))
-                        changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.tv)
-                        return true
-                    }
-                    R.id.action_people -> {
-                        addFragment(PeopleFragment(),Constant.people)
-                        setHintSearch(getString(R.string.people))
-                        changeToolbar(true)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.people)
-                        return true
-                    }
-                    R.id.action_setting -> {
-                        addFragment(SettingFragment(),Constant.setting)
-                        changeToolbar(false)
-                        AppPreference.writePreference(this@HomeActivity,Constant.tag,Constant.setting)
-                        return true
-                    }
+        homeBinding.navView.setOnItemSelectedListener {
+            // do stuff
+            when (it.itemId) {
+                R.id.action_home -> {
+                    addFragment(MovieFragment(), Constant.movie)
+                    setHintSearch(getString(R.string.movie))
+                    changeToolbar(true)
+                    AppPreference.writePreference(
+                        this@HomeActivity,
+                        Constant.tag,
+                        Constant.movie
+                    )
+                    return@setOnItemSelectedListener true
                 }
-                return false
+                R.id.action_tv -> {
+                    if (!presenter.checkDataPreferences(Constant.genreTv)) {
+                        presenter.loadDataTv()
+                    }
+                    addFragment(TvFragment(), Constant.tv)
+                    setHintSearch(getString(R.string.tv))
+                    changeToolbar(true)
+                    AppPreference.writePreference(this@HomeActivity, Constant.tag, Constant.tv)
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_people -> {
+                    addFragment(PeopleFragment(), Constant.people)
+                    setHintSearch(getString(R.string.people))
+                    changeToolbar(true)
+                    AppPreference.writePreference(
+                        this@HomeActivity,
+                        Constant.tag,
+                        Constant.people
+                    )
+                    return@setOnItemSelectedListener true
+                }
+                R.id.action_setting -> {
+                    addFragment(SettingFragment(), Constant.setting)
+                    changeToolbar(false)
+                    AppPreference.writePreference(
+                        this@HomeActivity,
+                        Constant.tag,
+                        Constant.setting
+                    )
+                    return@setOnItemSelectedListener true
+                }
             }
-        })
+            return@setOnItemSelectedListener false
+        }
         setOpenFragment()
-        searchBar.setOnMenuItemClickListener { item ->
-            if (item?.itemId == R.id.action_voice){
+        homeBinding.searchBar.setOnMenuItemClickListener { item ->
+            if (item?.itemId == R.id.action_voice) {
                 Util.onVoiceClicked(this)
             }
         }
-        searchBar.setOnFocusChangeListener(object : FloatingSearchView.OnFocusChangeListener{
+        homeBinding.searchBar.setOnFocusChangeListener(object :
+            FloatingSearchView.OnFocusChangeListener {
             override fun onFocusCleared() {
             }
 
             override fun onFocus() {
                 moveToSearch("")
-                searchBar.setSearchFocused(false)
+                homeBinding.searchBar.setSearchFocused(false)
             }
         })
     }
 
     override fun showLoading() {
-        loading.visibility      = View.VISIBLE
-        clContainer.visibility  = View.GONE
+        homeBinding.loading.visibility = View.VISIBLE
+        homeBinding.clContainer.visibility = View.GONE
 
         window?.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -127,8 +141,8 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun hideLoading() {
-        loading.visibility      = View.GONE
-        clContainer.visibility  = View.VISIBLE
+        homeBinding.loading.visibility = View.GONE
+        homeBinding.clContainer.visibility = View.VISIBLE
         window?.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -141,7 +155,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     }
 
     override fun setToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(homeBinding.toolbar)
     }
 
     override fun addFragment(fragments: Fragment, tag: String) {
@@ -149,7 +163,7 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
         val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
 
         var curFrag: Fragment? = null
-        if (fragmentManager.primaryNavigationFragment != null){
+        if (fragmentManager.primaryNavigationFragment != null) {
             curFrag = fragmentManager.primaryNavigationFragment
         }
         if (curFrag != null) {
@@ -160,13 +174,12 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
             fragmentManager.findFragmentByTag(tag)
         if (fragment == null) {
             fragment = fragments
-            fragmentTransaction.add(container.id, fragment, tag)
+            fragmentTransaction.add(homeBinding.container.id, fragment, tag)
         } else {
-            if (tag == Constant.setting){
-                fragmentTransaction.detach(fragment).
-                attach(fragment)
+            if (tag == Constant.setting) {
+                fragmentTransaction.detach(fragment).attach(fragment)
                 fragmentTransaction.show(fragment)
-            }else {
+            } else {
                 fragmentTransaction.show(fragment)
             }
         }
@@ -179,41 +192,41 @@ class HomeActivity : BaseActivity() ,HomeContract.View{
     @SuppressLint("DefaultLocale")
     override fun setHintSearch(status: String) {
         intentStatus = status
-        searchBar.setSearchHint("${getString(R.string.search_hint)} ${status.toLowerCase()}")
+        homeBinding.searchBar.setSearchHint("${getString(R.string.search_hint)} ${status.lowercase()}")
     }
 
     override fun moveToSearch(voiceSearch: String) {
-        val intent = Intent(this@HomeActivity,SearchActivity::class.java)
-        intent.putExtra(Constant.INTENT_STATUS,intentStatus)
-        intent.putExtra(Constant.voiceSearch,voiceSearch)
+        val intent = Intent(this@HomeActivity, SearchActivity::class.java)
+        intent.putExtra(Constant.INTENT_STATUS, intentStatus)
+        intent.putExtra(Constant.voiceSearch, voiceSearch)
         startActivity(intent)
     }
 
     override fun changeToolbar(isSearch: Boolean) {
-        if (isSearch){
-            searchBar.visibility    = View.VISIBLE
-            toolbar.visibility      = View.INVISIBLE
-            title                   = ""
-        }else{
-            searchBar.visibility    = View.INVISIBLE
-            toolbar.visibility      = View.VISIBLE
-            title                   = getString(R.string.setting)
+        if (isSearch) {
+            homeBinding.searchBar.visibility = View.VISIBLE
+            homeBinding.toolbar.visibility = View.INVISIBLE
+            title = ""
+        } else {
+            homeBinding.searchBar.visibility = View.INVISIBLE
+            homeBinding.toolbar.visibility = View.VISIBLE
+            title = getString(R.string.setting)
         }
     }
 
     override fun setOpenFragment() {
-        when (AppPreference.getStringPreferenceByName(this,Constant.tag)) {
+        when (AppPreference.getStringPreferenceByName(this, Constant.tag)) {
             Constant.tv -> {
-                nav_view.selectedItemId = R.id.action_tv
+                homeBinding.navView.selectedItemId = R.id.action_tv
             }
             Constant.people -> {
-                nav_view.selectedItemId = R.id.action_people
+                homeBinding.navView.selectedItemId = R.id.action_people
             }
-            Constant.setting-> {
-                nav_view.selectedItemId = R.id.action_setting
+            Constant.setting -> {
+                homeBinding.navView.selectedItemId = R.id.action_setting
             }
             else -> {
-                nav_view.selectedItemId = R.id.action_home
+                homeBinding.navView.selectedItemId = R.id.action_home
             }
         }
     }

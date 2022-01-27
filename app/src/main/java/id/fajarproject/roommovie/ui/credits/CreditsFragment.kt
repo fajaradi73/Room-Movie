@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.FragmentCreditsBinding
 import id.fajarproject.roommovie.di.component.DaggerFragmentComponent
 import id.fajarproject.roommovie.di.module.FragmentModule
 import id.fajarproject.roommovie.models.CreditsItem
@@ -17,12 +18,13 @@ import id.fajarproject.roommovie.ui.peopleDetail.PeopleDetailActivity
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.fragment_credits.*
 
 /**
  * A placeholder fragment containing a simple view.
  */
 class CreditsFragment : Fragment(),CreditsContract.Fragment {
+
+    private lateinit var creditsBinding: FragmentCreditsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +49,9 @@ class CreditsFragment : Fragment(),CreditsContract.Fragment {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_credits, container, false)
+    ): View {
+        creditsBinding = FragmentCreditsBinding.inflate(inflater,container,false)
+        return creditsBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,12 +62,12 @@ class CreditsFragment : Fragment(),CreditsContract.Fragment {
     override fun setRecycleView() {
         val mNoOfColumns        = Util.calculateNoOfColumns(requireContext())
         val layoutManager       = GridLayoutManager(requireContext(),mNoOfColumns)
-        rvCredits.layoutManager = layoutManager
+        creditsBinding.rvCredits.layoutManager = layoutManager
     }
 
     override fun showData(list: MutableList<CreditsItem?>) {
         val adapter         = CreditsAdapter(activity,list)
-        rvCredits.adapter   = adapter
+        creditsBinding.rvCredits.adapter   = adapter
         adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)

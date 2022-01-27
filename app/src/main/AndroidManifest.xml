@@ -41,8 +41,9 @@
         <activity
             android:name=".ui.splashscreen.SplashScreen"
             android:configChanges="locale"
-            android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme">
+            android:screenOrientation="fullSensor"
+            android:theme="@style/SplashTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

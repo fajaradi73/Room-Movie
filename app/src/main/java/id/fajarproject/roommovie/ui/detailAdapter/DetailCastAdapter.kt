@@ -7,51 +7,54 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import id.fajarproject.roommovie.R
+import id.fajarproject.roommovie.databinding.AdapterDetailCastBinding
 import id.fajarproject.roommovie.models.CreditsItem
 import id.fajarproject.roommovie.ui.base.AdapterHolder
 import id.fajarproject.roommovie.ui.widget.OnItemClickListener
 import id.fajarproject.roommovie.util.Constant
 import id.fajarproject.roommovie.util.Util
-import kotlinx.android.synthetic.main.adapter_detail_cast.view.*
 
 
 /**
  * Create by Fajar Adi Prasetyo on 07/07/2020.
  */
+
+
 class DetailCastAdapter(
     var activity: Activity,
     private var list: MutableList<CreditsItem?>
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<AdapterHolder<AdapterDetailCastBinding>>() {
 
-    private var onItemClickListener : OnItemClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
-    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?){
+    fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
         this.onItemClickListener = onItemClickListener
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): AdapterHolder<AdapterDetailCastBinding> {
         return AdapterHolder(
-            LayoutInflater.from(
-                parent.context
-            ).inflate(R.layout.adapter_detail_cast, parent, false)
-            , this.onItemClickListener
+            AdapterDetailCastBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            this.onItemClickListener
         )
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
+        holder: AdapterHolder<AdapterDetailCastBinding>,
         position: Int
     ) {
         val data = list[position] ?: CreditsItem()
-        holder.itemView.tvName.text = data.name
-        holder.itemView.tvKnownFor.text = data.character
+        holder.binding.tvName.text = data.name
+        holder.binding.tvKnownFor.text = data.character
         Glide.with(activity)
             .load(Constant.BASE_IMAGE + data.profilePath)
             .error(R.drawable.ic_placeholder)
             .placeholder(Util.circleLoading(activity))
-            .into(holder.itemView.ivProfile)
+            .into(holder.binding.ivProfile)
     }
 
     override fun getItemCount(): Int {
