@@ -236,6 +236,7 @@ class HomeActivity : BaseActivity(), HomeContract.View {
         super.onDestroy()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
