@@ -123,7 +123,7 @@ class TvDetailActivity : BaseActivity(), TvDetailContract.View {
                 tvDetailBinding.tvDetailPeople.tvFullCast.visibility = View.VISIBLE
                 setViewCasts(it)
                 tvDetailBinding.tvDetailPeople.tvFullCast.setOnClickListener {
-                    val intent = Intent(activity, CreditsActivity::class.java)
+                    val intent = Intent(this, CreditsActivity::class.java)
                     intent.putExtra(Constant.isMovie, false)
                     intent.putExtra(Constant.INTENT_STATUS, data.name)
                     intent.putExtra(Constant.idMovie, data.id)
@@ -196,7 +196,7 @@ class TvDetailActivity : BaseActivity(), TvDetailContract.View {
             }
             setViewSeason(last, data.name ?: "")
             tvDetailBinding.tvDetailSeason.tvFullSeason.setOnClickListener {
-                val intent = Intent(activity, SeasonActivity::class.java)
+                val intent = Intent(this, SeasonActivity::class.java)
                 intent.putExtra(Constant.title, data.name)
                 intent.putExtra(Constant.season, Parcels.wrap(list))
                 startActivity(intent)
@@ -260,7 +260,7 @@ class TvDetailActivity : BaseActivity(), TvDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 item?.id.let {
-                    val intent = Intent(activity, PeopleDetailActivity::class.java)
+                    val intent = Intent(this@TvDetailActivity, PeopleDetailActivity::class.java)
                     intent.putExtra(Constant.idPeople, it)
                     startActivity(intent)
                 }
@@ -447,7 +447,7 @@ class TvDetailActivity : BaseActivity(), TvDetailContract.View {
     }
 
     override fun moveToDiscover(status: String, genre: String, keywords: String, networks: String) {
-        val intent = Intent(activity, DiscoverActivity::class.java)
+        val intent = Intent(this, DiscoverActivity::class.java)
         intent.putExtra(Constant.isMovie, false)
         intent.putExtra(Constant.INTENT_STATUS, status)
         intent.putExtra(Constant.keywords, keywords)

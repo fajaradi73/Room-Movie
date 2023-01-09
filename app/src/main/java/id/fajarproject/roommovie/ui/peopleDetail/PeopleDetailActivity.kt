@@ -175,9 +175,9 @@ class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 val intent = if (item?.media_type == "tv") {
-                    Intent(activity, TvDetailActivity::class.java)
+                    Intent(this@PeopleDetailActivity, TvDetailActivity::class.java)
                 } else {
-                    Intent(activity, MovieDetailActivity::class.java)
+                    Intent(this@PeopleDetailActivity, MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
                     intent.putExtra(Constant.idMovie, it)
@@ -226,9 +226,9 @@ class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 val intent = if (item?.media_type == "tv") {
-                    Intent(activity, TvDetailActivity::class.java)
+                    Intent(this@PeopleDetailActivity, TvDetailActivity::class.java)
                 } else {
-                    Intent(activity, MovieDetailActivity::class.java)
+                    Intent(this@PeopleDetailActivity, MovieDetailActivity::class.java)
                 }
                 item?.id?.let {
                     intent.putExtra(Constant.idMovie, it)

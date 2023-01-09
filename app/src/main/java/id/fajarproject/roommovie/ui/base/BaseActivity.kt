@@ -28,8 +28,6 @@ import io.reactivex.disposables.CompositeDisposable
  */
 
 open class BaseActivity : LocaleAwareCompatActivity() {
-    lateinit var activity: Activity
-
     private val subscriptions = CompositeDisposable()
 
     var isConnection = true
@@ -49,7 +47,6 @@ open class BaseActivity : LocaleAwareCompatActivity() {
             isConnection = false
         }
         super.setContentView(layoutResID)
-        activity = this
     }
 
     override fun onDestroy() {

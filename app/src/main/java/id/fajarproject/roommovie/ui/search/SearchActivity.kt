@@ -210,7 +210,7 @@ class SearchActivity : BaseActivity(), SearchContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapterPeople?.getItem(position)
                 item?.id.let {
-                    val intent = Intent(activity, PeopleDetailActivity::class.java)
+                    val intent = Intent(this@SearchActivity, PeopleDetailActivity::class.java)
                     intent.putExtra(Constant.idPeople, it)
                     startActivity(intent)
                 }

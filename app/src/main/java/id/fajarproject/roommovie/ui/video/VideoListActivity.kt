@@ -55,7 +55,7 @@ class VideoListActivity : BaseActivity(), VideoListContract.View {
         videoListBinding.rvVideo.layoutManager = GridLayoutManager(this, 2)
         videoListBinding.rvVideo.addItemDecoration(
             GridSpacingItemDecoration(
-                activity,
+                this,
                 2,
                 1,
                 true

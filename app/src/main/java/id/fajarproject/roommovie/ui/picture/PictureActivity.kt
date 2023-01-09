@@ -65,7 +65,7 @@ class PictureActivity : BaseActivity(), PictureContract.View {
         pictureBinding.rvVideo.layoutManager = GridLayoutManager(this, 2)
         pictureBinding.rvVideo.addItemDecoration(
             GridSpacingItemDecoration(
-                activity,
+                this,
                 2,
                 1,
                 true

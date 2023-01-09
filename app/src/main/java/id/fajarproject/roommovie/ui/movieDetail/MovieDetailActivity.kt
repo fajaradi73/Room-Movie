@@ -122,7 +122,7 @@ class MovieDetailActivity : BaseActivity(), MovieDetailContract.View {
                 movieDetailBinding.movieDetailPeople.tvFullCast.visibility = View.VISIBLE
                 setViewCasts(it)
                 movieDetailBinding.movieDetailPeople.tvFullCast.setOnClickListener {
-                    val intent = Intent(activity, CreditsActivity::class.java)
+                    val intent = Intent(this, CreditsActivity::class.java)
                     intent.putExtra(Constant.isMovie, true)
                     intent.putExtra(Constant.INTENT_STATUS, data.title)
                     intent.putExtra(Constant.idMovie, data.id)
@@ -226,7 +226,7 @@ class MovieDetailActivity : BaseActivity(), MovieDetailContract.View {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
                 item?.id.let {
-                    val intent = Intent(activity, PeopleDetailActivity::class.java)
+                    val intent = Intent(this@MovieDetailActivity, PeopleDetailActivity::class.java)
                     intent.putExtra(Constant.idPeople, it)
                     startActivity(intent)
                 }
@@ -382,7 +382,7 @@ class MovieDetailActivity : BaseActivity(), MovieDetailContract.View {
     }
 
     override fun moveToDiscover(status: String, genre: String, keywords: String) {
-        val intent = Intent(activity, DiscoverActivity::class.java)
+        val intent = Intent(this, DiscoverActivity::class.java)
         intent.putExtra(Constant.isMovie, true)
         intent.putExtra(Constant.INTENT_STATUS, status)
         intent.putExtra(Constant.keywords, keywords)
