@@ -107,7 +107,7 @@ class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
         }"
         peopleDetailBinding.peopleDetailCast.acting.text = data.knownForDepartment
 
-        data.external_ids?.let {
+        data.externalIds?.let {
             setViewExternalIDs(it)
         }
         val listCredits: MutableList<CreditsItem?> = arrayListOf()
@@ -174,7 +174,7 @@ class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
         adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
-                val intent = if (item?.media_type == "tv") {
+                val intent = if (item?.mediaType == "tv") {
                     Intent(this@PeopleDetailActivity, TvDetailActivity::class.java)
                 } else {
                     Intent(this@PeopleDetailActivity, MovieDetailActivity::class.java)
@@ -225,7 +225,7 @@ class PeopleDetailActivity : BaseActivity(), PeopleDetailContract.View {
         adapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(view: View?, position: Int) {
                 val item = adapter.getItem(position)
-                val intent = if (item?.media_type == "tv") {
+                val intent = if (item?.mediaType == "tv") {
                     Intent(this@PeopleDetailActivity, TvDetailActivity::class.java)
                 } else {
                     Intent(this@PeopleDetailActivity, MovieDetailActivity::class.java)

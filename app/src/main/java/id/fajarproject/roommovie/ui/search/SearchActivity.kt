@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arlib.floatingsearchview.FloatingSearchView
@@ -67,7 +68,7 @@ class SearchActivity : BaseActivity(), SearchContract.View {
         setUI()
         searchBinding.searchBar.setSearchHint(
             "${getString(R.string.search_hint)} ${
-                status.toLowerCase(
+                status.lowercase(
                     Locale.getDefault()
                 )
             }"
@@ -270,6 +271,7 @@ class SearchActivity : BaseActivity(), SearchContract.View {
     }
 
     override fun setToolbar() {
+        // Empty
     }
 
     override fun setUI() {
@@ -289,13 +291,14 @@ class SearchActivity : BaseActivity(), SearchContract.View {
             }
 
             override fun onSuggestionClicked(searchSuggestion: SearchSuggestion?) {
+                //empty
             }
 
         })
         searchBinding.searchBar.setOnHomeActionClickListener { onBackPressed() }
         searchBinding.searchBar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_voice) {
-                Util.onVoiceClicked(this)
+                Util.onVoiceClicked(resultLauncher)
             }
         }
     }
@@ -328,19 +331,19 @@ class SearchActivity : BaseActivity(), SearchContract.View {
         searchBinding.refreshLayout.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == Constant.REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
             val matches: ArrayList<String> =
                 data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) ?: arrayListOf()
-            if (matches.size > 0) {
+            if (matches.isNotEmpty()) {
                 val searchWrd = matches[0]
                 if (!TextUtils.isEmpty(searchWrd)) {
                     searchBinding.searchBar.setSearchText(searchWrd)
                     search(searchWrd)
                 }
             }
-            return
+            return@registerForActivityResult
         }
     }
 }

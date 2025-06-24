@@ -34,7 +34,7 @@ data class CreditsItem(
     val voteCount: Int? = null,
 
     @field:SerializedName("media_type")
-    val media_type: String? = null,
+    val mediaType: String? = null,
 
     @field:SerializedName("department")
     val department: String? = null,

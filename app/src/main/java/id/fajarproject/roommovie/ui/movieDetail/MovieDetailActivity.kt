@@ -50,7 +50,6 @@ import org.parceler.Parcels
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-
 class MovieDetailActivity : BaseActivity(), MovieDetailContract.View {
 
     @Inject

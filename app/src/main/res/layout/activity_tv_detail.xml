@@ -52,7 +52,6 @@
                     android:layout_height="150dp"
                     android:id="@+id/rrPoster"
                     android:layout_marginTop="?attr/actionBarSize"
-                    app:shape_roundRect_borderWidth="2dp"
                     app:shape_roundRect_topLeftRadius="@dimen/padding_10"
                     app:shape_roundRect_topRightRadius="@dimen/padding_10"
                     app:shape_roundRect_bottomLeftRadius="@dimen/padding_10"

@@ -29,6 +29,7 @@ class BaseApp: LocaleAwareApplication() {
 
     }
 
+    @Suppress("DEPRECATION")
     private fun setup() {
         component = DaggerApplicationComponent.builder()
             .applicationModule(ApplicationModule(this)).build()

@@ -1,6 +1,5 @@
 package id.fajarproject.roommovie.ui.base
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -8,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.provider.Settings
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -84,7 +84,7 @@ open class BaseActivity : LocaleAwareCompatActivity() {
             }
 
             override fun onNo() {
-
+                Log.i("BaseActivity","Internet Connection")
             }
         })
     }

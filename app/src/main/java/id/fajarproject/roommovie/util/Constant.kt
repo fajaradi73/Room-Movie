@@ -54,5 +54,6 @@ object Constant {
     const val EXTRA_STARTING_ALBUM_POSITION         = "extra_starting_item_position"
     const val EXTRA_CURRENT_ALBUM_POSITION          = "extra_current_item_position"
     const val SAVED_CURRENT_PAGE_POSITION           = "current_page_position"
+    const val packageFacebook = "com.facebook.katana"
 
 }

@@ -25,7 +25,7 @@ data class PeopleItem(
 	val alsoKnownAs: MutableList<String>? = null,
 
     @field:SerializedName("external_ids")
-	val external_ids: ExternalIds? = null,
+	val externalIds: ExternalIds? = null,
 
     @field:SerializedName("popularity")
 	val popularity: Double? = null,

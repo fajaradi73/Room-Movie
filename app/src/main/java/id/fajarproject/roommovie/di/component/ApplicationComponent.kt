@@ -10,7 +10,7 @@ import id.fajarproject.roommovie.di.module.ApplicationModule
  */
 
 @Component(modules = [ApplicationModule::class])
-interface ApplicationComponent {
+fun interface ApplicationComponent {
 
     fun inject(application: BaseApp)
 

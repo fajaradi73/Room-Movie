@@ -40,13 +40,13 @@ interface ApiServiceInterface {
     fun getMovieSearch(@Query("api_key") apiKey : String, @Query("page") page : Int, @Query("query") query : String) : Observable<Movie>
 
     @GET("movie/{movie_id}")
-    fun getMovieDetail(@Path("movie_id") movie_id : Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<MovieItem>
+    fun getMovieDetail(@Path("movie_id") movieId: Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<MovieItem>
 
     @GET("person/popular")
     fun getPeoplePopular(@Query("api_key") apiKey : String, @Query("page") page : Int) : Observable<People>
 
     @GET("person/{person_id}")
-    fun getPeopleDetail(@Path("person_id") movie_id : Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<PeopleItem>
+    fun getPeopleDetail(@Path("person_id") movieId: Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<PeopleItem>
 
     @GET("search/person")
     fun getPeopleSearch(@Query("api_key") apiKey : String, @Query("page") page : Int, @Query("query") query : String) : Observable<People>
@@ -67,7 +67,7 @@ interface ApiServiceInterface {
     fun getTvSearch(@Query("api_key") apiKey : String, @Query("page") page : Int, @Query("query") query : String) : Observable<Movie>
 
     @GET("tv/{tv_id}")
-    fun getTvDetail(@Path("tv_id") movie_id : Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<MovieItem>
+    fun getTvDetail(@Path("tv_id") movieId: Int, @Query("api_key") apiKey: String, @Query("append_to_response") appendToResponse: String) : Observable<MovieItem>
 
     @GET("genre/tv/list")
     fun getTvGenres(@Query("api_key") apiKey : String) : Observable<Genre>

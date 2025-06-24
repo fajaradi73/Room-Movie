@@ -26,6 +26,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
@@ -111,7 +112,7 @@ object Util {
     }
 
     private fun capitalize(s: String?): String {
-        if (s == null || s.isEmpty()) {
+        if (s.isNullOrEmpty()) {
             return ""
         }
         val first = s[0]
@@ -292,6 +293,19 @@ object Util {
         ) // quantity of results we want to receive
         context.startActivityForResult(intent, Constant.REQUEST_VOICE)
     }
+    fun onVoiceClicked(launcher: ActivityResultLauncher<Intent>) {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH
+        ) // setting recognition model, optimized for short phrases – search queries
+
+        intent.putExtra(
+            RecognizerIntent.EXTRA_MAX_RESULTS,
+            1
+        ) // quantity of results we want to receive
+        launcher.launch(intent)
+    }
 
     fun initializeCache(context: Context): Long {
         var size: Long = 0
@@ -427,7 +441,6 @@ object Util {
                 Intent.ACTION_VIEW,
                 Uri.parse("http://instagram.com/_u/$userName")
             )
-            //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         } catch (e: java.lang.Exception) {
             Intent(
                 Intent.ACTION_VIEW,
@@ -456,13 +469,13 @@ object Util {
     fun startFacebook(context: Context, facebook: String): Intent? {
         val intent = Intent(Intent.ACTION_VIEW)
         try {
-            context.packageManager.getPackageInfo("com.facebook.katana", 0)
+            context.packageManager.getPackageInfo(Constant.packageFacebook, 0)
             val versionCode =
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    context.packageManager.getPackageInfo("com.facebook.katana", 0).longVersionCode
+                    context.packageManager.getPackageInfo(Constant.packageFacebook, 0).longVersionCode
                 } else {
                     context.packageManager.getPackageInfo(
-                        "com.facebook.katana",
+                        Constant.packageFacebook,
                         0
                     ).versionCode.toLong()
                 }
@@ -473,7 +486,6 @@ object Util {
                 intent.data = Uri.parse("fb://page/$facebook")
             }
             intent.setPackage("com.facebook.katana")
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             return intent
         } catch (e: java.lang.Exception) {
             intent.data = Uri.parse("https://facebook.com/$facebook")
@@ -556,7 +568,6 @@ object Util {
         if (str.contains(spannableText)) {
             ssb.setSpan(object : Spannable(false) {
                 override fun onClick(widget: View) {
-                    tv.layoutParams = tv.layoutParams
                     tv.setText(tv.tag.toString(), TextView.BufferType.SPANNABLE)
                     tv.invalidate()
                     if (viewMore) {

@@ -1,7 +1,6 @@
 package id.fajarproject.roommovie.ui.tvDetail
 
 import android.app.Activity
-import android.util.Log
 import id.fajarproject.roommovie.api.ApiServiceInterface
 import id.fajarproject.roommovie.models.GenresItem
 import id.fajarproject.roommovie.models.MovieItem

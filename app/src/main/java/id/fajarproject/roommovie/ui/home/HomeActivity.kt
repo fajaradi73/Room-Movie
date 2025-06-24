@@ -8,6 +8,7 @@ import android.speech.RecognizerIntent
 import android.text.TextUtils
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.arlib.floatingsearchview.FloatingSearchView
@@ -23,7 +24,6 @@ import id.fajarproject.roommovie.ui.setting.SettingFragment
 import id.fajarproject.roommovie.ui.tv.TvFragment
 import id.fajarproject.roommovie.util.AppPreference
 import id.fajarproject.roommovie.util.Constant
-import id.fajarproject.roommovie.util.Constant.REQUEST_VOICE
 import id.fajarproject.roommovie.util.Util
 import javax.inject.Inject
 
@@ -78,6 +78,7 @@ class HomeActivity : BaseActivity(), HomeContract.View {
                     )
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.action_tv -> {
                     if (!presenter.checkDataPreferences(Constant.genreTv)) {
                         presenter.loadDataTv()
@@ -88,6 +89,7 @@ class HomeActivity : BaseActivity(), HomeContract.View {
                     AppPreference.writePreference(this@HomeActivity, Constant.tag, Constant.tv)
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.action_people -> {
                     addFragment(PeopleFragment(), Constant.people)
                     setHintSearch(getString(R.string.people))
@@ -99,6 +101,7 @@ class HomeActivity : BaseActivity(), HomeContract.View {
                     )
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.action_setting -> {
                     addFragment(SettingFragment(), Constant.setting)
                     changeToolbar(false)
@@ -115,12 +118,14 @@ class HomeActivity : BaseActivity(), HomeContract.View {
         setOpenFragment()
         homeBinding.searchBar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_voice) {
-                Util.onVoiceClicked(this)
+                Util.onVoiceClicked(resultLauncher)
             }
         }
+
         homeBinding.searchBar.setOnFocusChangeListener(object :
             FloatingSearchView.OnFocusChangeListener {
             override fun onFocusCleared() {
+                // Noncompliance - method is empty
             }
 
             override fun onFocus() {
@@ -129,6 +134,7 @@ class HomeActivity : BaseActivity(), HomeContract.View {
             }
         })
     }
+
 
     override fun showLoading() {
         homeBinding.loading.visibility = View.VISIBLE
@@ -219,12 +225,15 @@ class HomeActivity : BaseActivity(), HomeContract.View {
             Constant.tv -> {
                 homeBinding.navView.selectedItemId = R.id.action_tv
             }
+
             Constant.people -> {
                 homeBinding.navView.selectedItemId = R.id.action_people
             }
+
             Constant.setting -> {
                 homeBinding.navView.selectedItemId = R.id.action_setting
             }
+
             else -> {
                 homeBinding.navView.selectedItemId = R.id.action_home
             }
@@ -236,19 +245,18 @@ class HomeActivity : BaseActivity(), HomeContract.View {
         super.onDestroy()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_VOICE && resultCode == Activity.RESULT_OK) {
+    private var resultLauncher = registerForActivityResult(StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
             val matches: ArrayList<String> =
                 data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) ?: arrayListOf()
-            if (matches.size > 0) {
+            if (matches.isNotEmpty()) {
                 val searchWrd = matches[0]
                 if (!TextUtils.isEmpty(searchWrd)) {
                     moveToSearch(searchWrd)
                 }
             }
-            return
+            return@registerForActivityResult
         }
     }
 }
