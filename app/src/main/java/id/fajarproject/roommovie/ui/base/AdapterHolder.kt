@@ -16,7 +16,7 @@ class AdapterHolder<B : ViewBinding>(var binding: B, onItemClickListener: OnItem
     private var onItemClickListener: OnItemClickListener? = null
 
     override fun onClick(v: View?) {
-        onItemClickListener?.onItemClick(v, adapterPosition)
+        onItemClickListener?.onItemClick(v, absoluteAdapterPosition)
     }
 
     init {
