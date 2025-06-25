@@ -22,6 +22,7 @@ class LoadingWebViewClient(var context: Context) : WebViewClient() {
         circularProgressDrawable.start()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(
         view: WebView,
         url: String

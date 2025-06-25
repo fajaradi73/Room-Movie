@@ -180,6 +180,7 @@ class VideoWebChromeClient : WebChromeClient, OnPreparedListener, OnCompletionLi
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onShowCustomView(
         view: View,
         requestedOrientation: Int,

@@ -49,6 +49,7 @@ class WebViewActivity : AppCompatActivity() {
     private fun setWebView() {
         webViewBinding.webView.settings.javaScriptEnabled = true
         webViewBinding.webView.webViewClient = object : WebViewClient() {
+            @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 val host = Uri.parse(url).host
                 host?.let {
@@ -106,6 +107,7 @@ class WebViewActivity : AppCompatActivity() {
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (webViewBinding.webView.canGoBack()) {
             webViewBinding.webView.goBack()
