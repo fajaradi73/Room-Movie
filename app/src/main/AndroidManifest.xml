@@ -40,7 +40,6 @@
         <activity
             android:name=".ui.splashscreen.SplashScreen"
             android:configChanges="locale"
-            android:screenOrientation="fullSensor"
             android:theme="@style/SplashTheme"
             android:exported="true">
             <intent-filter>
@@ -53,28 +52,25 @@
             android:name=".ui.home.HomeActivity"
             android:configChanges="locale"
             android:label=""
-            android:screenOrientation="nosensor"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.movieList.MovieListActivity"
             android:configChanges="locale"
-            android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DarkStatusBar" />
         <activity
             android:name=".ui.search.SearchActivity"
             android:configChanges="locale"
-            android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DarkStatusBar" />
         <activity
             android:name=".ui.setting.WebViewActivity"
             android:configChanges="locale"
             android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DarkStatusBar" />
         <activity
             android:name=".ui.tvList.TvListActivity"
             android:configChanges="locale"
             android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DarkStatusBar" />
         <activity
             android:name=".ui.movieDetail.MovieDetailActivity"
             android:configChanges="locale"
@@ -98,7 +94,7 @@
             android:configChanges="locale"
             android:label=""
             android:screenOrientation="nosensor"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.DarkStatusBar" />
         <activity
             android:name=".ui.previewPicture.PreviewPictureActivity"
             android:configChanges="locale"
